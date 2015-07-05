@@ -18,7 +18,6 @@ class Content
     protected $id;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     protected $gewijzigd;
@@ -28,8 +27,59 @@ class Content
      */
     protected $pagina;
 
-    public function __construct()
+    /**
+     * Set gewijzigd
+     *
+     * @param \DateTime $gewijzigd
+     * @return Content
+     */
+    public function setGewijzigd($gewijzigd)
     {
-        $this->gewijzigd = new \DateTime();
+        $this->gewijzigd = $gewijzigd;
+
+        return $this;
+    }
+
+    /**
+     * Get gewijzigd
+     *
+     * @return \DateTime 
+     */
+    public function getGewijzigd()
+    {
+        return $this->gewijzigd;
+    }
+
+    /**
+     * Set pagina
+     *
+     * @param string $pagina
+     * @return Content
+     */
+    public function setPagina($pagina)
+    {
+        $this->pagina = $pagina;
+
+        return $this;
+    }
+
+    /**
+     * Get pagina
+     *
+     * @return string 
+     */
+    public function getPagina()
+    {
+        return $this->pagina;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

@@ -43,7 +43,7 @@ class Content
     /**
      * Get gewijzigd
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getGewijzigd()
     {
@@ -66,7 +66,7 @@ class Content
     /**
      * Get pagina
      *
-     * @return string 
+     * @return string
      */
     public function getPagina()
     {
@@ -76,7 +76,7 @@ class Content
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
