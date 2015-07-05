@@ -23,9 +23,20 @@ class Content
     protected $gewijzigd;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(length=156)
      */
     protected $pagina;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $content;
+
+    public function __construct()
+    {
+        //$this->gewijzigd = date("Y-m-d H:i:s", time());
+        //var_dump(strtotime($this->gewijzigd));die;
+    }
 
     /**
      * Set gewijzigd
@@ -43,7 +54,7 @@ class Content
     /**
      * Get gewijzigd
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getGewijzigd()
     {
@@ -66,7 +77,7 @@ class Content
     /**
      * Get pagina
      *
-     * @return string 
+     * @return string
      */
     public function getPagina()
     {
@@ -76,7 +87,7 @@ class Content
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

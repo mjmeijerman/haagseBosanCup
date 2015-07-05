@@ -23,9 +23,14 @@ class Content
     protected $gewijzigd;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(length=156)
      */
     protected $pagina;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $content;
 
     /**
      * Set gewijzigd
@@ -81,5 +86,28 @@ class Content
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set content
+     *
+     * @param string $content
+     * @return Content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * Get content
+     *
+     * @return string 
+     */
+    public function getContent()
+    {
+        return $this->content;
     }
 }
