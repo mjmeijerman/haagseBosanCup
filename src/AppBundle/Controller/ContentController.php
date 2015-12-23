@@ -38,12 +38,12 @@ class ContentController extends Controller
                 ORDER BY content.gewijzigd DESC')
             ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
-            var_dump($content);die;
             return $this->render('default/index.html.twig');
         }
         else
         {
             $this->session->getFlashBag()->add('Error', 'De pagina kan niet gevonden worden');
+            return $this->render('error/pageNotFound.html.twig');
         }
     }
 
@@ -69,11 +69,13 @@ class ContentController extends Controller
             else
             {
                 $this->session->getFlashBag()->add('Error', 'De pagina kan niet gevonden worden');
+                return $this->render('error/pageNotFound.html.twig');
             }
         }
         else
         {
             $this->session->getFlashBag()->add('Error', 'Niet ingelogd als admin');
+            return $this->render('error/notAuthorized.html.twig');
         }
     }
 }

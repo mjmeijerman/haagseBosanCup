@@ -1,13 +1,88 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Haagse Bosan Cup</title>
+    <meta charset="UTF-8" />
+    {% block stylesheets %}
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
+    {% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logodonar.png') }}"/>
+</head>
+<body>
+<center>
+    <div id="container">
+        <div id="header">
+            <a href="{#{{ path('getNieuwsPage') }}#}">
+                <img src="{{ asset('images/header.png') }}" alt="" />
+            </a>
+        </div>
+
+        <div id="fill">.</div>
+        <nav id="primary_nav_wrap">
+            <ul>
+                <li><a href="{#{{ path('getNieuwsPage') }}#}">Laatste nieuws</a></li>
+                <li><a href="#">Wedstrijdinformatie</a>
+                    <ul>
+                        <li><a href="">Algemene informatie</a></li>
+                        <li><a href="">Reglementen</a></li>
+                        <li><a href="">Wedstrijdindeling Zaterdag</a></li>
+                        <li><a href="">Wedstrijdindeling Zondag</a></li>
+                        <li id="last"><a href="">Uitslagen</a></li>
+                    </ul>
+                </li>
+                <li><a href="">Sponsors</a></li>
+                <li><a href="">Contact</a></li>
+                <li><a href="">Inloggen</a></li>
+            </ul>
+        </nav>
+
+        <div id="l">
+            <div class="locatie">
+                <h2>Locatie</h2>
+                <hr>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2451.4535801027096!2d4.3465653!3d52.08967620000001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b70ac9816991%3A0x8f5cdf0ea9d78ec8!2sVlaskamp+3%2C+2592+AA+Den+Haag!5e0!3m2!1snl!2snl!4v1420389570598"
+                        width="200" frameborder="0"
+                        style="border:0;margin-left:10px;margin-right:10px;margin-bottom:5px;"></iframe>
+                <br/>
+                Sporthal Overbosch<br/>
+                Vlaskamp 3, Den Haag
+            </div>
+        </div>
+
+        <div id="c">
+            <div class="content">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+
+        <div id="s">
+            <div class="sponsor">
+                Sponsors
+                <hr>
+                <img src="{{ asset('images/bosan.png') }}" alt="">
+                <br />
+                <br />
+                <img src="{{ asset('images/spar.png') }}" alt="">
+                <br />
+                <br />
+                <img src="{{ asset('images/mila.png') }}" alt="">
+                <br />
+                <br />
+                <img src="{{ asset('images/gymworld.png') }}" alt="">
+                <br />
+                <br />
+                <img src="{{ asset('images/safetycamera.png') }}" alt="">
+                <br />
+                <br />
+                <img src="{{ asset('images/verax.png') }}" alt="">
+                <br />
+            </div>
+        </div>
+
+        {% block javascripts %}
+
+        {% endblock %}
+    </div>
+</center>
+</body>
 </html>
