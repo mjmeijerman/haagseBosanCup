@@ -23,7 +23,7 @@ class ContentController extends BaseController
     public function indexAction()
     {
         // todo: change this redirect to redirect to nieuwspage
-        return $this->redirectToRoute('getContent', array('page' => 'informatie'));
+        return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
     }
 
     private function checkIfPageExists($page)
