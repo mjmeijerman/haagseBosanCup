@@ -3,6 +3,7 @@ body {
 	background-size: cover;
 	background-attachment: fixed;
 	font-family: Verdana, Calibri;
+	min-height: 100vh;
 }
 
 #container {
