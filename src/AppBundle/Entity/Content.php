@@ -15,22 +15,22 @@ class Content
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $gewijzigd;
+    private $gewijzigd;
 
     /**
      * @ORM\Column(length=156)
      */
-    protected $pagina;
+    private $pagina;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $content;
+    private $content;
 
     /**
      * Set gewijzigd

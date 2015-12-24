@@ -14,13 +14,8 @@ use Symfony\Component\HttpKernel\Exception;
 
 class BaseController extends Controller
 {
-    protected $sponsors;
-    protected $menuItems;
-
-    protected function __construct()
-    {
-        $this->session = new Session();
-    }
+    protected $sponsors = array();
+    protected $menuItems = array();
 
     private function getSponsors()
     {
@@ -29,7 +24,21 @@ class BaseController extends Controller
 
     private function getMenuItems()
     {
-
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT hoofdmenuitem
+            FROM AppBundle:HoofdmenuItem hoofdmenuitem
+            ORDER BY hoofdmenuitem.positie');
+        $results = $query->getResult();
+        for($i = 0; $i < count($results); $i++) {
+            $this->menuItems['hoofdmenuItems'][$i]['naam'] = $results[$i]->getNaam();
+            $this->menuItems['hoofdmenuItems'][$i]['id'] = $results[$i]->getId();
+            $submenuItems = $results[$i]->getSubmenuItems();
+            for ($j = 0; $j < count($submenuItems); $j++) {
+                $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['naam'] = $submenuItems[$j]->getNaam();
+                $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['id'] = $submenuItems[$j]->getId();
+            }
+        }
     }
 
     protected function maand($maandNummer)
@@ -75,7 +84,7 @@ class BaseController extends Controller
 
     protected function setBasicPageData()
     {
-        $this->menuItems = $this->getMenuItems();
-        $this->sponsors = $this->getSponsors();
+        $this->getMenuItems();
+        $this->getSponsors();
     }
 }

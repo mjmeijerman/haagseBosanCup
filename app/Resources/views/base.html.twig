@@ -20,19 +20,22 @@
         <div id="fill">.</div>
         <nav id="primary_nav_wrap">
             <ul>
-                <li><a href="{#{{ path('getNieuwsPage') }}#}">Laatste nieuws</a></li>
-                <li><a href="#">Wedstrijdinformatie</a>
-                    <ul>
-                        <li><a href="">Algemene informatie</a></li>
-                        <li><a href="">Reglementen</a></li>
-                        <li><a href="">Wedstrijdindeling Zaterdag</a></li>
-                        <li><a href="">Wedstrijdindeling Zondag</a></li>
-                        <li id="last"><a href="">Uitslagen</a></li>
-                    </ul>
-                </li>
-                <li><a href="">Sponsors</a></li>
-                <li><a href="">Contact</a></li>
-                <li><a href="">Inloggen</a></li>
+                {% for items in menuItems.hoofdmenuItems %}
+                    <li>
+                        {% if items.submenuItems is defined %}
+                            <a href="#">{{ items.naam }}</a>
+                            <ul>
+                                {% for subItems in items.submenuItems %}
+                                    <li {% if loop.index == items.submenuItems|length %}id="last"{% endif %}>
+                                        <a href="{{ path('getContent', { 'page': subItems.naam }) }}">{{ subItems.naam }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
             </ul>
         </nav>
 
