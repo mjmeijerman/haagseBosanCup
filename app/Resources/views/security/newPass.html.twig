@@ -1,0 +1,19 @@
+{% extends 'inloggen/base.html.twig' %}
+
+{% block body %}
+    <h1>Nieuw wachtwoord</h1>
+    Voer uw emailadres in om een nieuw wachtword te ontvangen
+    {% if error %}
+        <div><span style="color:red;">{{ error }}</span></div>
+    {% endif %}
+
+    <form action="{{ path('getNewPassPage') }}" method="post">
+        <table>
+            <tr>
+                <td>Gebruikersnaam:</td>
+                <td><input type="text" name="username" placeholder="Gebruikersnaam" /></td>
+            </tr>
+        </table>
+        <p><button type="submit">Verstuur</button></p>
+    </form>
+{% endblock %}

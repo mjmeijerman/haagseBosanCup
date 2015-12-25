@@ -41,6 +41,27 @@ class BaseController extends Controller
         }
     }
 
+    protected function checkIfPageExists($page)
+    {
+        $pageExists = false;
+        foreach ($this->menuItems['hoofdmenuItems'] as $item) {
+            if ($pageExists) break;
+            if ($item['naam'] == $page) {
+                $pageExists = true;
+                break;
+            }
+            if (isset($item['submenuItems'])) {
+                foreach ($item['submenuItems'] as $subItem) {
+                    if ($subItem['naam'] == $page) {
+                        $pageExists = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return $pageExists;
+    }
+
     protected function maand($maandNummer)
     {
         switch($maandNummer)
