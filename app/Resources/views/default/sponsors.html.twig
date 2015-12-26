@@ -28,7 +28,7 @@
                 </a>
             {% endif %}
             {% if sponsor.omschrijving %}
-                <div class="beschrijving">{{ sponsor.omschrijving }}</div>
+                <div class="beschrijving">{{ sponsor.omschrijving|raw }}</div>
             {% endif %}
         </p>
     {% endfor %}
