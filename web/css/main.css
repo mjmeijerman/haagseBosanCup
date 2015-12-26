@@ -3,7 +3,7 @@ body {
 	background-size: cover;
 	background-attachment: fixed;
 	font-family: Verdana, Calibri;
-	min-height: 100vh;
+	min-height: 100%;
 }
 
 #container {
@@ -36,7 +36,7 @@ body {
 
 #fill{
 	width: 250px;
-	margin-right: 10px;
+	margin-right: 15px;
 	display: block;
 	float: left;
 	color: rgba(0,0,0,0);
@@ -94,6 +94,7 @@ body {
 	min-height: 300px;
 	display: block;
 	margin-left: 10px;
+	margin-bottom: 20px;
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
@@ -104,7 +105,7 @@ body {
 	margin-top: 20px;
 	margin-left: 20px;
 	margin-right: 20px;
-	margin-bottom: 5px;
+	margin-bottom: 20px;
 	text-align: left;
 	font-size: 10pt;
 }
@@ -112,11 +113,17 @@ body {
 .content .date {
 	color: #878787;
 	font-size: 8pt;
+	font-style: italic;
+}
+
+.content h1 {
+	font-size: 1.5em;
+	font-weight: normal;
 }
 
 .content h3 {
 	color: #000;
-	font-size: 11pt;
+	font-size: 1em;
 	margin-bottom: 2px;
 	margin-top: 2px;
 }
@@ -126,9 +133,144 @@ body {
 	height: 1px;
 	border: 0px;
 	float: left;
-	width: 535px;
-	margin-bottom: 2px;
+	width: 635px;
+	margin-bottom: 3px;
 	margin-top: 2px;
+}
+
+.content p {
+	margin-top: 3px;
+}
+
+.content #inschrijven a:link, #content #inschrijven a:visited {
+	background: #333;
+	padding: .4em .8em;
+	border-radius: 5px;
+	color: #FFFF00;
+	text-decoration: none;
+	float: right;
+	box-shadow: 2px 2px 2px #000;
+	margin-top: 5px; /* Of niet */
+	margin-right: 5px;
+
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
+.content #inschrijven a:hover, .content #inschrijven a:active {
+	margin-right: 15px; /* Of niet */
+	margin-top: 0px; /* Of niet */
+	background: #F2E609;
+	color: #333;
+	box-shadow: 8px 8px 20px #333; /* Of 2px 2px 2px #333 */
+}
+
+.content a:link, .content a:visited {
+	color: blue;
+	text-decoration: underline;
+}
+
+.content a:hover, .content a:active {
+	color: #000;
+}
+
+/* INLOG PAGINA VERENIGING */
+.content h4 {
+	color: #FFF;
+	margin-top: 1.3em;
+	margin-bottom: .7em;
+	font-weight: normal;
+	font-size: 1.1em;
+	background: #C1C1C1;
+	padding: .4em .5em;
+	border-radius: 5px;
+}
+
+.content #contactpersoon {
+	min-width: 50%;
+}
+
+.content #factuur:link {
+	color: #FFF;
+	width: 11.5em;
+	margin-top: 1.3em;
+	font-size: 1.1em;
+	background: #FF4747;
+	display: inline-block;
+	padding: .4em .5em;
+	border-radius: 5px;
+	text-decoration: none;
+	-o-transition: .3s;
+	-ms-transition: .3s;
+	-moz-transition: .3s;
+	-webkit-transition: .3s;
+	transition: .3s;
+}
+
+.content #factuur:hover {
+	color: #FFF;
+	background: #333;
+}
+
+.content #indeling:link {
+	color: #FFF;
+	margin-top: 1.3em;
+	font-size: 1.1em;
+	background: #333;
+	display: inline-block;
+	padding: .4em .5em;
+	border-radius: 5px;
+	text-decoration: none;
+	-o-transition: .3s;
+	-ms-transition: .3s;
+	-moz-transition: .3s;
+	-webkit-transition: .3s;
+	transition: .3s;
+}
+
+.content #indeling:hover {
+	color: #FFFF00;
+}
+
+.content #deelnemers {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.content #deelnemers tr:nth-child(even) {
+	background: #F1F1F1;
+}
+
+.content #wachtlijst {
+	width: 95%;
+	border-collapse: collapse;
+}
+
+.content #wachtlijst tr:nth-child(even) {
+	background: #F1F1F1;
+}
+
+.content #juryleden {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.content #juryleden tr:nth-child(even) {
+	background: #F1F1F1;
+}
+
+.content #contact {
+	color: #FFF;
+	margin-top: 1.3em;
+	margin-bottom: .7em;
+	font-weight: normal;
+	font-size: 1.1em;
+	background: #333;
+	padding: .4em .5em;
+	border-radius: 5px;
 }
 
 /* SPONSOREN */
@@ -170,13 +312,23 @@ body {
 	width: 130px;
 }
 
+/* SOCIAL - FACEBOOK */
+#social {
+	width: 150px;
+	float: right;
+	margin-left: 0;
+	margin-top: 10px;
+	margin-right: 10px;
+	text-align: center;
+}
+
 /* ---------------------- */
 
 #primary_nav_wrap
 {
 	color: #FFF;
 	height: 35px;
-	width: 675px;
+	width: 670px;
 	float: left;
 	border-radius: 5px;
 	font-size: 11pt;
