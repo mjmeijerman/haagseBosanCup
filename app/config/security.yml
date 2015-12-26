@@ -26,11 +26,11 @@ security:
                 login_path: /login
                 check_path: /login_check
                 csrf_provider: security.csrf.token_manager
-                default_target_path: /inloggen
+                default_target_path: /pagina/Inloggen
 
             logout:
                 path:   /logout
-                target: /inloggen
+                target: /pagina/Inloggen
 
             remember_me:
                 key:      "%secret%"

@@ -127,6 +127,11 @@ body {
     font-weight: normal;
 }
 
+.content h2 {
+    font-size: 1.25em;
+    font-weight: normal;
+}
+
 .content h3 {
     color: #000;
     font-size: 1em;
@@ -181,6 +186,51 @@ body {
 
 .content a:hover, .content a:active {
     color: #000;
+}
+
+/* SPONSOR PAGINA */
+
+.content .sponsors h1 {
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.content .sponsors h2 {
+    font-size: 1.25em;
+    font-weight: normal;
+}
+
+.content .sponsors h3 {
+    color: #000;
+    font-size: 1em;
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+
+.content .sponsors hr {
+    background-color: #000;
+    height: 1px;
+    border: 0px;
+    float: left;
+    width: 635px;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.content .sponsors p {
+    margin-top: 3px;
+}
+
+.content .sponsors img {
+    max-width: 500px;
+    max-height: 50px;
+    margin: 5px 0px;
+}
+
+.content .sponsors .beschrijving {
+    font-style: italic;
+    margin-top: .5em;
+    margin-bottom: 1em;
 }
 
 /* INLOG PAGINA VERENIGING */
@@ -317,6 +367,11 @@ body {
     height: 1px;
     border: 0px;
     width: 130px;
+}
+
+.sponsor img {
+    max-width: 130px;
+    max-height: 35px;
 }
 
 /* SOCIAL - FACEBOOK */
