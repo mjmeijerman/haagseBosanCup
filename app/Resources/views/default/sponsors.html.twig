@@ -12,14 +12,14 @@
     <br>
         <hr>
         <p>
-            <h1>{{ sponsor.naam }}
+            <h2>{{ sponsor.naam }}
             {% if app.user and is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('editNieuwsberichtPage', { 'id': sponsor.id }) }}"><img
                             src="{{ asset('images/edit.png') }}" width="18px"/></a>
                 <a href="{{ path('removeSponsorPage', { 'id': sponsor.id }) }}"><img
                             src="{{ asset('images/remove.png') }}" width="18px"/></a>
             {% endif %}
-            </h1>
+            </h2>
             {% if sponsor.website %}
                 <a href="{{ sponsor.website }}" target="_blank">
             {% endif %}
@@ -28,7 +28,7 @@
                 </a>
             {% endif %}
             {% if sponsor.omschrijving %}
-                {{ sponsor.omschrijving }}
+                <div class="beschrijving">{{ sponsor.omschrijving }}</div>
             {% endif %}
         </p>
     {% endfor %}
