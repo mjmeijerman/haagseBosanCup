@@ -72,7 +72,10 @@ class ContentController extends BaseController
     {
         $this->setBasicPageData();
         $user = $this->getUser();
-        $roles = $user->getRoles();
+        $roles[0] = "";
+        if ($user) {
+            $roles = $user->getRoles();
+        }
         switch ($roles[0])
         {
             case 'ROLE_ADMIN':
@@ -82,10 +85,7 @@ class ContentController extends BaseController
                 return $this->redirectToRoute('getContactpersoonIndexPage');
                 break;
             default:
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                ));
+                return $this->redirectToRoute('login_route');
         }
     }
 
