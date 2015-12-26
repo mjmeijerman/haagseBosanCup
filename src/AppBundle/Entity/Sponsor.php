@@ -37,7 +37,7 @@ class Sponsor
     private $file;
 
     /**
-     * @ORM\Column(length=300, nullable=true)
+     * @ORM\Column(length=300)
      */
     protected $naam;
 
