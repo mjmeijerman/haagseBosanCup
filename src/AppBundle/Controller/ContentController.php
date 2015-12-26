@@ -183,8 +183,9 @@ class ContentController extends BaseController
         {
             $contentItems[$i] = $content[$i]->getAll();
         }
+        shuffle($contentItems);
         return $this->render('default/sponsors.html.twig', array(
-            'contentItems' => shuffle($contentItems),
+            'contentItems' => $contentItems,
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
         ));

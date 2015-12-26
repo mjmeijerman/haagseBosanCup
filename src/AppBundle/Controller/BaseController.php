@@ -28,6 +28,7 @@ class BaseController extends Controller
         {
             $this->sponsors[$i] = $content[$i]->getAll();
         }
+        shuffle($this->sponsors);
     }
 
     private function getMenuItems()

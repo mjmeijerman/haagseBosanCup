@@ -6,19 +6,20 @@
             Sponsor toevoegen<img src="{{ asset('images/add.png') }}" width="18px" /></a>
     {% endif %}
     <h1>Sponsors</h1>
-    Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
-    <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a>
-    {% for content in contentItems %}
+    <p>Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
+    <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></p>
+    {% for sponsor in contentItems %}
+        <br><br>
         <p>
-            {% if content.website is defined %}
-                <a href="{{ content.website }}">
+            {% if sponsor.website is defined %}
+                <a href="{{ sponsor.website }}">
             {% endif %}
-            <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ content.locatie }}" /><br>
-            {% if content.website is defined %}
+            <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie }}" width="200px" /><br>
+            {% if sponsor.website is defined %}
                 </a>
             {% endif %}
-            {% if content.omschrijving is defined %}
-                {{ content.omschrijving }}
+            {% if sponsor.omschrijving is defined %}
+                {{ sponsor.omschrijving }}
             {% endif %}
         </p>
     {% endfor %}
