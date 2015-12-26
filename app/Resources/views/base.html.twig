@@ -63,11 +63,11 @@
                 Sponsors
                 <hr />
                 {% for sponsor in sponsors %}
-                {% if sponsor.website is defined %}
-                    <a href="{{ sponsor.website }}" style="text-decoration: none;">
+                {% if sponsor.website %}
+                    <a href="{{ sponsor.website }}" target="_blank" style="text-decoration: none;">
                 {% endif %}
                     <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie }}" />
-                {% if sponsor.website is defined %}
+                {% if sponsor.website %}
                     </a>
                 {% endif %}
                 <br />

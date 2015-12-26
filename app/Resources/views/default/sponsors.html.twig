@@ -13,14 +13,14 @@
         <hr>
         <p>
             <h1>{{ sponsor.naam }}</h1>
-            {% if sponsor.website is defined %}
-                <a href="{{ sponsor.website }}">
+            {% if sponsor.website %}
+                <a href="{{ sponsor.website }}" target="_blank">
             {% endif %}
             <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie }}" width="200px" /><br>
-            {% if sponsor.website is defined %}
+            {% if sponsor.website %}
                 </a>
             {% endif %}
-            {% if sponsor.omschrijving is defined %}
+            {% if sponsor.omschrijving %}
                 {{ sponsor.omschrijving }}
             {% endif %}
         </p>
