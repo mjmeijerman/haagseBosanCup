@@ -283,61 +283,58 @@ class AdminController extends BaseController
         }
     }
 
-//    /**
-//     * @Route("/pagina/Sponsors/remove/{id}/", name="removeSponsorPage")
-//     * @Method({"GET", "POST"})
-//     */
-//    public function removeAdminFotoPage($id, Request $request)
-//    {
-//        if($request->getMethod() == 'GET')
-//        {
-//            $this->setBasicPageData();
-//            $em = $this->getDoctrine()->getManager();
-//            $query = $em->createQuery(
-//                'SELECT fotoupload
-//                FROM AppBundle:FotoUpload fotoupload
-//                WHERE fotoupload.id = :id')
-//                ->setParameter('id', $id);
-//            $foto = $query->setMaxResults(1)->getOneOrNullResult();
-//            if(count($foto) > 0)
-//            {
-//                return $this->render('inloggen/removeAdminFotos.html.twig', array(
-//                    'calendarItems' => $this->calendarItems,
-//                    'header' => $this->header,
-//                    'content' => $foto->getAll(),
-//                    'wedstrijdLinkItems' => $this->groepItems,
-//                ));
-//            }
-//            else
-//            {
-//                return $this->render('error/pageNotFound.html.twig', array(
-//                    'calendarItems' => $this->calendarItems,
-//                    'header' => $this->header,
-//                    'wedstrijdLinkItems' => $this->groepItems,
-//                ));
-//            }
-//        }
-//        elseif($request->getMethod() == 'POST')
-//        {
-//            $em = $this->getDoctrine()->getManager();
-//            $query = $em->createQuery(
-//                'SELECT fotoupload
-//                FROM AppBundle:FotoUpload fotoupload
-//                WHERE fotoupload.id = :id')
-//                ->setParameter('id', $id);
-//            $foto = $query->setMaxResults(1)->getOneOrNullResult();
-//            $em->remove($foto);
-//            $em->flush();
-//            return $this->redirectToRoute('getAdminFotoPage');
-//        }
-//        else
-//        {
-//            return $this->render('error/pageNotFound.html.twig', array(
-//                'calendarItems' => $this->calendarItems,
-//                'header' => $this->header,
-//                'wedstrijdLinkItems' => $this->groepItems,
-//            ));
-//        }
-//    }
+    /**
+     * @Route("/pagina/Sponsors/remove/{id}/", name="removeSponsorPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeSponsorPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->setBasicPageData();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT sponsor
+                FROM AppBundle:Sponsor sponsor
+                WHERE sponsor.id = :id')
+                ->setParameter('id', $id);
+            $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($sponsor) > 0)
+            {
+                return $this->render('default/removeSponsor.html.twig', array(
+                    'content' => $sponsor->getAll(),
+                    'menuItems' => $this->menuItems,
+                    'sponsors' => $this->sponsors,
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                    'sponsors' => $this->sponsors,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT sponsor
+                FROM AppBundle:Sponsor sponsor
+                WHERE sponsor.id = :id')
+                ->setParameter('id', $id);
+            $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($sponsor);
+            $em->flush();
+            return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+            ));
+        }
+    }
 
 }
