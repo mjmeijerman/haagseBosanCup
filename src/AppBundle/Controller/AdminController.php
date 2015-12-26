@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Nieuwsbericht;
+use AppBundle\Form\Type\NieuwsberichtType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -55,7 +57,7 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Route("/donar/{page}/edit/", defaults={"page" = "geschiedenis"}, name="editDefaultPage")
+     * @Route("/pagina/{page}/edit/", defaults={"page" = "geschiedenis"}, name="editDefaultPage")
      * @Method({"GET", "POST"})
      */
     public function editDefaultPageAction($page, Request $request)
@@ -110,5 +112,126 @@ class AdminController extends BaseController
         }
     }
 
+    /**
+     * @Route("/pagina/Laatste%20nieuws/add/", name="addNieuwsPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addNieuwsPage(Request $request)
+    {
+        $this->setBasicPageData();
+        $nieuwsbericht = new Nieuwsbericht();
+        $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
+            $nieuwsbericht->setJaar(date('Y', time()));
+            $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($nieuwsbericht);
+            $em->flush();
+            return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
+        }
+        else {
+            return $this->render('default/addNieuwsbericht.html.twig', array(
+                'form' => $form->createView(),
+                'menuItems' => $this->menuItems,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/pagina/Laatste%20nieuws/edit/{id}/", name="editNieuwsberichtPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editNieuwsberichtPage($id, Request $request)
+    {
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT nieuwsbericht
+            FROM AppBundle:Nieuwsbericht nieuwsbericht
+            WHERE nieuwsbericht.id = :id')
+            ->setParameter('id', $id);
+        /** @var Nieuwsbericht $nieuwsbericht */
+        $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+        if(count($nieuwsbericht) > 0)
+        {
+            $nieuwsbericht->setBericht(str_replace("<br />","\n",$nieuwsbericht->getBericht()));
+            $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($nieuwsbericht);
+                $em->flush();
+                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
+            }
+            else {
+                return $this->render('default/addNieuwsbericht.html.twig', array(
+                    'form' => $form->createView(),
+                    'menuItems' => $this->menuItems,
+                ));
+            }
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/pagina/Laatste%20nieuws//remove/{id}/", name="removeNieuwsberichtPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeNieuwsberichtPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->setBasicPageData();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT nieuwsbericht
+                FROM AppBundle:Nieuwsbericht nieuwsbericht
+                WHERE nieuwsbericht.id = :id')
+                ->setParameter('id', $id);
+            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($nieuwsbericht) > 0)
+            {
+                return $this->render('default/removeNieuwsbericht.html.twig', array(
+                    'content' => $nieuwsbericht->getAll(),
+                    'menuItems' => $this->menuItems,
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT nieuwsbericht
+                FROM AppBundle:Nieuwsbericht nieuwsbericht
+                WHERE nieuwsbericht.id = :id')
+                ->setParameter('id', $id);
+            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($nieuwsbericht);
+            $em->flush();
+            return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+            ));
+        }
+    }
 
 }

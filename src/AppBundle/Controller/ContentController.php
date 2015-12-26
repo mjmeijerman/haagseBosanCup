@@ -37,8 +37,10 @@ class ContentController extends BaseController
         if ($this->checkIfPageExists($page)) {
             switch ($page) {
                 case 'Inloggen':
-                    return $this->redirectToRoute('getInloggenPage');
+                    return $this->getInloggenPageAction();
                     break;
+                case 'Laatste nieuws':
+                    return $this->getNieuwsIndexPage();
                 default:
                     $em = $this->getDoctrine()->getManager();
                     $query = $em->createQuery(
@@ -62,14 +64,7 @@ class ContentController extends BaseController
         }
     }
 
-    /**
-     * @Route("/inloggen/", name="getInloggenPage")
-     *
-     * @Security("has_role('ROLE_INGELOGD')")
-     *
-     * @Method("GET")
-     */
-    public function getInloggenPageAction()
+    private function getInloggenPageAction()
     {
         $this->setBasicPageData();
         $user = $this->getUser();
@@ -87,6 +82,25 @@ class ContentController extends BaseController
                     'menuItems' => $this->menuItems,
                 ));
         }
+    }
+
+    private function getNieuwsIndexPage()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT nieuwsbericht
+            FROM AppBundle:Nieuwsbericht nieuwsbericht
+            ORDER BY nieuwsbericht.id DESC');
+        $content = $query->setMaxResults(10)->getResult();
+        $nieuwsItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $nieuwsItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render('default/nieuws.html.twig', array(
+            'nieuwsItems' => $nieuwsItems,
+            'menuItems' => $this->menuItems,
+        ));
     }
 
     /**

@@ -1,0 +1,23 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addNieuwsPage') }}">Nieuw nieuwsbericht plaatsen:<img src="{{ asset('images/add.png') }}"
+                                                                                width="18px"/></a>
+    {% endif %}
+    {% for item in nieuwsItems %}
+        <div class="date">{{ item.datumtijd }}</div>
+        <hr>
+        <h1>
+            {{ item.titel }}
+            {% if app.user and is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('editNieuwsberichtPage', { 'id': item.id }) }}"><img
+                            src="{{ asset('images/edit.png') }}" width="18px"/></a>
+                <a href="{{ path('removeNieuwsberichtPage', { 'id': item.id }) }}"><img
+                            src="{{ asset('images/remove.png') }}" width="18px"/></a>
+            {% endif %}
+        </h1>
+
+        <p>{{ item.bericht|raw }}</p>
+    {% endfor %}
+{% endblock %}
