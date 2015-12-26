@@ -34,18 +34,18 @@ body {
 
 /* FILL - BLANK SPACE NAAST MENU */
 
-#fill {
+#fill{
     width: 250px;
     margin-right: 15px;
     display: block;
     float: left;
-    color: rgba(0, 0, 0, 0);
+    color: rgba(0,0,0,0);
 }
 
 /* LOCATIE */
 
 #l {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0,0,0,0.4);
     color: #FFF;
     width: 250px;
     display: block;
@@ -59,7 +59,7 @@ body {
 }
 
 #l:hover {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0,0,0,0.5);
     color: #FFFF00;
     box-shadow: 0px 0px 5px #000;
 }
@@ -70,7 +70,7 @@ body {
     font-size: 10pt;
 }
 
-.locatie h2 {
+.locatie h2{
     color: #FFF;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -91,7 +91,7 @@ body {
     background: #FFF;
     float: left;
     width: 675px;
-    min-height: 300px;
+    min-height: 487px;
     display: block;
     margin-left: 10px;
     margin-bottom: 20px;
@@ -110,10 +110,16 @@ body {
     font-size: 10pt;
 }
 
+.content .title h1 {
+    margin-top: 0;
+}
+
 .content .date {
     color: #878787;
     font-size: 8pt;
     font-style: italic;
+    margin-top: 2em;
+    margin-bottom: .4em;
 }
 
 .content h1 {
@@ -178,6 +184,7 @@ body {
 }
 
 /* INLOG PAGINA VERENIGING */
+
 .content h4 {
     color: #FFF;
     margin-top: 1.3em;
@@ -276,7 +283,7 @@ body {
 /* SPONSOREN */
 
 #s {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255,255,255,0.4);
     color: #FFF;
     width: 150px;
     float: left;
@@ -293,7 +300,7 @@ body {
 }
 
 #s:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255,255,255,0.6);
 }
 
 .sponsor {
@@ -313,6 +320,7 @@ body {
 }
 
 /* SOCIAL - FACEBOOK */
+
 #social {
     width: 150px;
     float: right;
@@ -324,7 +332,8 @@ body {
 
 /* ---------------------- */
 
-#primary_nav_wrap {
+#primary_nav_wrap
+{
     color: #FFF;
     height: 35px;
     width: 670px;
@@ -333,27 +342,30 @@ body {
     font-size: 11pt;
 }
 
-#primary_nav_wrap ul {
-    list-style: none;
-    position: relative;
-    float: left;
-    margin: 0;
-    padding: 0;
+#primary_nav_wrap ul
+{
+    list-style:none;
+    position:relative;
+    float:left;
+    margin:0;
+    padding:0;
 }
 
-#primary_nav_wrap ul a {
+#primary_nav_wrap ul a
+{
     display: block;
     color: #FFFF00;
-    text-decoration: none;
-    line-height: 35px;
-    padding: 0 15px;
+    text-decoration:none;
+    line-height:35px;
+    padding:0 15px;
 }
 
-#primary_nav_wrap ul li {
-    position: relative;
-    float: left;
-    margin: 0;
-    padding: 0;
+#primary_nav_wrap ul li
+{
+    position:relative;
+    float:left;
+    margin:0;
+    padding:0;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 
@@ -364,21 +376,23 @@ body {
     transition: .5s;
 }
 
-#primary_nav_wrap ul li:hover {
-    background: rgba(0, 0, 0, 0.6);
+#primary_nav_wrap ul li:hover
+{
+    background: rgba(0,0,0,0.6);
     /* background:#C1C1C1; */
 }
 
-#primary_nav_wrap ul ul {
+#primary_nav_wrap ul ul
+{
     color: #FF0000;
     text-align: left;
-    display: none;
-    position: absolute;
+    display:none;
+    position:absolute;
     top: 100%;
     left: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0,0,0,0.7);
     /* background:#C0C0C0; */
-    padding: 0;
+    padding:0;
     border-radius: 5px;
     border-top-left-radius: 0px;
 
@@ -389,12 +403,14 @@ body {
     animation: fadein .5s;
 }
 
-#primary_nav_wrap ul ul li {
+#primary_nav_wrap ul ul li
+{
     float: none;
     width: 250px;
 }
 
-#primary_nav_wrap ul ul li:hover {
+#primary_nav_wrap ul ul li:hover
+{
     background: #0F0F0F;
     /* background: #9E9E9E; */
     border-radius: 0px;
@@ -406,67 +422,50 @@ body {
     border-bottom-right-radius: 5px;
 }
 
-#primary_nav_wrap ul ul a {
-    line-height: 120%;
-    padding: 10px 15px;
+#primary_nav_wrap ul ul a
+{
+    line-height:120%;
+    padding:10px 15px;
 }
 
-#primary_nav_wrap ul ul ul {
-    top: 0;
-    left: 100%;
+#primary_nav_wrap ul ul ul
+{
+    top:0;
+    left:100%;
 }
 
-#primary_nav_wrap ul li:hover > ul {
-    display: block;
+#primary_nav_wrap ul li:hover > ul
+{
+    display:block;
 }
 
 /* ---------------------- */
 
 @keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* Firefox < 16 */
 @-moz-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* Internet Explorer */
 @-ms-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* Opera < 12.1 */
 @-o-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
