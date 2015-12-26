@@ -30,6 +30,7 @@ class AdminController extends BaseController
         $this->setBasicPageData();
         return $this->render('inloggen/adminIndex.html.twig', array(
             'menuItems' => $this->menuItems,
+            'sponsors' =>$this->sponsors,
         ));
     }
 
@@ -49,10 +50,13 @@ class AdminController extends BaseController
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($content);
                     $em->flush();
-                    return $this->render('default/index.html.twig');
+                    return $this->redirectToRoute('getContent', array('page' => $page));
             }
         } else {
-            return $this->render('error/pageNotFound.html.twig');
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+            ));
         }
     }
 
@@ -93,6 +97,7 @@ class AdminController extends BaseController
                         'content' => $content->getContent(),
                         'menuItems' => $this->menuItems,
                         'form' => $form->createView(),
+                        'sponsors' =>$this->sponsors,
                     ));
                 }
             }
@@ -100,6 +105,7 @@ class AdminController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
                 ));
             }
 
@@ -108,6 +114,7 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
             ));
         }
     }
@@ -136,6 +143,7 @@ class AdminController extends BaseController
             return $this->render('default/addNieuwsbericht.html.twig', array(
                 'form' => $form->createView(),
                 'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
             ));
         }
     }
@@ -172,6 +180,7 @@ class AdminController extends BaseController
                 return $this->render('default/addNieuwsbericht.html.twig', array(
                     'form' => $form->createView(),
                     'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
                 ));
             }
         }
@@ -179,6 +188,7 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
             ));
         }
     }
@@ -204,12 +214,14 @@ class AdminController extends BaseController
                 return $this->render('default/removeNieuwsbericht.html.twig', array(
                     'content' => $nieuwsbericht->getAll(),
                     'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
                 ));
             }
         }
@@ -230,8 +242,99 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
             ));
         }
     }
+
+//    /**
+//     * @Template()
+//     * @Route("/admin/foto/add/", name="addAdminFotoPage")
+//     * @Method({"GET", "POST"})
+//     */
+//    public function addAdminFotoPageAction(Request $request)
+//    {
+//        $this->setBasicPageData();
+//        $foto = new FotoUpload();
+//        $form = $this->createFormBuilder($foto)
+//            ->add('naam')
+//            ->add('file')
+//            ->add('uploadBestand', 'submit')
+//            ->getForm();
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($foto);
+//            $em->flush();
+//            $this->get('helper.imageresizer')->resizeImage($foto->getAbsolutePath(), $foto->getUploadRootDir()."/" , null, $width=597);
+//            return $this->redirectToRoute('getAdminFotoPage');
+//        }
+//        else {
+//            return $this->render('inloggen/addAdminFotos.html.twig', array(
+//                'calendarItems' => $this->calendarItems,
+//                'header' => $this->header,
+//                'form' => $form->createView(),
+//                'wedstrijdLinkItems' => $this->groepItems,
+//            ));
+//        }
+//    }
+//
+//    /**
+//     * @Route("/admin/foto/remove/{id}/", name="removeAdminFotoPage")
+//     * @Method({"GET", "POST"})
+//     */
+//    public function removeAdminFotoPage($id, Request $request)
+//    {
+//        if($request->getMethod() == 'GET')
+//        {
+//            $this->setBasicPageData();
+//            $em = $this->getDoctrine()->getManager();
+//            $query = $em->createQuery(
+//                'SELECT fotoupload
+//                FROM AppBundle:FotoUpload fotoupload
+//                WHERE fotoupload.id = :id')
+//                ->setParameter('id', $id);
+//            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+//            if(count($foto) > 0)
+//            {
+//                return $this->render('inloggen/removeAdminFotos.html.twig', array(
+//                    'calendarItems' => $this->calendarItems,
+//                    'header' => $this->header,
+//                    'content' => $foto->getAll(),
+//                    'wedstrijdLinkItems' => $this->groepItems,
+//                ));
+//            }
+//            else
+//            {
+//                return $this->render('error/pageNotFound.html.twig', array(
+//                    'calendarItems' => $this->calendarItems,
+//                    'header' => $this->header,
+//                    'wedstrijdLinkItems' => $this->groepItems,
+//                ));
+//            }
+//        }
+//        elseif($request->getMethod() == 'POST')
+//        {
+//            $em = $this->getDoctrine()->getManager();
+//            $query = $em->createQuery(
+//                'SELECT fotoupload
+//                FROM AppBundle:FotoUpload fotoupload
+//                WHERE fotoupload.id = :id')
+//                ->setParameter('id', $id);
+//            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+//            $em->remove($foto);
+//            $em->flush();
+//            return $this->redirectToRoute('getAdminFotoPage');
+//        }
+//        else
+//        {
+//            return $this->render('error/pageNotFound.html.twig', array(
+//                'calendarItems' => $this->calendarItems,
+//                'header' => $this->header,
+//                'wedstrijdLinkItems' => $this->groepItems,
+//            ));
+//        }
+//    }
 
 }

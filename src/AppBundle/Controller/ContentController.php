@@ -41,6 +41,8 @@ class ContentController extends BaseController
                     break;
                 case 'Laatste nieuws':
                     return $this->getNieuwsIndexPage();
+                case 'Sponsors':
+                    return $this->getSponsorsPage();
                 default:
                     $em = $this->getDoctrine()->getManager();
                     $query = $em->createQuery(
@@ -55,11 +57,13 @@ class ContentController extends BaseController
                     return $this->render('default/index.html.twig', array(
                         'content' => $content,
                         'menuItems' => $this->menuItems,
+                        'sponsors' =>$this->sponsors,
                     ));
             }
         } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
             ));
         }
     }
@@ -80,6 +84,7 @@ class ContentController extends BaseController
             default:
                 return $this->render('error/pageNotFound.html.twig', array(
                     'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
                 ));
         }
     }
@@ -100,6 +105,7 @@ class ContentController extends BaseController
         return $this->render('default/nieuws.html.twig', array(
             'nieuwsItems' => $nieuwsItems,
             'menuItems' => $this->menuItems,
+            'sponsors' =>$this->sponsors,
         ));
     }
 
@@ -142,7 +148,8 @@ class ContentController extends BaseController
                             'mails/new_password.txt.twig',
                             array(
                                 'username' => $user->getUsername(),
-                                'password' => $password
+                                'password' => $password,
+                                'sponsors' =>$this->sponsors,
                             )
                         ),
                         'text/plain'
@@ -159,6 +166,27 @@ class ContentController extends BaseController
         return $this->render('security/newPass.html.twig', array(
             'error' => $error,
             'menuItems' => $this->menuItems,
+            'sponsors' =>$this->sponsors,
+        ));
+    }
+
+    public function getSponsorsPage()
+    {
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT sponsor
+            FROM AppBundle:Sponsor sponsor');
+        $content = $query->getResult();
+        $contentItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $contentItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render('default/sponsors.html.twig', array(
+            'contentItems' => shuffle($contentItems),
+            'menuItems' => $this->menuItems,
+            'sponsors' =>$this->sponsors,
         ));
     }
 }

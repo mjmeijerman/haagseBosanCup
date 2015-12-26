@@ -62,23 +62,17 @@
             <div class="sponsor">
                 Sponsors
                 <hr />
-                <img src="{{ asset('sponsors/bosan.png') }}" alt="">
+                {% for sponsor in sponsors %}
+                {% if sponsor.website is defined %}
+                    <a href="{{ sponsor.website }}">
+                {% endif %}
+                    <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie }}" alt="" />
+                {% if sponsor.website is defined %}
+                    </a>
+                {% endif %}
                 <br />
-                <br />
-                <img src="{{ asset('sponsors/spar.png') }}" alt="">
-                <br />
-                <br />
-                <img src="{{ asset('sponsors/mila.png') }}" alt="">
-                <br />
-                <br />
-                <img src="{{ asset('sponsors/gymworld.png') }}" alt="">
-                <br />
-                <br />
-                <img src="{{ asset('sponsors/safetycamera.png') }}" alt="">
-                <br />
-                <br />
-                <img src="{{ asset('sponsors/verax.png') }}" alt="">
-                <br />
+                    {% if loop.index != sponsors|length %}<br />{% endif %}
+                {% endfor %}
             </div>
         </div>
 

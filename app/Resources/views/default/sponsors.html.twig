@@ -1,0 +1,25 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('editDefaultPage', { 'page': app.request.get('page') }) }}">
+            Sponsor toevoegen<img src="{{ asset('images/add.png') }}" width="18px" /></a>
+    {% endif %}
+    <h1>Sponsors</h1>
+    Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
+    <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a>
+    {% for content in contentItems %}
+        <p>
+            {% if content.website is defined %}
+                <a href="{{ content.website }}">
+            {% endif %}
+            <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ content.locatie }}" /><br>
+            {% if content.website is defined %}
+                </a>
+            {% endif %}
+            {% if content.omschrijving is defined %}
+                {{ content.omschrijving }}
+            {% endif %}
+        </p>
+    {% endfor %}
+{% endblock %}

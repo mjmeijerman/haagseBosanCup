@@ -19,7 +19,15 @@ class BaseController extends Controller
 
     private function getSponsors()
     {
-
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT sponsor
+            FROM AppBundle:Sponsor sponsor');
+        $content = $query->getResult();
+        for($i=0;$i<count($content);$i++)
+        {
+            $this->sponsors[$i] = $content[$i]->getAll();
+        }
     }
 
     private function getMenuItems()

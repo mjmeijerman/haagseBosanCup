@@ -57,6 +57,9 @@ class Sponsor
         $items = new \stdClass();
         $items->id = $this->id;
         $items->locatie = $this->locatie;
+        $items->naam = $this->naam;
+        $items->website = $this->website;
+        $items->omschrijving = $this->omschrijving;
         return $items;
     }
 
