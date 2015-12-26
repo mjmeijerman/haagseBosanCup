@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('editDefaultPage', { 'page': app.request.get('page') }) }}">
+        <a href="{{ path('addSponsorPage') }}">
             Sponsor toevoegen<img src="{{ asset('images/add.png') }}" width="18px" /></a>
     {% endif %}
     <h1>Sponsors</h1>

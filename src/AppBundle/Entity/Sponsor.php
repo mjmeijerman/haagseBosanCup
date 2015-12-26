@@ -196,4 +196,73 @@ class Sponsor
             unlink($this->temp);
         }
     }
+
+    /**
+     * Set naam
+     *
+     * @param string $naam
+     * @return Sponsor
+     */
+    public function setNaam($naam)
+    {
+        $this->naam = $naam;
+
+        return $this;
+    }
+
+    /**
+     * Get naam
+     *
+     * @return string 
+     */
+    public function getNaam()
+    {
+        return $this->naam;
+    }
+
+    /**
+     * Set website
+     *
+     * @param string $website
+     * @return Sponsor
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
+     * Get website
+     *
+     * @return string 
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * Set omschrijving
+     *
+     * @param string $omschrijving
+     * @return Sponsor
+     */
+    public function setOmschrijving($omschrijving)
+    {
+        $this->omschrijving = $omschrijving;
+
+        return $this;
+    }
+
+    /**
+     * Get omschrijving
+     *
+     * @return string 
+     */
+    public function getOmschrijving()
+    {
+        return $this->omschrijving;
+    }
 }
