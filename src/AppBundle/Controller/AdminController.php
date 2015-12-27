@@ -263,7 +263,7 @@ class AdminController extends BaseController
             ->add('file')
             ->add('website')
             ->add('omschrijving')
-            ->add('uploadBestand', 'submit')
+            ->add('opslaan', 'submit')
             ->getForm();
         $form->handleRequest($request);
 
@@ -280,6 +280,44 @@ class AdminController extends BaseController
                 'menuItems' => $this->menuItems,
                 'sponsors' => $this->sponsors,
             ));
+        }
+    }
+
+    /**
+     * @Route("/pagina/Sponsors/edit/{id}/", name="editSponsorPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editSponsorPage($id, Request $request)
+    {
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT sponsor
+            FROM AppBundle:Sponsor sponsor
+            WHERE sponsor.id = :id')
+            ->setParameter('id', $id);
+        $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
+        if (count($sponsor) > 0) {
+            $form = $this->createFormBuilder($sponsor)
+                ->add('naam')
+                ->add('website')
+                ->add('omschrijving')
+                ->add('opslaan', 'submit')
+                ->getForm();
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($sponsor);
+                $em->flush();
+                return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
+            } else {
+                return $this->render('default/addSponsor.html.twig', array(
+                    'form' => $form->createView(),
+                    'menuItems' => $this->menuItems,
+                    'sponsors' => $this->sponsors,
+                ));
+            }
         }
     }
 

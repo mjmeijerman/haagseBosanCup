@@ -14,6 +14,8 @@
         <p>
             <h2>{{ sponsor.naam }}
             {% if app.user and is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('editSponsorPage', { 'id': sponsor.id }) }}"><img
+                            src="{{ asset('images/edit.png') }}" width="18px"/></a>
                 <a href="{{ path('removeSponsorPage', { 'id': sponsor.id }) }}"><img
                             src="{{ asset('images/remove.png') }}" width="18px"/></a>
             {% endif %}

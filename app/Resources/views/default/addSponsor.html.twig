@@ -8,13 +8,15 @@
         {{ form_start(form) }}
         {{ form_errors(form) }}
         <table>
-            <tr>
-                <td colspan="2">{{ form_errors(form.file) }}</td>
-            </tr>
-            <tr>
-                <td>{{ form_label(form.file) }}</td>
-                <td>{{ form_widget(form.file) }}</td>
-            </tr>
+            {% if form.file is defined %}
+                <tr>
+                    <td colspan="2">{{ form_errors(form.file) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_label(form.file) }}</td>
+                    <td>{{ form_widget(form.file) }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <td colspan="2">{{ form_errors(form.naam) }}</td>
             </tr>
@@ -37,7 +39,7 @@
                 <td>{{ form_widget(form.omschrijving) }}</td>
             </tr>
         </table>
-        {{ form_widget(form.uploadBestand) }}
+        {{ form_widget(form.opslaan) }}
         {{ form_end(form) }}
     {% endif %}
 {% endblock %}
