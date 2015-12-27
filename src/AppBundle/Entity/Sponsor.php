@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Sponsor
 {
     private $temp;
+    private $temp2;
 
     /**
      * @ORM\Column(type="integer")
@@ -35,6 +36,20 @@ class Sponsor
      *      )
      */
     private $file;
+
+    /**
+     * @Assert\File(
+     *      maxSize="5M",
+     *      mimeTypes = {"image/gif", "image/jpeg", "image/pjpeg", "image/png"},
+     *      mimeTypesMessage = "Please upload a valid image: gif, jpg or png"
+     *      )
+     */
+    private $file2;
+
+    /**
+     * @ORM\Column(length=300)
+     */
+    protected $locatie2;
 
     /**
      * @ORM\Column(length=300)
@@ -60,6 +75,7 @@ class Sponsor
         $items->naam = $this->naam;
         $items->website = $this->website;
         $items->omschrijving = $this->omschrijving;
+        $items->locatie2 = $this->locatie2;
         return $items;
     }
 
@@ -89,6 +105,20 @@ class Sponsor
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
         return 'uploads/sponsors';
+    }
+
+    public function getAbsolutePath2()
+    {
+        return null === $this->locatie
+            ? null
+            : $this->getUploadRootDir().'/'.$this->locatie2;
+    }
+
+    public function getWebPath2()
+    {
+        return null === $this->locatie
+            ? null
+            : $this->getUploadDir().'/'.$this->locatie2;
     }
 
     /**
@@ -125,10 +155,33 @@ class Sponsor
     }
 
     /**
-     * Sets file.
+     * Set locatie
      *
-     * @param UploadedFile $file
+     * @param string $locatie2
+     * @return Sponsor
      */
+    public function setLocatie2($locatie2)
+    {
+        $this->locatie2 = $locatie2;
+
+        return $this;
+    }
+
+    /**
+     * Get locatie2
+     *
+     * @return string
+     */
+    public function getLocatie2()
+    {
+        return $this->locatie2;
+    }
+
+    /**
+ * Sets file.
+ *
+ * @param UploadedFile $file
+ */
     public function setFile(UploadedFile $file = null)
     {
         $this->file = $file;
@@ -194,6 +247,79 @@ class Sponsor
     {
         if (isset($this->temp)) {
             unlink($this->temp);
+        }
+    }
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file2
+     */
+    public function setFile2(UploadedFile $file2 = null)
+    {
+        $this->file2 = $file2;
+        if (isset($this->locatie2)) {
+            $this->temp2 = $this->locatie2;
+            $this->locatie2 = null;
+        } else {
+            $this->locatie2 = 'initial';
+        }
+    }
+
+    /**
+     * Get file2.
+     *
+     * @return UploadedFile
+     */
+    public function getFile2()
+    {
+        return $this->file2;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload2()
+    {
+        if (null !== $this->getFile2()) {
+            $filename = sha1(uniqid(mt_rand(), true));
+            $this->locatie2 = $filename.'_groot.'.$this->getFile2()->getClientOriginalExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload2()
+    {
+        if (null === $this->getFile2()) {
+            return;
+        }
+        $this->getFile2()->move($this->getUploadRootDir(), $this->locatie2);
+        if (isset($this->temp2)) {
+            unlink($this->getUploadRootDir().'/'.$this->temp2);
+            $this->temp2 = null;
+        }
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function storeFilenameForRemove2()
+    {
+        $this->temp = $this->getAbsolutePath2();
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload2()
+    {
+        if (isset($this->temp2)) {
+            unlink($this->temp2);
         }
     }
 

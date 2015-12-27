@@ -259,11 +259,19 @@ class AdminController extends BaseController
         $this->setBasicPageData();
         $sponsor = new Sponsor();
         $form = $this->createFormBuilder($sponsor)
-            ->add('naam')
-            ->add('file')
+            ->add('naam', null, array(
+                'required' => true
+            ))
+            ->add('file', null, array(
+                'required' => true
+            ))
+            ->add('file2', null, array(
+                'required' => true
+            ))
             ->add('website')
             ->add('omschrijving')
             ->add('opslaan', 'submit')
+
             ->getForm();
         $form->handleRequest($request);
 

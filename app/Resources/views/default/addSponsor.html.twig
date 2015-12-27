@@ -13,8 +13,17 @@
                     <td colspan="2">{{ form_errors(form.file) }}</td>
                 </tr>
                 <tr>
-                    <td>{{ form_label(form.file) }}</td>
+                    <td>Klein logo</td>
                     <td>{{ form_widget(form.file) }}</td>
+                </tr>
+            {% endif %}
+            {% if form.file2 is defined %}
+                <tr>
+                    <td colspan="2">{{ form_errors(form.file2) }}</td>
+                </tr>
+                <tr>
+                    <td>Groot logo</td>
+                    <td>{{ form_widget(form.file2) }}</td>
                 </tr>
             {% endif %}
             <tr>
