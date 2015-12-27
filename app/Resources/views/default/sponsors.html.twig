@@ -5,31 +5,33 @@
         <a href="{{ path('addSponsorPage') }}">
             Sponsor toevoegen<img src="{{ asset('images/add.png') }}" width="18px" /></a>
     {% endif %}
-    <h1>Sponsors</h1>
-    <p>Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
-    <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></p>
-    {% for sponsor in contentItems %}
-    <br>
-        <hr>
-        <p>
-            <h2>{{ sponsor.naam }}
-            {% if app.user and is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('editSponsorPage', { 'id': sponsor.id }) }}"><img
-                            src="{{ asset('images/edit.png') }}" width="18px"/></a>
-                <a href="{{ path('removeSponsorPage', { 'id': sponsor.id }) }}"><img
-                            src="{{ asset('images/remove.png') }}" width="18px"/></a>
-            {% endif %}
-            </h2>
-            {% if sponsor.website %}
-                <a href="{{ sponsor.website }}" target="_blank">
-            {% endif %}
-            <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie2 }}" width="200px" /><br>
-            {% if sponsor.website %}
-                </a>
-            {% endif %}
-            {% if sponsor.omschrijving %}
-                <div class="beschrijving">{{ sponsor.omschrijving|raw }}</div>
-            {% endif %}
-        </p>
-    {% endfor %}
+    <div class="sponsors">
+        <h1>Sponsors</h1>
+        <p>Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
+        <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></p>
+        {% for sponsor in contentItems %}
+        <br>
+            <hr>
+            <p>
+                <h2>{{ sponsor.naam }}
+                {% if app.user and is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('editSponsorPage', { 'id': sponsor.id }) }}"><img
+                                src="{{ asset('images/edit.png') }}" width="18px"/></a>
+                    <a href="{{ path('removeSponsorPage', { 'id': sponsor.id }) }}"><img
+                                src="{{ asset('images/remove.png') }}" width="18px"/></a>
+                {% endif %}
+                </h2>
+                {% if sponsor.website %}
+                    <a href="{{ sponsor.website }}" target="_blank">
+                {% endif %}
+                <img src="http://www.haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie2 }}" /><br>
+                {% if sponsor.website %}
+                    </a>
+                {% endif %}
+                {% if sponsor.omschrijving %}
+                    <div class="beschrijving">{{ sponsor.omschrijving|raw }}</div>
+                {% endif %}
+            </p>
+        {% endfor %}
+    </div>
 {% endblock %}
