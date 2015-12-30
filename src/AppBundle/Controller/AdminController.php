@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\FileUpload;
+use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Form\Type\NieuwsberichtType;
@@ -30,10 +32,215 @@ class AdminController extends BaseController
     public function getIndexPageAction()
     {
         $this->setBasicPageData();
-        return $this->render('inloggen/adminIndex.html.twig', array(
+        $fotoUploads = $this->getFotoUploads();
+        $fileUploads = $this->getFileUploads();
+        return $this->render('admin/adminIndex.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
+            'fotoUploads' => $fotoUploads,
+            'fileUploads' => $fileUploads,
         ));
+    }
+
+    private function getFotoUploads()
+    {
+        $fotoUploads = array();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT fotoupload
+            FROM AppBundle:FotoUpload fotoupload
+            ORDER BY fotoupload.naam');
+        $results = $query->getResult();
+        foreach ($results as $result) {
+            $fotoUploads[] = $result->getAll();
+        }
+        return $fotoUploads;
+    }
+
+    private function getFileUploads()
+    {
+        $fileUploads = array();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT fileupload
+            FROM AppBundle:FileUpload fileupload
+            ORDER BY fileupload.naam');
+        $results = $query->getResult();
+        foreach ($results as $result) {
+            $fileUploads[] = $result->getAll();
+        }
+        return $fileUploads;
+    }
+
+    /**
+     * @Template()
+     * @Route("/admin/foto/add/", name="addAdminFoto")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminFotoAction(Request $request)
+    {
+        $this->setBasicPageData();
+        $foto = new FotoUpload();
+        $form = $this->createFormBuilder($foto)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($foto);
+            $em->flush();
+            $this->get('helper.imageresizer')->resizeImage($foto->getAbsolutePath(), $foto->getUploadRootDir()."/" , null, $width=597);
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            return $this->render('admin/addAdminFoto.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/foto/remove/{id}/", name="removeAdminFoto")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminFoto($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->setBasicPageData();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fotoupload
+                FROM AppBundle:FotoUpload fotoupload
+                WHERE fotoupload.id = :id')
+                ->setParameter('id', $id);
+            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($foto) > 0)
+            {
+                return $this->render('admin/removeAdminFotos.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
+                    'content' => $foto->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fotoupload
+                FROM AppBundle:FotoUpload fotoupload
+                WHERE fotoupload.id = :id')
+                ->setParameter('id', $id);
+            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($foto);
+            $em->flush();
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/file/remove/{id}/", name="removeAdminFile")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminFile($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->setBasicPageData();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fileupload
+                FROM AppBundle:FileUpload fileupload
+                WHERE fileupload.id = :id')
+                ->setParameter('id', $id);
+            $file = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($file) > 0)
+            {
+                return $this->render('admin/removeAdminFiles.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
+                    'content' => $file->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'menuItems' => $this->menuItems,
+                    'sponsors' =>$this->sponsors,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fileupload
+                FROM AppBundle:FileUpload fileupload
+                WHERE fileupload.id = :id')
+                ->setParameter('id', $id);
+            $file = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($file);
+            $em->flush();
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+            ));
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/admin/file/add/", name="addAdminFile")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminFileAction(Request $request)
+    {
+        $this->setBasicPageData();
+        $file = new FileUpload();
+        $form = $this->createFormBuilder($file)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($file);
+            $em->flush();
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            return $this->render('admin/addAdminFile.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+                'form' => $form->createView(),
+            ));
+        }
     }
 
     /**

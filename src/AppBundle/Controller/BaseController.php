@@ -117,4 +117,33 @@ class BaseController extends Controller
         $this->getMenuItems();
         $this->getSponsors();
     }
+
+    /**
+     * Creates a token usable in a form
+     * @return string
+     */
+    protected function getToken()
+    {
+        $token = sha1(mt_rand());
+        if (!isset($_SESSION['tokens'])) {
+            $_SESSION['tokens'] = array($token => 1);
+        } else {
+            $_SESSION['tokens'][$token] = 1;
+        }
+        return $token;
+    }
+
+    /**
+     * Check if a token is valid. Removes it from the valid tokens list
+     * @param string $token The token
+     * @return bool
+     */
+    protected function isTokenValid($token)
+    {
+        if (!empty($_SESSION['tokens'][$token])) {
+            unset($_SESSION['tokens'][$token]);
+            return true;
+        }
+        return false;
+    }
 }

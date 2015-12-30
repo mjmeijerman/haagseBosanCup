@@ -153,6 +153,12 @@ body {
     margin-top: 3px;
 }
 
+.content #uploads {
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+}
+
 .content #inschrijven a:link, .content #inschrijven a:visited {
     background: #333;
     padding: .4em .8em;
