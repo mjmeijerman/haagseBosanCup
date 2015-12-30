@@ -81,7 +81,6 @@ class AdminController extends BaseController
             $result = $query->setMaxResults(1)->getOneOrNullResult();
             $content = "";
             if (count($result) == 1) $content = $result->getContent();
-            {
                 $form = $this->createForm(new ContentType(), $content);
                 $form->handleRequest($request);
 
