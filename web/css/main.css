@@ -3,7 +3,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     font-family: Verdana, Calibri;
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 #container {
@@ -91,7 +91,7 @@ body {
     background: #FFF;
     float: left;
     width: 675px;
-    min-height: 487px;
+    min-height: 500px;
     display: block;
     margin-left: 10px;
     margin-bottom: 20px;
@@ -153,7 +153,7 @@ body {
     margin-top: 3px;
 }
 
-.content #inschrijven a:link, #content #inschrijven a:visited {
+.content #inschrijven a:link, .content #inschrijven a:visited {
     background: #333;
     padding: .4em .8em;
     border-radius: 5px;
@@ -250,7 +250,7 @@ body {
     min-width: 50%;
 }
 
-.content #factuur:link {
+.content #factuur:link, .content #factuur:visited {
     color: #FFF;
     width: 11.5em;
     margin-top: 1.3em;
@@ -267,12 +267,12 @@ body {
     transition: .3s;
 }
 
-.content #factuur:hover {
+.content #factuur:hover, .content #factuur:active {
     color: #FFF;
     background: #333;
 }
 
-.content #indeling:link {
+.content #indeling:link, .content #indeling:visited {
     color: #FFF;
     margin-top: 1.3em;
     font-size: 1.1em;
@@ -288,7 +288,7 @@ body {
     transition: .3s;
 }
 
-.content #indeling:hover {
+.content #indeling:hover, .content #indeling:active {
     color: #FFFF00;
 }
 
