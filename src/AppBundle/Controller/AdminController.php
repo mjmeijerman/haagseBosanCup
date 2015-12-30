@@ -103,15 +103,6 @@ class AdminController extends BaseController
                         'sponsors' =>$this->sponsors,
                     ));
                 }
-            }
-            else
-            {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                ));
-            }
-
         }
         else
         {
