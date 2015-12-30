@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Haagse Bosan Cup</title>
+    <meta charset="UTF-8" />
+    {% block stylesheets %}
+        <link href="{{ asset('css/organisatie.css') }}" rel="stylesheet"/>
+    {% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}"/>
+</head>
+<body>
+<center>
+    <div id="container">
+        <div id="header">
+            <a href="{{ path('getIndexPage') }}">
+                <img src="{{ asset('images/header.png') }}" alt="" />
+            </a>
+        </div>
+
+        <div id="fill">.</div>
+        <nav id="primary_nav_wrap">
+            <ul>
+                {% for items in menuItems.hoofdmenuItems %}
+                    <li>
+                        {% if items.submenuItems is defined %}
+                            <a href="#">{{ items.naam }}</a>
+                            <ul>
+                                {% for subItems in items.submenuItems %}
+                                    <li {% if loop.index == items.submenuItems|length %}id="last"{% endif %}>
+                                        <a href="{{ path('getContent', { 'page': subItems.naam }) }}">{{ subItems.naam }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <div id="c">
+            <div class="content">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+
+        {% block javascripts %}
+
+        {% endblock %}
+    </div>
+</center>
+</body>
+</html>
