@@ -6,7 +6,9 @@ use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Sponsor;
+use AppBundle\Entity\User;
 use AppBundle\Form\Type\NieuwsberichtType;
+use AppBundle\Form\Type\OrganisatieType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,12 +36,27 @@ class AdminController extends BaseController
         $this->setBasicPageData();
         $fotoUploads = $this->getFotoUploads();
         $fileUploads = $this->getFileUploads();
+        $organisatieLeden = $this->getOrganisatieLeden();
         return $this->render('admin/adminIndex.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
             'fotoUploads' => $fotoUploads,
             'fileUploads' => $fileUploads,
+            'organisatieLeden' => $organisatieLeden,
         ));
+    }
+
+    private function getOrganisatieLeden()
+    {
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUsersByRole('ROLE_ORGANISATIE');
+        $organisatieLeden = array();
+        /** @var User $result */
+        foreach ($results as $result) {
+            $organisatieLeden[] = $result->getAll();
+        }
+        return $organisatieLeden;
     }
 
     private function getFotoUploads()
@@ -70,6 +87,115 @@ class AdminController extends BaseController
             $fileUploads[] = $result->getAll();
         }
         return $fileUploads;
+    }
+
+    /**
+     * @Route("/admin/organisatie/add/", name="addOrganisatieLid")
+     * @Method({"GET", "POST"})
+     */
+    public function addOrganisatieLid(Request $request)
+    {
+        $this->setBasicPageData();
+        $organisatieLid = new User();
+        $form = $this->createForm(new OrganisatieType(), $organisatieLid);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $organisatieLid->setRole('ROLE_ORGANISATIE');
+            $organisatieLid->setIsActive(true);
+            $password = $this->generatePassword();
+            $encoder = $this->container
+                ->get('security.encoder_factory')
+                ->getEncoder($organisatieLid);
+            $organisatieLid->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
+            $em->persist($organisatieLid);
+            $em->flush();
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Inloggegevens website Haagse Bosan Cup')
+                ->setFrom('info@haagsebosancup.nl')
+                ->setTo($organisatieLid->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'mails/new_user.txt.twig',
+                        array(
+                            'voornaam' => $organisatieLid->getVoornaam(),
+                            'username' => $organisatieLid->getUsername(),
+                            'password' => $password
+                        )
+                    ),
+                    'text/plain'
+                );
+            $this->get('mailer')->send($message);
+
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            return $this->render('admin/addOrganisatieLid.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+                'sponsors' =>$this->sponsors,
+            ));
+        }
+
+    }
+
+    /**
+     * @Route("/admin/organisatie/edit/{username}/", name="editOrganisatieLid")
+     * @Method({"GET", "POST"})
+     */
+    public function editOrganisatieLid($username, Request $request)
+    {
+        $this->setBasicPageData();
+        $organisatieLid = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUserByUsername($username);
+        $form = $this->createForm(new OrganisatieType(), $organisatieLid);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($organisatieLid);
+            $em->flush();
+
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            return $this->render('admin/addOrganisatieLid.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+                'sponsors' =>$this->sponsors,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/organisatie/remove/{username}/", name="removeOrganisatieLid")
+     * @Method({"GET", "POST"})
+     */
+    public function removeOrganisatieLid($username, Request $request)
+    {
+        $this->setBasicPageData();
+        $organisatieLid = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUserByUsername($username);
+
+        if($request->getMethod() == 'POST') {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($organisatieLid);
+            $em->flush();
+
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            $organisatieLid = $organisatieLid->getAll();
+            return $this->render('admin/removeOrganisatieLid.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+                'organisatieLid' => $organisatieLid,
+            ));
+        }
     }
 
     /**

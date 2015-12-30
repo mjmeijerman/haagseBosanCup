@@ -68,6 +68,13 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="verantwoordelijkheid", type="string", length=255, nullable=true)
+     */
+    private $verantwoordelijkheid;
+
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
 //     *
@@ -93,6 +100,19 @@ class User implements AdvancedUserInterface, \Serializable
 //     * @ORM\Column(type="integer", nullable=TRUE)
 //     */
 //    private $arrangementenZondag;
+
+    public function getAll()
+    {
+        $user = new \stdClass();
+        $user->voornaam = $this->getVoornaam();
+        $user->achternaam = $this->getAchternaam();
+        $user->email = $this->getEmail();
+        $user->id = $this->getId();
+        $user->username = $this->getUsername();
+        $user->role = $this->getRole();
+        $user->verantwoordelijkheid = $this->getVerantwoordelijkheid();
+        return $user;
+    }
 
     public function getSalt()
     {
@@ -325,5 +345,28 @@ class User implements AdvancedUserInterface, \Serializable
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set verantwoordelijkheid
+     *
+     * @param string $verantwoordelijkheid
+     * @return User
+     */
+    public function setVerantwoordelijkheid($verantwoordelijkheid)
+    {
+        $this->verantwoordelijkheid = $verantwoordelijkheid;
+
+        return $this;
+    }
+
+    /**
+     * Get verantwoordelijkheid
+     *
+     * @return string
+     */
+    public function getVerantwoordelijkheid()
+    {
+        return $this->verantwoordelijkheid;
     }
 }

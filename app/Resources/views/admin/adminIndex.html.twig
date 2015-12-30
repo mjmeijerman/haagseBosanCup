@@ -11,6 +11,36 @@
     <i>Ingelogd als Admin</i>
 
     <hr>
+
+    <h2>Organisatie
+        <a href="{{ path('addOrganisatieLid') }}">
+            <img src="{{ asset('images/add.png') }}" width="18px"/>
+        </a></h2>
+    <table border="1">
+        <tr>
+            <th>Naam</th>
+            <th>Email</th>
+            <th>Verantwoordelijkheid</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for lid in organisatieLeden %}
+            <tr>
+                <td>{{ lid.voornaam }} {{ lid.achternaam }}</td>
+                <td>{{ lid.email }}</td>
+                <td>{{ lid.verantwoordelijkheid }}</td>
+                <td><a href="{{ path('editOrganisatieLid', { 'username': lid.username }) }}">
+                        <img src="{{ asset('images/edit.png') }}" width="18px"/>
+                    </a>
+                </td>
+                <td><a href="{{ path('removeOrganisatieLid', { 'username': lid.username }) }}">
+                        <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
     <h2>Foto's
         <a href="{{ path('addAdminFoto') }}">
             <img src="{{ asset('images/add.png') }}" width="18px"/>

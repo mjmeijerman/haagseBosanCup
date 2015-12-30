@@ -34,6 +34,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $user;
     }
 
+    public function loadUsersByRole($role)
+    {
+        $users = $this->createQueryBuilder('u')
+            ->where('u.role = :role')
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getResult();
+        return $users;
+    }
+
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
