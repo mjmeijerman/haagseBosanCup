@@ -288,7 +288,7 @@ class AdminController extends BaseController
             $result = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($result) == 1)
             {
-                $content = $result->getContent();
+                $content = $result;
             } else {
                 $content = new Content();
             }
