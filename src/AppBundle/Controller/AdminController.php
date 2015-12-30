@@ -78,8 +78,9 @@ class AdminController extends BaseController
             ORDER BY content.gewijzigd DESC')
                 ->setParameter('page', $page);
             /** @var Content $content */
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($content) > 0)
+            $result = $query->setMaxResults(1)->getOneOrNullResult();
+            $content = "";
+            if (count($result) == 1) $content = $result->getContent();
             {
                 $form = $this->createForm(new ContentType(), $content);
                 $form->handleRequest($request);
