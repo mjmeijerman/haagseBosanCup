@@ -79,8 +79,12 @@ class AdminController extends BaseController
                 ->setParameter('page', $page);
             /** @var Content $content */
             $result = $query->setMaxResults(1)->getOneOrNullResult();
-            $content = "";
-            if (count($result) == 1) $content = $result->getContent();
+            if (count($result) == 1)
+            {
+                $content = $result->getContent();
+            } else {
+                $content = new Content();
+            }
                 $form = $this->createForm(new ContentType(), $content);
                 $form->handleRequest($request);
 
