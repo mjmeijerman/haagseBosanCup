@@ -1,375 +1,249 @@
 body {
-    background: #C1C1C1 url(../images/background4.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
-    background-size: cover;
-    background-attachment: fixed;
-    font-family: Verdana, Calibri;
-    min-height: 100vh;
+    background: #BFBFBF;
+    font-family: Calibri;
 }
 
 #container {
-    width: 1100px;
-    height: 100%;
+	background: #FFF;
+	min-height: 100vh;
+	width: 940px;
+	box-shadow: 0px 0px 10px #000;
+	border-radius: 5px;
+	overflow: hidden;
 }
 
-#header {
-    width: 1000px;
-    height: 210px;
+a:visited {
+	color: blue;
 }
 
-/* LIVE SCORES LINK */
-#live img {
-    width: 140px;
-    border: 2px solid #000;
-    border-radius: 5px;
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    float: left;
+/* HEADER */
+
+header {
+	width: 100%;
+	text-align: center;
+	font-family: Verdana;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	background-size: cover;
+	color: #FFF;
+	background: #212121;
 }
 
-#live img:hover {
-    border: 2px solid #FFF;
-    border-radius: 5px;
+header h1 {
+	font-weight: normal;
+	margin: 0;
 }
 
-/* FILL - BLANK SPACE NAAST MENU */
+header h2 {
+	font-weight: normal;
+	margin: 0;
+}
 
-#fill{
-    width: 250px;
-    margin-right: 15px;
-    display: block;
-    float: left;
-    color: rgba(0,0,0,0);
+/* MENU */
+
+#menu {
+	background: #F2E609;
+	font-size: 12pt;
+	padding-left: 1.7em;
+	padding-right: 1.7em;
+	text-align: left;
+	display: block;
+	width: 100%;
+	float: left;
+	box-sizing: border-box;
+}
+
+#menu a:link, #menu a:visited {
+	color: #000;
+	text-decoration: none;
+	display: inline-block;
+	padding: .6em 1em;
+	margin: 0;
+	float: left;
+	
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
+#menu a:hover, #menu a:active {
+	background: #CCBE08;
+	color: #FFF;
+}
+
+/* NOTIFICATION & STATISTIEK*/
+
+#statistiek {
+	background: #C1C1C1;
+	display: block;
+	text-align: center;
+	padding-left: 2.3em;
+	color: #FFF;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	overflow: hidden;
+	letter-spacing: .2em;
+}
+
+#notification {
+	width: 100%;
+	background: #CC0000;
+	display: block;
+	text-align: left;
+	padding-left: 2.3em;
+	color: #FFF;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	overflow: hidden;
+	margin-top: 1em;
+}
+
+#notification b {
+	color: #FFF;
+	letter-spacing: .2em;
 }
 
 /* CONTENT */
 
-#c {
-    background: #FFF;
-    float: left;
-    width: 1075px;
-    min-height: 500px;
-    display: block;
-    margin-left: 10px;
-    margin-bottom: 20px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.index {
+	width: 60%;
 }
 
-.content {
-    color: #000;
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    text-align: left;
-    font-size: 10pt;
+article {
+	width: 90%;
+	float: left;
+	text-align: left;
+	padding: 1em 2.3em .6em 2.3em;
+	color: #212121;
 }
 
-.content .title h1 {
-    margin-top: 0;
+article h1 {
+	font-weight: normal;
 }
 
-.content .date {
-    color: #878787;
-    font-size: 8pt;
-    font-style: italic;
-    margin-top: 2em;
-    margin-bottom: .4em;
+article .titel {
+	display: block;
+	padding: .2em;
+	padding-left: .7em;
+	background: #212121;
+	color: #FFF;
+	border-radius: 5px;
 }
 
-.content h1 {
-    font-size: 1.5em;
-    font-weight: normal;
+article .titel h2 {
+	margin: 0;
+	font-size: 16pt;
+	font-weight: normal;
+	display: inline-block;
 }
 
-.content h2 {
-    font-size: 1.25em;
-    font-weight: normal;
+article .details {
+	margin-left: 5px;
+	font-style: italic;
+	font-size: 10pt;
 }
 
-.content h3 {
-    color: #000;
-    font-size: 1em;
-    margin-bottom: 2px;
-    margin-top: 2px;
+article .bericht {
+	margin-top: .4em;
+	margin-left: 5px;
 }
 
-.content hr {
-    background-color: #000;
-    height: 1px;
-    border: 0px;
-    float: left;
-    width: 635px;
-    margin-bottom: 3px;
-    margin-top: 2px;
+article h2 {
+	font-size: 14pt;
+	font-weight: normal;
+	margin: .6em 0 0 0;
 }
 
-.content p {
-    margin-top: 3px;
+/* MAILS TABEL */
+
+article #mails td{
+	vertical-align: top;
 }
 
-.content #uploads {
-    table-layout: fixed;
-    width: 100%;
-    word-wrap: break-word;
+/* INSCHRIJVINGEN PAGINA */
+
+article .cat {
+	background: rgba(255,255,0,0.55);
+	font-size: 12pt;
+	width: 100px;
+	color: #000;
+	border-radius: 5px;
+	text-decoration: none;
+	padding: 3px;
+	text-align: center;
+	margin: 3px;
 }
 
-.content a:link, .content a:visited {
-    color: blue;
-    text-decoration: underline;
+article .niv {
+	background: rgba(0,0,0,0.4);
+	font-size: 12pt;
+	width: 100px;
+	color: #FFFF00;
+	border-radius: 5px;
+	text-decoration: none;
+	padding: 3px;
+	text-align: center;
+	margin: 3px;
 }
 
-.content a:hover, .content a:active {
-    color: #000;
+article .niv_vol {
+	background: rgba(255,0,0,0.6);
+	font-size: 12pt;
+	width: 100px;
+	color: #FFFF00;
+	border-radius: 5px;
+	text-decoration: none;
+	padding: 3px;
+	text-align: center;
+	margin: 3px;
 }
 
-/* INLOG PAGINA VERENIGING */
-
-.content h4 {
-    color: #FFF;
-    margin-top: 1.3em;
-    margin-bottom: .7em;
-    font-weight: normal;
-    font-size: 1.1em;
-    background: #C1C1C1;
-    padding: .4em .5em;
-    border-radius: 5px;
+article .niv_bijnavol {
+	background: rgba(255,170,0,0.6);
+	font-size: 12pt;
+	width: 100px;
+	color: #FFFF00;
+	border-radius: 5px;
+	text-decoration: none;
+	padding: 3px;
+	text-align: center;
+	margin: 3px;
 }
 
-.content #contactpersoon {
-    min-width: 50%;
+article .inschrijvingen table {
+	border-collapse: collapse;
+	width: 100%;
+	text-align: left;
 }
 
-.content #factuur:link, .content #factuur:visited {
-    color: #FFF;
-    width: 11.5em;
-    margin-top: 1.3em;
-    font-size: 1.1em;
-    background: #FF4747;
-    display: inline-block;
-    padding: .4em .5em;
-    border-radius: 5px;
-    text-decoration: none;
-    -o-transition: .3s;
-    -ms-transition: .3s;
-    -moz-transition: .3s;
-    -webkit-transition: .3s;
-    transition: .3s;
+article .inschrijvingen th {
+	font-weight: normal;
+	text-align: right;
+	padding-right: 1em;
+	padding-left: 1em;
 }
 
-.content #factuur:hover, .content #factuur:active {
-    color: #FFF;
-    background: #333;
+article .inschrijvingen_nieuw {
+	background: #E1E1E1;
+	border-radius: 5px;
+	padding: .4em .6em;
 }
 
-.content #indeling:link, .content #indeling:visited {
-    color: #FFF;
-    margin-top: 1.3em;
-    font-size: 1.1em;
-    background: #333;
-    display: inline-block;
-    padding: .4em .5em;
-    border-radius: 5px;
-    text-decoration: none;
-    -o-transition: .3s;
-    -ms-transition: .3s;
-    -moz-transition: .3s;
-    -webkit-transition: .3s;
-    transition: .3s;
+article .inschrijvingen .vrij {
+	color: rgba(0,220,0,1);
 }
 
-.content #indeling:hover, .content #indeling:active {
-    color: #FFFF00;
+/* ASIDE */
+
+aside {
+	float: right;
+	width: 25%;
+	text-align: left;
+	margin-right: 2em;
 }
 
-.content #deelnemers {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.content #deelnemers tr:nth-child(even) {
-    background: #F1F1F1;
-}
-
-.content #wachtlijst {
-    width: 95%;
-    border-collapse: collapse;
-}
-
-.content #wachtlijst tr:nth-child(even) {
-    background: #F1F1F1;
-}
-
-.content #juryleden {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.content #juryleden tr:nth-child(even) {
-    background: #F1F1F1;
-}
-
-.content #contact {
-    color: #FFF;
-    margin-top: 1.3em;
-    margin-bottom: .7em;
-    font-weight: normal;
-    font-size: 1.1em;
-    background: #333;
-    padding: .4em .5em;
-    border-radius: 5px;
-}
-
-/* SOCIAL - FACEBOOK */
-
-#social {
-    width: 150px;
-    float: right;
-    margin-left: 0;
-    margin-top: 10px;
-    margin-right: 10px;
-    text-align: center;
-}
-
-/* ---------------------- */
-
-#primary_nav_wrap
-{
-    color: #FFF;
-    height: 35px;
-    width: 670px;
-    float: left;
-    border-radius: 5px;
-    font-size: 11pt;
-}
-
-#primary_nav_wrap ul
-{
-    list-style:none;
-    position:relative;
-    float:left;
-    margin:0;
-    padding:0;
-}
-
-#primary_nav_wrap ul a
-{
-    display: block;
-    color: #FFFF00;
-    text-decoration:none;
-    line-height:35px;
-    padding:0 15px;
-}
-
-#primary_nav_wrap ul li
-{
-    position:relative;
-    float:left;
-    margin:0;
-    padding:0;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-
-    -o-transition: .5s;
-    -ms-transition: .5s;
-    -moz-transition: .5s;
-    -webkit-transition: .5s;
-    transition: .5s;
-}
-
-#primary_nav_wrap ul li:hover
-{
-    background: rgba(0,0,0,0.6);
-    /* background:#C1C1C1; */
-}
-
-#primary_nav_wrap ul ul
-{
-    color: #FF0000;
-    text-align: left;
-    display:none;
-    position:absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(0,0,0,0.7);
-    /* background:#C0C0C0; */
-    padding:0;
-    border-radius: 5px;
-    border-top-left-radius: 0px;
-
-    -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein .5s; /* Firefox < 16 */
-    -ms-animation: fadein .5s; /* Internet Explorer */
-    -o-animation: fadein .5s; /* Opera < 12.1 */
-    animation: fadein .5s;
-}
-
-#primary_nav_wrap ul ul li
-{
-    float: none;
-    width: 250px;
-}
-
-#primary_nav_wrap ul ul li:hover
-{
-    background: #0F0F0F;
-    /* background: #9E9E9E; */
-    border-radius: 0px;
-}
-
-#primary_nav_wrap #last:hover {
-    background: #0F0F0F;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-#primary_nav_wrap ul ul a
-{
-    line-height:120%;
-    padding:10px 15px;
-}
-
-#primary_nav_wrap ul ul ul
-{
-    top:0;
-    left:100%;
-}
-
-#primary_nav_wrap ul li:hover > ul
-{
-    display:block;
-}
-
-/* ---------------------- */
-
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Firefox < 16 */
-@-moz-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Internet Explorer */
-@-ms-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Opera < 12.1 */
-@-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+aside h1 {
+	font-weight: normal;
 }
