@@ -11,39 +11,43 @@
 <body>
 <center>
     <div id="container">
-        <div id="header">
+        <header>
             <a href="{{ path('getIndexPage') }}">
-                <img src="{{ asset('images/header.png') }}" alt="" />
+                <img src="{{ asset('images/header_organisatie.png') }}" alt="" />
             </a>
-        </div>
+        </header>
 
-        <div id="fill">.</div>
-        <nav id="primary_nav_wrap">
-            <ul>
+        <nav id="menu">
                 {% for items in menuItems.hoofdmenuItems %}
-                    <li>
                         {% if items.submenuItems is defined %}
                             <a href="#">{{ items.naam }}</a>
-                            <ul>
-                                {% for subItems in items.submenuItems %}
-                                    <li {% if loop.index == items.submenuItems|length %}id="last"{% endif %}>
-                                        <a href="{{ path('getContent', { 'page': subItems.naam }) }}">{{ subItems.naam }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
                         {% else %}
                             <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
                         {% endif %}
-                    </li>
                 {% endfor %}
-            </ul>
         </nav>
+		
+		<div id="statistiek">
+			0 VERENIGINGEN | 6 TURNSTERS | 4 WACHTLIJST | 1 JURYLID
+		</div>
 
-        <div id="c">
-            <div class="content">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+        <article class="index">
+            {% block body %}{% endblock %}
+        </article>
+		
+		<aside>
+			<h1>To do</h1>
+			<ul>
+				<li><s>Ding 1</s>
+					<ul>
+						<li>Subding 1</li>
+						<li>Subding 2</li>
+					</ul>
+					</li>
+				<li>Ding 3</li>
+				<li>Ding 4</li>
+			</ul>
+		</aside>
 
         {% block javascripts %}
 
