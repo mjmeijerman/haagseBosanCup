@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Haagse Bosan Cup</title>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     {% block stylesheets %}
         <link href="{{ asset('css/organisatie.css') }}" rel="stylesheet"/>
     {% endblock %}
@@ -13,41 +13,41 @@
     <div id="container">
         <header>
             <a href="{{ path('getIndexPage') }}">
-                <img src="{{ asset('images/header_organisatie.png') }}" alt="" />
+                <img src="{{ asset('images/header_organisatie.png') }}" alt=""/>
             </a>
         </header>
 
         <nav id="menu">
-                {% for items in menuItems.hoofdmenuItems %}
-                        {% if items.submenuItems is defined %}
-                            <a href="#">{{ items.naam }}</a>
-                        {% else %}
-                            <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
-                        {% endif %}
-                {% endfor %}
+            {% for items in menuItems.hoofdmenuItems %}
+                {% if items.submenuItems is defined %}
+                    <a href="#">{{ items.naam }}</a>
+                {% else %}
+                    <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
+                {% endif %}
+            {% endfor %}
         </nav>
-		
-		<div id="statistiek">
-			0 VERENIGINGEN | 6 TURNSTERS | 4 WACHTLIJST | 1 JURYLID
-		</div>
+
+        <div id="statistiek">
+            0 VERENIGINGEN | 6 TURNSTERS | 4 WACHTLIJST | 1 JURYLID
+        </div>
 
         <article class="index">
             {% block body %}{% endblock %}
         </article>
-		
-		<aside>
-			<h1>To do</h1>
-			<ul>
-				<li><s>Ding 1</s>
-					<ul>
-						<li>Subding 1</li>
-						<li>Subding 2</li>
-					</ul>
-					</li>
-				<li>Ding 3</li>
-				<li>Ding 4</li>
-			</ul>
-		</aside>
+
+        <aside>
+            <h1>To do</h1>
+            <ul>
+                <li><s>Ding 1</s>
+                    <ul>
+                        <li>Subding 1</li>
+                        <li>Subding 2</li>
+                    </ul>
+                </li>
+                <li>Ding 3</li>
+                <li>Ding 4</li>
+            </ul>
+        </aside>
 
         {% block javascripts %}
 
