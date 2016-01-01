@@ -19,12 +19,9 @@
 
         <nav id="menu">
             {% for items in menuItems.hoofdmenuItems %}
-                {% if items.submenuItems is defined %}
-                    <a href="#">{{ items.naam }}</a>
-                {% else %}
-                    <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
-                {% endif %}
+                <a href="{#{{ path('getContent', { 'page': items.naam }) }}#}">{{ items.naam }}</a>
             {% endfor %}
+            <a href="{{ path('logout') }}">Uitloggen</a>
         </nav>
 
         <div id="statistiek">

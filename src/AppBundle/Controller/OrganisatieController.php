@@ -24,7 +24,7 @@ class OrganisatieController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->setBasicPageData();
+        $this->setBasicPageData(true);
         return $this->render('organisatie/organisatieIndex.html.twig', array(
             'menuItems' => $this->menuItems,
         ));

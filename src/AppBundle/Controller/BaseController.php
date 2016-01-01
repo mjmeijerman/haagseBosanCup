@@ -33,6 +33,7 @@ class BaseController extends Controller
 
     private function getMenuItems()
     {
+        $this->menuItems['hoofdmenuItems'] = array();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT hoofdmenuitem
@@ -47,6 +48,21 @@ class BaseController extends Controller
                 $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['naam'] = $submenuItems[$j]->getNaam();
                 $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['id'] = $submenuItems[$j]->getId();
             }
+        }
+    }
+
+    private function getOrganisatieMenuItems()
+    {
+        $this->menuItems['hoofdmenuItems'] = array();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT organisatiemenuitem
+            FROM AppBundle:OrganisatieMenuItem organisatiemenuitem
+            ORDER BY organisatiemenuitem.positie');
+        $results = $query->getResult();
+        for($i = 0; $i < count($results); $i++) {
+            $this->menuItems['hoofdmenuItems'][$i]['naam'] = $results[$i]->getNaam();
+            $this->menuItems['hoofdmenuItems'][$i]['id'] = $results[$i]->getId();
         }
     }
 
@@ -112,9 +128,9 @@ class BaseController extends Controller
         return $password;
     }
 
-    protected function setBasicPageData()
+    protected function setBasicPageData($organisatie = false)
     {
-        $this->getMenuItems();
+        $organisatie ? $this->getOrganisatieMenuItems() : $this->getMenuItems();
         $this->getSponsors();
     }
 
