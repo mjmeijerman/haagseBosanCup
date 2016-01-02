@@ -1,0 +1,66 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <p>
+		<div class="titel">
+			<h2>Mijn gegevens</h2>
+		</div>
+		<div class="bericht">
+		    <table>
+		        <tr>
+		            <td>Gebruikersnaam: </td><td><div id="username">{{ gegevens.username }}</div></td>
+                </tr>
+                <tr>
+		            <td>Naam: </td><td><span id="Voornaam">{{ gegevens.voornaam }}</span> <span id="achternaam">{{ gegevens.achternaam }}</span></td>
+                </tr>
+                <tr>
+		            <td>Emailadres: </td><td><span id="email">{{ gegevens.email }}</span></td>
+                </tr>
+                <tr>
+		            <td>Verantwoordelijkheid: </td><td><span id="verantwoordelijkheid">{{ gegevens.verantwoordelijkheid }}</span></td>
+                </tr>
+                <tr>
+		            <td>Wachtwoord: </td><td><a href=""> Wachtwoord wijzigen</a></td>
+                </tr>
+			</table>
+		</div>
+	</p>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $('#username').click(function(){
+            var name = $(this).text();
+            $(this).html('');
+            $('<input></input>')
+                    .attr({
+                        'type': 'text',
+                        'name': 'fname',
+                        'id': 'txt_username',
+                        'size': '30',
+                        'value': name
+                    })
+                    .appendTo('#username');
+            $('#txt_username').focus();
+        });
+
+        $(document).on('blur','#txt_username', function(){
+            var name = $(this).val();
+            if( $(this).val()) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('editGegevens', {fieldName: 'username', data: name}),
+                    success: function () {
+                        $('#username').text(name);
+                    }
+                });
+            }
+        });
+    </script>
+
+
+    {#<script src="http://www.haagsebosancup.nl/js/updateFieldOnTheFly.js"></script>#}
+{% endblock %}

@@ -85,7 +85,7 @@ class ContentController extends BaseController
                 return $this->redirectToRoute('getContactpersoonIndexPage');
                 break;
             case 'ROLE_ORGANISATIE':
-                return $this->redirectToRoute('getOrganisatieIndexPage');
+                return $this->redirectToRoute('organisatieGetContent', array('page' => 'Home'));
                 break;
             default:
                 return $this->redirectToRoute('login_route');
