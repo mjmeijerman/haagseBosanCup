@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class OrganisatieController extends BaseController
 {
     /**
-     * @Route("/organisatie/{page}/", name="organisatieGetContent")
+     * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
      * @Method("GET")
      */
     public function getOrganisatiePage($page)
@@ -102,7 +102,41 @@ class OrganisatieController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($userObject);
         $em->flush();
-        $response = new Response(json_encode(array($fieldName => $returnData)));
+        $response = new Response($returnData);
+        return $response;
+    }
+
+    /**
+     * @Route("/organisatie/edit/{fieldName}/", name="removeGegevens", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function removeGegevens($fieldName)
+    {
+        /** @var User $userObject */
+        $userObject = $this->getUser();
+        $returnData = 'error';
+        switch ($fieldName) {
+            case 'username':
+                $returnData = $userObject->getUsername();
+                break;
+            case 'voornaam':
+                $returnData = $userObject->getVoornaam();
+                break;
+            case 'achternaam':
+                $returnData = $userObject->getAchternaam();
+                break;
+            case 'email':
+                $returnData = $userObject->getEmail();
+                break;
+            case 'verantwoordelijkheid':
+                $userObject->setVerantwoordelijkheid(null);
+                $returnData = $userObject->getVerantwoordelijkheid();
+                break;
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($userObject);
+        $em->flush();
+        $response = new Response($returnData);
         return $response;
     }
 

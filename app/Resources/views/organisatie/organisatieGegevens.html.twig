@@ -47,14 +47,23 @@
             $('#txt_username').focus();
         });
 
-        $(document).on('blur','#txt_username', function(){
+        $(document).on('blur keypress','#txt_username', function(e){
+            if(e.type === 'keypress' && e.keyCode !== 13) return;
             var name = $(this).val();
             if( $(this).val()) {
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('editGegevens', {fieldName: 'username', data: name}),
-                    success: function () {
-                        $('#username').text(name);
+                    success: function (data) {
+                        $('#username').text(data);
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('removeGegevens', {fieldName: 'username'}),
+                    success: function (data) {
+                        $('#username').text(data);
                     }
                 });
             }
