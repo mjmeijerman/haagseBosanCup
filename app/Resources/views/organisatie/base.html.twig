@@ -7,19 +7,22 @@
         <link href="{{ asset('css/organisatie.css') }}" rel="stylesheet"/>
     {% endblock %}
     <link rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}"/>
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 </head>
 <body>
 <center>
     <div id="container">
         <header>
-            <a href="{{ path('getIndexPage') }}">
+            <a href="{{ path('organisatieGetContent', { 'page': 'Home' }) }}">
                 <img src="{{ asset('images/header_organisatie.png') }}" alt=""/>
             </a>
         </header>
 
         <nav id="menu">
             {% for items in menuItems.hoofdmenuItems %}
-                <a href="{#{{ path('getContent', { 'page': items.naam }) }}#}">{{ items.naam }}</a>
+                <a href="{{ path('organisatieGetContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
             {% endfor %}
             <a href="{{ path('logout') }}">Uitloggen</a>
         </nav>
@@ -46,10 +49,10 @@
             </ul>
         </aside>
 
-        {% block javascripts %}
-
-        {% endblock %}
     </div>
 </center>
+{% block javascripts %}
+
+{% endblock %}
 </body>
 </html>

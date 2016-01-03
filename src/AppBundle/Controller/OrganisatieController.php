@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,15 +20,124 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class OrganisatieController extends BaseController
 {
     /**
-     * @Route("/organisatie/", name="getOrganisatieIndexPage")
+     * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
      * @Method("GET")
      */
-    public function getIndexPageAction()
+    public function getOrganisatiePage($page)
     {
         $this->setBasicPageData(true);
+        switch ($page) {
+            case 'Home':
+                return $this->getOrganisatieHomePage();
+            case 'To-do lijst':
+                return $this->getOrganisatieHomePage();
+            case 'Instellingen':
+                return $this->getOrganisatieHomePage();
+            case 'Mails':
+                return $this->getOrganisatieHomePage();
+            case 'Inschrijvingen':
+                return $this->getOrganisatieHomePage();
+            case 'Juryzaken':
+                return $this->getOrganisatieHomePage();
+            case 'Financieel':
+                return $this->getOrganisatieHomePage();
+            case 'Mijn gegevens':
+                return $this->getOrganisatieGegevensPage();
+        }
+    }
+
+    private function getGegevens()
+    {
+        $userObject = $this->getUser();
+        return $userObject->getAll();
+    }
+
+    private function getOrganisatieGegevensPage()
+    {
+        $gegevens = $this->getGegevens();
+        return $this->render('organisatie/organisatieGegevens.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'gegevens' => $gegevens,
+        ));
+    }
+
+    private function getOrganisatieHomePage()
+    {
         return $this->render('organisatie/organisatieIndex.html.twig', array(
             'menuItems' => $this->menuItems,
         ));
+    }
+
+    /**
+     * @Route("/organisatie/edit/{fieldName}/{data}/", name="editGegevens", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function editGegevens($fieldName, $data)
+    {
+        /** @var User $userObject */
+        $userObject = $this->getUser();
+        $returnData = 'error';
+        switch ($fieldName) {
+            case 'username':
+                $userObject->setUsername($data);
+                $returnData = $userObject->getUsername();
+                break;
+            case 'voornaam':
+                $userObject->setVoornaam($data);
+                $returnData = $userObject->getVoornaam();
+                break;
+            case 'achternaam':
+                $userObject->setAchternaam($data);
+                $returnData = $userObject->getAchternaam();
+                break;
+            case 'email':
+                $userObject->setEmail($data);
+                $returnData = $userObject->getEmail();
+                break;
+            case 'verantwoordelijkheid':
+                $userObject->setVerantwoordelijkheid($data);
+                $returnData = $userObject->getVerantwoordelijkheid();
+                break;
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($userObject);
+        $em->flush();
+        $response = new Response($returnData);
+        return $response;
+    }
+
+    /**
+     * @Route("/organisatie/edit/{fieldName}/", name="removeGegevens", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function removeGegevens($fieldName)
+    {
+        /** @var User $userObject */
+        $userObject = $this->getUser();
+        $returnData = 'error';
+        switch ($fieldName) {
+            case 'username':
+                $returnData = $userObject->getUsername();
+                break;
+            case 'voornaam':
+                $returnData = $userObject->getVoornaam();
+                break;
+            case 'achternaam':
+                $returnData = $userObject->getAchternaam();
+                break;
+            case 'email':
+                $returnData = $userObject->getEmail();
+                break;
+            case 'verantwoordelijkheid':
+                $userObject->setVerantwoordelijkheid(null);
+                $returnData = $userObject->getVerantwoordelijkheid();
+                break;
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($userObject);
+        $em->flush();
+        $response = new Response($returnData);
+        return $response;
     }
 
 }
