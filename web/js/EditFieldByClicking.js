@@ -27,6 +27,7 @@ function onClick(name, fieldName) {
             'type': 'text',
             'name': 'fname',
             'id': 'txt_' + fieldName,
+            'class': 'txt_edit',
             'size': '30',
             'value': name
         })
