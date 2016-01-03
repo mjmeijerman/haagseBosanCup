@@ -1,5 +1,5 @@
 body {
-	background: #C1C1C1 url(images/background4.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
+	background: #C1C1C1 url(../images/background4.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
 	background-size: cover;
 	background-attachment: fixed;
 	font-family: Verdana, Calibri;
@@ -370,7 +370,7 @@ body {
 	margin-bottom: .7em;
 	font-weight: normal;
 	font-size: 1.1em;
-	background: #A4D8A4 url(images/check.png) right no-repeat;
+	background: #A4D8A4 url(../images/check.png) right no-repeat;
 	padding: .4em .5em;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px #A4D8A4;
