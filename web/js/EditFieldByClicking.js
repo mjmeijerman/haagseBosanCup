@@ -27,7 +27,7 @@ function onClick(name, fieldName) {
             'type': 'text',
             'name': 'fname',
             'id': 'txt_' + fieldName,
-            'size': '30',
+            'size': '30', 
             'value': name
         })
         .appendTo('#' + fieldName);
