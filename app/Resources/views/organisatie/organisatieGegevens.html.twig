@@ -30,43 +30,19 @@
 {% endblock %}
 
 {% block javascripts %}
-
+    {{ parent() }}
+    <script src="{{ asset('js/editFieldByClicking.js') }}"></script>
     <script>
-        $('#username').click(function(){
+        $('#username').click(function() {
             var name = $(this).text();
-            $(this).html('');
-            $('<input></input>')
-                    .attr({
-                        'type': 'text',
-                        'name': 'fname',
-                        'id': 'txt_username',
-                        'size': '30',
-                        'value': name
-                    })
-                    .appendTo('#username');
-            $('#txt_username').focus();
+            var fieldName = this.id;
+            onClick(name, fieldName);
         });
 
         $(document).on('blur keypress','#txt_username', function(e){
-            if(e.type === 'keypress' && e.keyCode !== 13) return;
             var name = $(this).val();
-            if( $(this).val()) {
-                $.ajax({
-                    type: 'get',
-                    url: Routing.generate('editGegevens', {fieldName: 'username', data: name}),
-                    success: function (data) {
-                        $('#username').text(data);
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: 'get',
-                    url: Routing.generate('removeGegevens', {fieldName: 'username'}),
-                    success: function (data) {
-                        $('#username').text(data);
-                    }
-                });
-            }
+            var fieldName = this.id.replace('txt_', '');
+            onChange(name, fieldName, e);
         });
     </script>
 
