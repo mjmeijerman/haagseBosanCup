@@ -235,6 +235,56 @@ article .inschrijvingen .vrij {
 	color: rgba(0,220,0,1);
 }
 
+/* FACTUREN */
+
+article .facturen {
+	border-collapse: collapse;
+}
+
+article .facturen td, article .facturen th {
+	padding: .2em;
+}
+
+article .niet_voldaan {
+	background: rgba(255,0,0,0.3);
+	color: #FF0000;
+}
+
+article .bijna_voldaan {
+	background: rgba(255,140,0,0.3);
+}
+
+article .voldaan {
+	background: rgba(0,255,0,0.3);
+	color: #000;
+}
+
+/* OVERZICHT TABELLEN */
+
+article .overzicht {
+	border-collapse: collapse;
+}
+
+article .overzicht td, article .facturen th {
+	padding: .15em;
+}
+
+article .overzicht tr:nth-child(even) {
+	background: #EFEFEF;
+}
+
+article .overzicht tr {
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
+article .overzicht tr:hover {
+	background: rgba(255,255,0,0.3);
+}
+
 /* ASIDE */
 
 aside {
