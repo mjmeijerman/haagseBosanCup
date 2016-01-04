@@ -25,7 +25,7 @@ class OrganisatieController extends BaseController
      */
     public function getOrganisatiePage($page)
     {
-        $this->setBasicPageData(true);
+        $this->setBasicPageData('Organisatie');
         switch ($page) {
             case 'Home':
                 return $this->getOrganisatieHomePage();

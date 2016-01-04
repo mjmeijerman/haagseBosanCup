@@ -23,7 +23,6 @@ class ContentController extends BaseController
      */
     public function indexAction()
     {
-        // todo: change this redirect to redirect to nieuwspage
         return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
     }
 
@@ -42,18 +41,20 @@ class ContentController extends BaseController
                 case 'Laatste nieuws':
                     return $this->getNieuwsIndexPage();
                 case 'Sponsors':
-                    return $this->getSponsorsPage();
+                    return $this->render('default/sponsors.html.twig', array(
+                        'menuItems' => $this->menuItems,
+                        'sponsors' =>$this->sponsors,
+                    ));
                 default:
-                    $em = $this->getDoctrine()->getManager();
-                    $query = $em->createQuery(
-                        'SELECT content
-                    FROM AppBundle:Content content
-                    WHERE content.pagina = :page
-                    ORDER BY content.gewijzigd DESC')
-                        ->setParameter('page', $page);
-                    $result = $query->setMaxResults(1)->getOneOrNullResult();
+                    $result = $this->getDoctrine()
+                        ->getRepository('AppBundle:Content')
+                        ->findBy(
+                            array('pagina' => $page),
+                            array('gewijzigd' => 'DESC'),
+                            1
+                        );
                     $content = "";
-                    if (count($result) == 1) $content = $result->getContent();
+                    if (count($result) == 1) $content = $result[0]->getContent();
                     return $this->render('default/index.html.twig', array(
                         'content' => $content,
                         'menuItems' => $this->menuItems,
@@ -70,7 +71,6 @@ class ContentController extends BaseController
 
     private function getInloggenPageAction()
     {
-        $this->setBasicPageData();
         $user = $this->getUser();
         $roles[0] = "";
         if ($user) {
@@ -119,8 +119,6 @@ class ContentController extends BaseController
     public function getNewPassPageAction(Request $request)
     {
         $error = "";
-        $this->setBasicPageData();
-
         if($request->getMethod() == 'POST')
         {
             $username = $this->get('request')->request->get('username');
@@ -168,27 +166,6 @@ class ContentController extends BaseController
 
         return $this->render('security/newPass.html.twig', array(
             'error' => $error,
-            'menuItems' => $this->menuItems,
-            'sponsors' =>$this->sponsors,
-        ));
-    }
-
-    public function getSponsorsPage()
-    {
-        $this->setBasicPageData();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT sponsor
-            FROM AppBundle:Sponsor sponsor');
-        $content = $query->getResult();
-        $contentItems = array();
-        for($i=0;$i<count($content);$i++)
-        {
-            $contentItems[$i] = $content[$i]->getAll();
-        }
-        shuffle($contentItems);
-        return $this->render('default/sponsors.html.twig', array(
-            'contentItems' => $contentItems,
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
         ));

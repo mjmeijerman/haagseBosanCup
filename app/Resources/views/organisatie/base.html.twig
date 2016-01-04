@@ -21,8 +21,8 @@
         </header>
 
         <nav id="menu">
-            {% for items in menuItems.hoofdmenuItems %}
-                <a href="{{ path('organisatieGetContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
+            {% for menuItem in menuItems %}
+                <a href="{{ path('organisatieGetContent', { 'page': menuItem.naam }) }}">{{ menuItem.naam }}</a>
             {% endfor %}
             <a href="{{ path('logout') }}">Uitloggen</a>
         </nav>

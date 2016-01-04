@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="organisatiemenuitems")
  */
-class OrganisatieMenuItem
+class OrganisatiemenuItem
 {
     /**
      * @ORM\Column(type="integer")
@@ -26,6 +26,14 @@ class OrganisatieMenuItem
      * @ORM\Column(type="integer")
      */
     private $positie;
+
+    public function getAll()
+    {
+        $menuItems = new \stdClass();
+        $menuItems->id = $this->id;
+        $menuItems->naam = $this->naam;
+        return $menuItems;
+    }
 
     /**
      * Get id

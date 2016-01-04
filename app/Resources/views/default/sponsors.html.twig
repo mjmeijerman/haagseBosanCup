@@ -9,7 +9,7 @@
         <h1>Sponsors</h1>
         <p>Wilt u of uw bedrijf ook op de sponsorpagina komen stuurt u dan een e-mail naar
         <a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></p>
-        {% for sponsor in contentItems %}
+        {% for sponsor in sponsors %}
             <hr>
                 <h2>{{ sponsor.naam }}
                 {% if app.user and is_granted('ROLE_ADMIN') %}

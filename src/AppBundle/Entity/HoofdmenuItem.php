@@ -41,6 +41,18 @@ class HoofdmenuItem
         $this->submenuItems = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function getAll()
+    {
+        $menuItems = new \stdClass();
+        $menuItems->id = $this->id;
+        $menuItems->naam = $this->naam;
+        $menuItems->submenuItems = array();
+        foreach ($this->submenuItems as $submenuItem) {
+            $menuItems->submenuItems[] = $submenuItem->getAll();
+        }
+        return $menuItems;
+    }
+
     /**
      * Get id
      *

@@ -17,72 +17,44 @@ class BaseController extends Controller
     protected $sponsors = array();
     protected $menuItems = array();
 
-    private function getSponsors()
+    private function setSponsors()
     {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT sponsor
-            FROM AppBundle:Sponsor sponsor');
-        $content = $query->getResult();
-        for($i=0;$i<count($content);$i++)
-        {
-            $this->sponsors[$i] = $content[$i]->getAll();
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:Sponsor')
+            ->findAll();
+        foreach ($results as $result) {
+            $this->sponsors[] = $result->getAll();
         }
         shuffle($this->sponsors);
     }
 
-    private function getMenuItems()
+    private function setMenuItems($type)
     {
-        $this->menuItems['hoofdmenuItems'] = array();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT hoofdmenuitem
-            FROM AppBundle:HoofdmenuItem hoofdmenuitem
-            ORDER BY hoofdmenuitem.positie');
-        $results = $query->getResult();
-        for($i = 0; $i < count($results); $i++) {
-            $this->menuItems['hoofdmenuItems'][$i]['naam'] = $results[$i]->getNaam();
-            $this->menuItems['hoofdmenuItems'][$i]['id'] = $results[$i]->getId();
-            $submenuItems = $results[$i]->getSubmenuItems();
-            for ($j = 0; $j < count($submenuItems); $j++) {
-                $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['naam'] = $submenuItems[$j]->getNaam();
-                $this->menuItems['hoofdmenuItems'][$i]['submenuItems'][$j]['id'] = $submenuItems[$j]->getId();
-            }
-        }
-    }
-
-    private function getOrganisatieMenuItems()
-    {
-        $this->menuItems['hoofdmenuItems'] = array();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT organisatiemenuitem
-            FROM AppBundle:OrganisatieMenuItem organisatiemenuitem
-            ORDER BY organisatiemenuitem.positie');
-        $results = $query->getResult();
-        for($i = 0; $i < count($results); $i++) {
-            $this->menuItems['hoofdmenuItems'][$i]['naam'] = $results[$i]->getNaam();
-            $this->menuItems['hoofdmenuItems'][$i]['id'] = $results[$i]->getId();
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:' . $type . 'menuItem')
+            ->findAll();
+        foreach ($results as $result) {
+            $this->menuItems[] = $result->getAll();
         }
     }
 
     protected function checkIfPageExists($page)
     {
         $pageExists = false;
-        foreach ($this->menuItems['hoofdmenuItems'] as $item) {
-            if ($pageExists) break;
-            if ($item['naam'] == $page) {
+        foreach ($this->menuItems as $menuItem) {
+            if ($menuItem->naam == $page) {
                 $pageExists = true;
                 break;
             }
-            if (isset($item['submenuItems'])) {
-                foreach ($item['submenuItems'] as $subItem) {
-                    if ($subItem['naam'] == $page) {
+            if ($menuItem->submenuItems) {
+                foreach ($menuItem->submenuItems as $submenuItem) {
+                    if ($submenuItem->naam == $page) {
                         $pageExists = true;
                         break;
                     }
                 }
             }
+            if ($pageExists) break;
         }
         return $pageExists;
     }
@@ -128,10 +100,10 @@ class BaseController extends Controller
         return $password;
     }
 
-    protected function setBasicPageData($organisatie = false)
+    protected function setBasicPageData($type = 'Hoofd')
     {
-        $organisatie ? $this->getOrganisatieMenuItems() : $this->getMenuItems();
-        $this->getSponsors();
+        $this->setMenuItems($type);
+        $this->setSponsors();
     }
 
     /**

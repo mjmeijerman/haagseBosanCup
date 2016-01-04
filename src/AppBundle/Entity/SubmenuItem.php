@@ -33,6 +33,13 @@ class SubmenuItem
      */
     protected $hoofdmenuItem;
 
+    public function getAll()
+    {
+        $submenuItem = new \stdClass();
+        $submenuItem->id = $this->id;
+        $submenuItem->naam = $this->naam;
+        return $submenuItem;
+    }
 
     /**
      * Get id

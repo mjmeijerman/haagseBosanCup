@@ -42,12 +42,4 @@ class SecurityController extends BaseController
     public function loginCheckAction()
     {
     }
-
-    /**
-     * @Route("/pre_logout", name="pre_logout")
-     */
-    public function preLogout()
-    {
-        return $this->redirectToRoute('logout');
-    }
 }

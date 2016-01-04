@@ -20,19 +20,19 @@
         <div id="fill">.</div>
         <nav id="primary_nav_wrap">
             <ul>
-                {% for items in menuItems.hoofdmenuItems %}
+                {% for menuItem in menuItems %}
                     <li>
-                        {% if items.submenuItems is defined %}
-                            <a href="#">{{ items.naam }}</a>
+                        {% if menuItem.submenuItems %}
+                            <a href="#">{{ menuItem.naam }}</a>
                             <ul>
-                                {% for subItems in items.submenuItems %}
-                                    <li {% if loop.index == items.submenuItems|length %}id="last"{% endif %}>
-                                        <a href="{{ path('getContent', { 'page': subItems.naam }) }}">{{ subItems.naam }}</a>
+                                {% for submenuItem in menuItem.submenuItems %}
+                                    <li {% if loop.index == menuItem.submenuItems|length %}id="last"{% endif %}>
+                                        <a href="{{ path('getContent', { 'page': submenuItem.naam }) }}">{{ submenuItem.naam }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <a href="{{ path('getContent', { 'page': items.naam }) }}">{{ items.naam }}</a>
+                            <a href="{{ path('getContent', { 'page': menuItem.naam }) }}">{{ menuItem.naam }}</a>
                         {% endif %}
                     </li>
                 {% endfor %}
