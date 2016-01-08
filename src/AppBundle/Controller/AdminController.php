@@ -34,8 +34,8 @@ class AdminController extends BaseController
     public function getIndexPageAction()
     {
         $this->setBasicPageData();
-        $fotoUploads = $this->getFotoUploads();
-        $fileUploads = $this->getFileUploads();
+        $fotoUploads = $this->getUploads('Foto');
+        $fileUploads = $this->getUploads('File');
         $organisatieLeden = $this->getOrganisatieLeden();
         return $this->render('admin/adminIndex.html.twig', array(
             'menuItems' => $this->menuItems,
@@ -52,41 +52,25 @@ class AdminController extends BaseController
             ->getRepository('AppBundle:User')
             ->loadUsersByRole('ROLE_ORGANISATIE');
         $organisatieLeden = array();
-        /** @var User $result */
         foreach ($results as $result) {
             $organisatieLeden[] = $result->getAll();
         }
         return $organisatieLeden;
     }
 
-    private function getFotoUploads()
+    private function getUploads($type)
     {
-        $fotoUploads = array();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT fotoupload
-            FROM AppBundle:FotoUpload fotoupload
-            ORDER BY fotoupload.naam');
-        $results = $query->getResult();
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:' . $type . 'Upload')
+            ->findBy(
+                array(),
+                array('naam' => 'ASC')
+            );
+        $uploads = array();
         foreach ($results as $result) {
-            $fotoUploads[] = $result->getAll();
+            $uploads[] = $result->getAll();
         }
-        return $fotoUploads;
-    }
-
-    private function getFileUploads()
-    {
-        $fileUploads = array();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT fileupload
-            FROM AppBundle:FileUpload fileupload
-            ORDER BY fileupload.naam');
-        $results = $query->getResult();
-        foreach ($results as $result) {
-            $fileUploads[] = $result->getAll();
-        }
-        return $fileUploads;
+        return $uploads;
     }
 
     /**
@@ -101,13 +85,13 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $organisatieLid->setRole('ROLE_ORGANISATIE');
-            $organisatieLid->setIsActive(true);
             $password = $this->generatePassword();
             $encoder = $this->container
                 ->get('security.encoder_factory')
                 ->getEncoder($organisatieLid);
-            $organisatieLid->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
+            $organisatieLid->setRole('ROLE_ORGANISATIE')
+                ->setIsActive(true)
+                ->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
             $this->addToDB($organisatieLid);
 
             $subject = 'Inloggegevens website Haagse Bosan Cup';
@@ -146,9 +130,7 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($organisatieLid);
-            $em->flush();
+            $this->addToDB($organisatieLid);
 
             return $this->redirectToRoute('getAdminIndexPage');
         }
@@ -173,9 +155,7 @@ class AdminController extends BaseController
             ->loadUserByUsername($username);
 
         if($request->getMethod() == 'POST') {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($organisatieLid);
-            $em->flush();
+            $this->removeFromDB($organisatieLid);
 
             return $this->redirectToRoute('getAdminIndexPage');
         }
@@ -190,138 +170,27 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Template()
-     * @Route("/admin/foto/add/", name="addAdminFoto")
+     * @Route("/admin/file/remove/{id}/{type}/", name="removeAdminFile")
      * @Method({"GET", "POST"})
      */
-    public function addAdminFotoAction(Request $request)
+    public function removeAdminFile($id, Request $request, $type)
     {
+        $file = $this->getDoctrine()
+            ->getRepository('AppBundle:' . $type . 'Upload')
+            ->find($id);
         $this->setBasicPageData();
-        $foto = new FotoUpload();
-        $form = $this->createFormBuilder($foto)
-            ->add('naam')
-            ->add('file')
-            ->add('uploadBestand', 'submit')
-            ->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($foto);
-            $em->flush();
-            $this->get('helper.imageresizer')->resizeImage($foto->getAbsolutePath(), $foto->getUploadRootDir()."/" , null, $width=597);
-            return $this->redirectToRoute('getAdminIndexPage');
-        }
-        else {
-            return $this->render('admin/addAdminFoto.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'sponsors' =>$this->sponsors,
-                'form' => $form->createView(),
-            ));
-        }
-    }
-
-    /**
-     * @Route("/admin/foto/remove/{id}/", name="removeAdminFoto")
-     * @Method({"GET", "POST"})
-     */
-    public function removeAdminFoto($id, Request $request)
-    {
-        if($request->getMethod() == 'GET')
-        {
-            $this->setBasicPageData();
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fotoupload
-                FROM AppBundle:FotoUpload fotoupload
-                WHERE fotoupload.id = :id')
-                ->setParameter('id', $id);
-            $foto = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($foto) > 0)
-            {
-                return $this->render('admin/removeAdminFotos.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                    'content' => $foto->getAll(),
-                ));
-            }
-            else
-            {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                ));
-            }
-        }
-        elseif($request->getMethod() == 'POST')
-        {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fotoupload
-                FROM AppBundle:FotoUpload fotoupload
-                WHERE fotoupload.id = :id')
-                ->setParameter('id', $id);
-            $foto = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($foto);
-            $em->flush();
-            return $this->redirectToRoute('getAdminIndexPage');
-        }
-        else
-        {
-            return $this->render('error/pageNotFound.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'sponsors' =>$this->sponsors,
-            ));
-        }
-    }
-
-    /**
-     * @Route("/admin/file/remove/{id}/", name="removeAdminFile")
-     * @Method({"GET", "POST"})
-     */
-    public function removeAdminFile($id, Request $request)
-    {
-        if($request->getMethod() == 'GET')
-        {
-            $this->setBasicPageData();
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fileupload
-                FROM AppBundle:FileUpload fileupload
-                WHERE fileupload.id = :id')
-                ->setParameter('id', $id);
-            $file = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($file) > 0)
-            {
-                return $this->render('admin/removeAdminFiles.html.twig', array(
+        if($file) {
+            if($request->getMethod() == 'GET') {
+                return $this->render('admin/removeAdminFile.html.twig', array(
                     'menuItems' => $this->menuItems,
                     'sponsors' =>$this->sponsors,
                     'content' => $file->getAll(),
                 ));
+            } elseif($request->getMethod() == 'POST') {
+                $this->removeFromDB($file);
+                return $this->redirectToRoute('getAdminIndexPage');
             }
-            else
-            {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                ));
-            }
-        }
-        elseif($request->getMethod() == 'POST')
-        {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fileupload
-                FROM AppBundle:FileUpload fileupload
-                WHERE fileupload.id = :id')
-                ->setParameter('id', $id);
-            $file = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($file);
-            $em->flush();
-            return $this->redirectToRoute('getAdminIndexPage');
-        }
-        else
-        {
+        } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' =>$this->sponsors,
@@ -329,15 +198,24 @@ class AdminController extends BaseController
         }
     }
 
+    private function getNewFileObject($type)
+    {
+        switch ($type) {
+            case 'File': return new FileUpload();
+            case 'Foto': return new FotoUpload();
+        }
+    }
+
+
     /**
      * @Template()
-     * @Route("/admin/file/add/", name="addAdminFile")
+     * @Route("/admin/file/add/{type}/", name="addAdminFile")
      * @Method({"GET", "POST"})
      */
-    public function addAdminFileAction(Request $request)
+    public function addAdminFileAction(Request $request, $type)
     {
         $this->setBasicPageData();
-        $file = new FileUpload();
+        $file = $this->getNewFileObject($type);
         $form = $this->createFormBuilder($file)
             ->add('naam')
             ->add('file')
@@ -346,9 +224,10 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($file);
-            $em->flush();
+            $this->addToDB($file);
+            if ($type == 'Foto') {
+                $this->get('helper.imageresizer')->resizeImage($file->getAbsolutePath(), $file->getUploadRootDir()."/" , null, $width=597);
+            }
             return $this->redirectToRoute('getAdminIndexPage');
         }
         else {

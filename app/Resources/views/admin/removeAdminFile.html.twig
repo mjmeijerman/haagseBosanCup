@@ -7,7 +7,7 @@
         <table>
             <tr>
                 <td>
-                    <form method="post" action="{{ path('removeAdminFile', { id: app.request.get('id') }) }}">
+                    <form method="post" action="{{ path('removeAdminFile', { 'id': app.request.get('id'), 'type': app.request.get('type') }) }}">
                         <input name="bevestig" type="submit" value="Bevestig">
                     </form>
                 </td>

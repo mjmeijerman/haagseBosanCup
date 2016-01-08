@@ -42,7 +42,7 @@
     </table>
 
     <h2>Foto's
-        <a href="{{ path('addAdminFoto') }}">
+        <a href="{{ path('addAdminFile', { 'type': 'Foto' }) }}">
             <img src="{{ asset('images/add.png') }}" width="18px"/>
         </a></h2>
     <table id="uploads" border="1">
@@ -58,7 +58,7 @@
             <tr>
                 <td>{{ foto.naam }}</td>
                 <td>http://www.haagsebosancup.nl/uploads/adminFotos/{{ foto.locatie }}</td>
-                <td><a href="{{ path('removeAdminFoto', { 'id': foto.id }) }}">
+                <td><a href="{{ path('removeAdminFile', { 'id': foto.id, 'type': 'Foto' }) }}">
                         <img src="{{ asset('images/remove.png') }}" width="18px"/>
                     </a>
                 </td>
@@ -67,7 +67,7 @@
     </table>
 
     <h2>Overige bestanden
-        <a href="{{ path('addAdminFile') }}">
+        <a href="{{ path('addAdminFile', { 'type': 'File' }) }}">
             <img src="{{ asset('images/add.png') }}" width="18px"/>
         </a></h2>
     <table id="uploads" border="1">
@@ -83,7 +83,7 @@
             <tr>
                 <td>{{ file.naam }}</td>
                 <td>http://www.haagsebosancup.nl/uploads/adminFiles/{{ file.locatie }}</td>
-                <td><a href="{{ path('removeAdminFile', { 'id': file.id }) }}">
+                <td><a href="{{ path('removeAdminFile', { 'id': file.id, 'type': 'File' }) }}">
                         <img src="{{ asset('images/remove.png') }}" width="18px"/>
                     </a>
                 </td>

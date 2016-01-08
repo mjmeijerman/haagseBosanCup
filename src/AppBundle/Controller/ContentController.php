@@ -48,13 +48,12 @@ class ContentController extends BaseController
                 default:
                     $result = $this->getDoctrine()
                         ->getRepository('AppBundle:Content')
-                        ->findBy(
+                        ->findOneBy(
                             array('pagina' => $page),
-                            array('gewijzigd' => 'DESC'),
-                            1
+                            array('gewijzigd' => 'DESC')
                         );
                     $content = "";
-                    if (count($result) == 1) $content = $result[0]->getContent();
+                    if ($result) $content = $result->getContent();
                     return $this->render('default/index.html.twig', array(
                         'content' => $content,
                         'menuItems' => $this->menuItems,
@@ -124,12 +123,8 @@ class ContentController extends BaseController
             $username = $this->get('request')->request->get('username');
             $user = $this->getDoctrine()
                 ->getRepository('AppBundle:User')
-                ->findBy(
-                    array('username' => $username),
-                    array(),
-                    1
-                );
-            if (count($user) == 0) {
+                ->loadUserByUsername($username);
+            if (!$user) {
                 $error = 'Deze gebruikersnaam bestaat niet';
             }
             else {

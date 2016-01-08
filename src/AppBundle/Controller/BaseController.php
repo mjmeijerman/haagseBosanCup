@@ -166,4 +166,11 @@ class BaseController extends Controller
         $em->persist($object);
         $em->flush();
     }
+
+    protected function removeFromDB($object)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($object);
+        $em->flush();
+    }
 }
