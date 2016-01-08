@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\SendMail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -149,6 +150,14 @@ class BaseController extends Controller
                 'text/plain'
             );
         $this->get('mailer')->send($message);
+
+        $sendMail = new SendMail();
+        $sendMail->setDatum(new \DateTime())
+            ->setVan($from)
+            ->setAan($to)
+            ->setOnderwerp($subject)
+            ->setBericht($message->getBody());
+        $this->addToDB($sendMail);
     }
 
     protected function addToDB($object)
