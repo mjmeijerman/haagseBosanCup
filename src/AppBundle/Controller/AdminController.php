@@ -101,7 +101,6 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $organisatieLid->setRole('ROLE_ORGANISATIE');
             $organisatieLid->setIsActive(true);
             $password = $this->generatePassword();
@@ -109,25 +108,17 @@ class AdminController extends BaseController
                 ->get('security.encoder_factory')
                 ->getEncoder($organisatieLid);
             $organisatieLid->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
-            $em->persist($organisatieLid);
-            $em->flush();
+            $this->addToDB($organisatieLid);
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject('Inloggegevens website Haagse Bosan Cup')
-                ->setFrom('info@haagsebosancup.nl')
-                ->setTo($organisatieLid->getEmail())
-                ->setBody(
-                    $this->renderView(
-                        'mails/new_user.txt.twig',
-                        array(
-                            'voornaam' => $organisatieLid->getVoornaam(),
-                            'username' => $organisatieLid->getUsername(),
-                            'password' => $password
-                        )
-                    ),
-                    'text/plain'
-                );
-            $this->get('mailer')->send($message);
+            $subject = 'Inloggegevens website Haagse Bosan Cup';
+            $to = $organisatieLid->getEmail();
+            $view = 'mails/new_user.txt.twig';
+            $mailParameters = array(
+                'voornaam' => $organisatieLid->getVoornaam(),
+                'username' => $organisatieLid->getUsername(),
+                'password' => $password
+            );
+            $this->sendEmail($subject, $to, $view, $mailParameters);
 
             return $this->redirectToRoute('getAdminIndexPage');
         }

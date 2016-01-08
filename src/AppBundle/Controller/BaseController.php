@@ -134,4 +134,27 @@ class BaseController extends Controller
         }
         return false;
     }
+
+    protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@haagsebosancup.nl')
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $this->renderView(
+                    $view,
+                    array('parameters' => $parameters)
+                ),
+                'text/plain'
+            );
+        $this->get('mailer')->send($message);
+    }
+
+    protected function addToDB($object)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($object);
+        $em->flush();
+    }
 }

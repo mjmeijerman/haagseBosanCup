@@ -94,16 +94,16 @@ class ContentController extends BaseController
 
     private function getNieuwsIndexPage()
     {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT nieuwsbericht
-            FROM AppBundle:Nieuwsbericht nieuwsbericht
-            ORDER BY nieuwsbericht.id DESC');
-        $content = $query->setMaxResults(10)->getResult();
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:Nieuwsbericht')
+            ->findBy(
+                array(),
+                array('id' => 'DESC'),
+                10
+            );
         $nieuwsItems = array();
-        for($i=0;$i<count($content);$i++)
-        {
-            $nieuwsItems[$i] = $content[$i]->getAll();
+        foreach ($results as $result) {
+            $nieuwsItems[] = $result->getAll();
         }
         return $this->render('default/nieuws.html.twig', array(
             'nieuwsItems' => $nieuwsItems,
@@ -122,44 +122,32 @@ class ContentController extends BaseController
         if($request->getMethod() == 'POST')
         {
             $username = $this->get('request')->request->get('username');
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT user
-                    FROM AppBundle:User user
-                    WHERE user.username = :username')
-                ->setParameter('username', $username);
-            /** @var User $user */
-            $user = $query->setMaxResults(1)->getOneOrNullResult();
+            $user = $this->getDoctrine()
+                ->getRepository('AppBundle:User')
+                ->findBy(
+                    array('username' => $username),
+                    array(),
+                    1
+                );
             if (count($user) == 0) {
                 $error = 'Deze gebruikersnaam bestaat niet';
             }
             else {
+                $user = $user[0];
                 $password = $this->generatePassword();
                 $encoder = $this->container
                     ->get('security.encoder_factory')
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                $em->flush();
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Inloggegevens website Haagse Bosan Cup')
-                    ->setFrom('info@haagsebosancup.nl')
-                    ->setTo($user->getEmail())
-                    ->setBody(
-                        $this->renderView(
-                            'mails/new_password.txt.twig',
-                            array(
-                                'username' => $user->getUsername(),
-                                'password' => $password,
-                                'sponsors' =>$this->sponsors,
-                            )
-                        ),
-                        'text/plain'
-                    );
-                try{$this->get('mailer')->send($message);}
-                catch(\Exception $e){
-                    var_dump($e->getMessage());die;
-                }
-
+                $this->addToDB($user);
+                $subject = 'Inloggegevens website Haagse Bosan Cup';
+                $to = $user->getEmail();
+                $view = 'mails/new_password.txt.twig';
+                $mailParameters = array(
+                    'username' => $user->getUsername(),
+                    'password' => $password,
+                );
+                $this->sendEmail($subject, $to, $view, $mailParameters);
                 $error = 'Een nieuw wachtwoord is gemaild';
             }
         }
