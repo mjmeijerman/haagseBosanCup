@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Class OrganisatiemenuItemRepository
  * @package AppBundle\Entity
  */
-class OrganisatieMenuItemRepository extends EntityRepository
+class OrganisatiemenuItemRepository extends EntityRepository
 {
 
 }
