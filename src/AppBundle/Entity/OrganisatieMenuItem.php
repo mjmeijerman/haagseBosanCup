@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="organisatiemenuitems")
  */
-class OrganisatiemenuItem
+class OrganisatieMenuItem
 {
     /**
      * @ORM\Column(type="integer")
