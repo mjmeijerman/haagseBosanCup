@@ -478,6 +478,7 @@ class AdminController extends BaseController
             $em->persist($sponsor);
             $em->flush();
             $this->get('helper.imageresizer')->resizeImage($sponsor->getAbsolutePath(), $sponsor->getUploadRootDir()."/" , null, $width=597);
+            $this->get('helper.imageresizer')->resizeImage($sponsor->getAbsolutePath2(), $sponsor->getUploadRootDir()."/" , null, $width=597);
             return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
         }
         else {
