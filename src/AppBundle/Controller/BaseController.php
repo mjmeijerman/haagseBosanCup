@@ -43,13 +43,13 @@ class BaseController extends Controller
     {
         $pageExists = false;
         foreach ($this->menuItems as $menuItem) {
-            if ($menuItem->naam == $page) {
+            if ($menuItem['naam'] == $page) {
                 $pageExists = true;
                 break;
             }
-            if ($menuItem->submenuItems) {
-                foreach ($menuItem->submenuItems as $submenuItem) {
-                    if ($submenuItem->naam == $page) {
+            if ($menuItem['submenuItems']) {
+                foreach ($menuItem['submenuItems'] as $submenuItem) {
+                    if ($submenuItem['naam'] == $page) {
                         $pageExists = true;
                         break;
                     }

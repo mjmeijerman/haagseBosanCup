@@ -43,12 +43,13 @@ class HoofdmenuItem
 
     public function getAll()
     {
-        $menuItems = new \stdClass();
-        $menuItems->id = $this->id;
-        $menuItems->naam = $this->naam;
-        $menuItems->submenuItems = array();
+        $menuItems = [
+            'id' => $this->id,
+            'naam' => $this->naam,
+            'submenuItems' => array(),
+        ];
         foreach ($this->submenuItems as $submenuItem) {
-            $menuItems->submenuItems[] = $submenuItem->getAll();
+            $menuItems['submenuItems'][] = $submenuItem->getAll();
         }
         return $menuItems;
     }

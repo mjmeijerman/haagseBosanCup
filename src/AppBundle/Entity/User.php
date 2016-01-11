@@ -103,14 +103,15 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function getAll()
     {
-        $user = new \stdClass();
-        $user->voornaam = $this->getVoornaam();
-        $user->achternaam = $this->getAchternaam();
-        $user->email = $this->getEmail();
-        $user->id = $this->getId();
-        $user->username = $this->getUsername();
-        $user->role = $this->getRole();
-        $user->verantwoordelijkheid = $this->getVerantwoordelijkheid();
+        $user = [
+            'id' => $this->id,
+            'voornaam' => $this->voornaam,
+            'achternaam' => $this->achternaam,
+            'email' => $this->email,
+            'username' => $this->username,
+            'role' => $this->role,
+            'verantwoordelijkheid' => $this->verantwoordelijkheid,
+        ];
         return $user;
     }
 

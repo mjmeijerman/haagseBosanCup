@@ -29,9 +29,10 @@ class OrganisatiemenuItem
 
     public function getAll()
     {
-        $menuItems = new \stdClass();
-        $menuItems->id = $this->id;
-        $menuItems->naam = $this->naam;
+        $menuItems = [
+            'id' => $this->id,
+            'naam' => $this->naam,
+        ];
         return $menuItems;
     }
 

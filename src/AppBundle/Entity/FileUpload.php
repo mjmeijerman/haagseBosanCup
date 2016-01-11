@@ -40,10 +40,11 @@ class FileUpload
 
     public function getAll()
     {
-        $items = new \stdClass();
-        $items->id = $this->id;
-        $items->naam = $this->naam;
-        $items->locatie = $this->locatie;
+        $items = [
+            'id' => $this->id,
+            'naam' => $this->naam,
+            'locatie' => $this->locatie,
+        ];
         return $items;
     }
 

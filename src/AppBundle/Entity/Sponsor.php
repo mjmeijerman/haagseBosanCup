@@ -69,13 +69,14 @@ class Sponsor
 
     public function getAll()
     {
-        $items = new \stdClass();
-        $items->id = $this->id;
-        $items->locatie = $this->locatie;
-        $items->naam = $this->naam;
-        $items->website = $this->website;
-        $items->omschrijving = $this->omschrijving;
-        $items->locatie2 = $this->locatie2;
+        $items = [
+            'id' => $this->id,
+            'locatie' => $this->locatie,
+            'naam' => $this->naam,
+            'website' => $this->website,
+            'omschrijving' => $this->omschrijving,
+            'locatie2' => $this->locatie2,
+        ];
         return $items;
     }
 

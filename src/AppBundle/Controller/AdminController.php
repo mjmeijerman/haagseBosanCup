@@ -255,7 +255,7 @@ class AdminController extends BaseController
                     array('pagina' => $page),
                     array('gewijzigd' => 'DESC')
                 );
-            $result ? $content = $result->getContent() : $content = new Content();
+            $result ? $content = $result : $content = new Content();
             $form = $this->createForm(new ContentType(), $content);
             $form->handleRequest($request);
 
@@ -438,9 +438,13 @@ class AdminController extends BaseController
     public function removeSponsorPage($id, Request $request)
     {
         $this->setBasicPageData();
-        $sponsor = $this->getDoctrine()
-            ->getRepository('AppBundle:Sponsor')
-            ->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT sponsor
+                FROM AppBundle:Sponsor sponsor
+                WHERE sponsor.id = :id')
+            ->setParameter('id', $id);
+        $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
         if ($sponsor) {
             if ($request->getMethod() == 'GET') {
                 return $this->render('default/removeSponsor.html.twig', array(
@@ -450,6 +454,8 @@ class AdminController extends BaseController
                 ));
             } else {
                 $this->removeFromDB($sponsor);
+                $em->remove($sponsor);
+                $em->flush();
                 return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
             }
         } else {

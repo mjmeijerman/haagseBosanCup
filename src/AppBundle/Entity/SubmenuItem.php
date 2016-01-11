@@ -35,9 +35,10 @@ class SubmenuItem
 
     public function getAll()
     {
-        $submenuItem = new \stdClass();
-        $submenuItem->id = $this->id;
-        $submenuItem->naam = $this->naam;
+        $submenuItem = [
+            'id' => $this->id,
+            'naam' => $this->naam,
+        ];
         return $submenuItem;
     }
 

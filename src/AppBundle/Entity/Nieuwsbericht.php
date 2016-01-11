@@ -40,12 +40,13 @@ class Nieuwsbericht
 
     public function getAll()
     {
-        $items = new \stdClass();
-        $items->id = $this->id;
-        $items->datumtijd = $this->datumtijd;
-        $items->jaar = $this->jaar;
-        $items->titel = $this->titel;
-        $items->bericht = $this->bericht;
+        $items = [
+            'id' => $this->id,
+            'datumtijd' => $this->datumtijd,
+            'jaar' => $this->jaar,
+            'titel' => $this->titel,
+            'bericht' => $this->bericht,
+        ];
         return $items;
     }
 
