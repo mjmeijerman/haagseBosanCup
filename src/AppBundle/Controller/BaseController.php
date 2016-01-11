@@ -160,9 +160,10 @@ class BaseController extends Controller
         $this->addToDB($sendMail);
     }
 
-    protected function addToDB($object)
+    protected function addToDB($object, $detach = null)
     {
         $em = $this->getDoctrine()->getManager();
+        if ($detach) $em->detach($detach);
         $em->persist($object);
         $em->flush();
     }

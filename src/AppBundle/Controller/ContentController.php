@@ -118,7 +118,7 @@ class ContentController extends BaseController
     public function getNewPassPageAction(Request $request)
     {
         $error = "";
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
         {
             $username = $this->get('request')->request->get('username');
             $user = $this->getDoctrine()

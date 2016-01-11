@@ -7,8 +7,10 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Entity\User;
+use AppBundle\Form\Type\EditSponsorType;
 use AppBundle\Form\Type\NieuwsberichtType;
 use AppBundle\Form\Type\OrganisatieType;
+use AppBundle\Form\Type\SponsorType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -154,7 +156,7 @@ class AdminController extends BaseController
             ->getRepository('AppBundle:User')
             ->loadUserByUsername($username);
 
-        if($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
             $this->removeFromDB($organisatieLid);
 
             return $this->redirectToRoute('getAdminIndexPage');
@@ -179,14 +181,14 @@ class AdminController extends BaseController
             ->getRepository('AppBundle:' . $type . 'Upload')
             ->find($id);
         $this->setBasicPageData();
-        if($file) {
-            if($request->getMethod() == 'GET') {
+        if ($file) {
+            if ($request->getMethod() == 'GET') {
                 return $this->render('admin/removeAdminFile.html.twig', array(
                     'menuItems' => $this->menuItems,
                     'sponsors' =>$this->sponsors,
                     'content' => $file->getAll(),
                 ));
-            } elseif($request->getMethod() == 'POST') {
+            } elseif ($request->getMethod() == 'POST') {
                 $this->removeFromDB($file);
                 return $this->redirectToRoute('getAdminIndexPage');
             }
@@ -240,32 +242,6 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Route("/pagina/{page}", name="setContent")
-     * @Method("POST")
-     */
-    public function updateContentAction($page, Request $request)
-    {
-        if ($this->checkIfPageExists($page)) {
-            switch ($page) {
-                default:
-                    $content = new Content();
-                    $content->setGewijzigd(new \DateTime("now"));
-                    $content->setPagina($page);
-                    $content->setContent($request->request->get('content'));
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($content);
-                    $em->flush();
-                    return $this->redirectToRoute('getContent', array('page' => $page));
-            }
-        } else {
-            return $this->render('error/pageNotFound.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'sponsors' =>$this->sponsors,
-            ));
-        }
-    }
-
-    /**
      * @Route("/pagina/{page}/edit/", defaults={"page" = "geschiedenis"}, name="editDefaultPage")
      * @Method({"GET", "POST"})
      */
@@ -273,45 +249,32 @@ class AdminController extends BaseController
     {
         $this->setBasicPageData();
         if ($this->checkIfPageExists($page)) {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT content
-            FROM AppBundle:Content content
-            WHERE content.pagina = :page
-            ORDER BY content.gewijzigd DESC')
-                ->setParameter('page', $page);
-            /** @var Content $content */
-            $result = $query->setMaxResults(1)->getOneOrNullResult();
-            if (count($result) == 1)
-            {
-                $content = $result;
-            } else {
-                $content = new Content();
-            }
-                $form = $this->createForm(new ContentType(), $content);
-                $form->handleRequest($request);
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Content')
+                ->findOneBy(
+                    array('pagina' => $page),
+                    array('gewijzigd' => 'DESC')
+                );
+            $result ? $content = $result->getContent() : $content = new Content();
+            $form = $this->createForm(new ContentType(), $content);
+            $form->handleRequest($request);
 
-                if ($form->isValid()) {
-                    $editedContent = new Content();
-                    $editedContent->setGewijzigd(new \DateTime('NOW'));
-                    $editedContent->setPagina($page);
-                    $editedContent->setContent($content->getContent());
-                    $em->detach($content);
-                    $em->persist($editedContent);
-                    $em->flush();
-                    return $this->redirectToRoute('getContent', array('page' => $page));
-                }
-                else {
-                    return $this->render('default/editIndex.html.twig', array(
-                        'content' => $content->getContent(),
-                        'menuItems' => $this->menuItems,
-                        'form' => $form->createView(),
-                        'sponsors' =>$this->sponsors,
-                    ));
-                }
-        }
-        else
-        {
+            if ($form->isValid()) {
+                $editedContent = new Content();
+                $editedContent->setGewijzigd(new \DateTime('NOW'))
+                    ->setPagina($page)
+                    ->setContent($content->getContent());
+                $this->addToDB($editedContent, $content);
+                return $this->redirectToRoute('getContent', array('page' => $page));
+            } else {
+                return $this->render('default/editIndex.html.twig', array(
+                    'content' => $content->getContent(),
+                    'menuItems' => $this->menuItems,
+                    'form' => $form->createView(),
+                    'sponsors' =>$this->sponsors,
+                ));
+            }
+        } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' =>$this->sponsors,
@@ -331,12 +294,10 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
-            $nieuwsbericht->setJaar(date('Y', time()));
-            $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($nieuwsbericht);
-            $em->flush();
+            $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()))
+                ->setJaar(date('Y', time()))
+                ->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
+            $this->addToDB($nieuwsbericht);
             return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
         }
         else {
@@ -355,25 +316,17 @@ class AdminController extends BaseController
     public function editNieuwsberichtPage($id, Request $request)
     {
         $this->setBasicPageData();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT nieuwsbericht
-            FROM AppBundle:Nieuwsbericht nieuwsbericht
-            WHERE nieuwsbericht.id = :id')
-            ->setParameter('id', $id);
-        /** @var Nieuwsbericht $nieuwsbericht */
-        $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-        if(count($nieuwsbericht) > 0)
-        {
+        $nieuwsbericht = $this->getDoctrine()
+            ->getRepository('AppBundle:Nieuwsbericht')
+            ->find($id);
+        if ($nieuwsbericht) {
             $nieuwsbericht->setBericht(str_replace("<br />","\n",$nieuwsbericht->getBericht()));
             $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($nieuwsbericht);
-                $em->flush();
+                $this->addToDB($nieuwsbericht);
                 return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
             }
             else {
@@ -383,9 +336,7 @@ class AdminController extends BaseController
                     'sponsors' =>$this->sponsors,
                 ));
             }
-        }
-        else
-        {
+        } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' =>$this->sponsors,
@@ -399,47 +350,22 @@ class AdminController extends BaseController
      */
     public function removeNieuwsberichtPage($id, Request $request)
     {
-        if($request->getMethod() == 'GET')
-        {
-            $this->setBasicPageData();
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM AppBundle:Nieuwsbericht nieuwsbericht
-                WHERE nieuwsbericht.id = :id')
-                ->setParameter('id', $id);
-            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($nieuwsbericht) > 0)
-            {
+        $this->setBasicPageData();
+        $nieuwsbericht = $this->getDoctrine()
+            ->getRepository('AppBundle:Nieuwsbericht')
+            ->find($id);
+        if ($nieuwsbericht) {
+            if ($request->getMethod() == 'GET') {
                 return $this->render('default/removeNieuwsbericht.html.twig', array(
                     'content' => $nieuwsbericht->getAll(),
                     'menuItems' => $this->menuItems,
                     'sponsors' =>$this->sponsors,
                 ));
+            } else {
+                $this->removeFromDB($nieuwsbericht);
+                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
             }
-            else
-            {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' =>$this->sponsors,
-                ));
-            }
-        }
-        elseif($request->getMethod() == 'POST')
-        {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM AppBundle:Nieuwsbericht nieuwsbericht
-                WHERE nieuwsbericht.id = :id')
-                ->setParameter('id', $id);
-            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($nieuwsbericht);
-            $em->flush();
-            return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
-        }
-        else
-        {
+        } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' =>$this->sponsors,
@@ -456,32 +382,15 @@ class AdminController extends BaseController
     {
         $this->setBasicPageData();
         $sponsor = new Sponsor();
-        $form = $this->createFormBuilder($sponsor)
-            ->add('naam', null, array(
-                'required' => true
-            ))
-            ->add('file', null, array(
-                'required' => true
-            ))
-            ->add('file2', null, array(
-                'required' => true
-            ))
-            ->add('website')
-            ->add('omschrijving')
-            ->add('opslaan', 'submit')
-
-            ->getForm();
+        $form = $this->createForm(new SponsorType(), $sponsor);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($sponsor);
-            $em->flush();
+            $this->addToDB($sponsor);
             $this->get('helper.imageresizer')->resizeImage($sponsor->getAbsolutePath(), $sponsor->getUploadRootDir()."/" , null, $width=597);
             $this->get('helper.imageresizer')->resizeImage($sponsor->getAbsolutePath2(), $sponsor->getUploadRootDir()."/" , null, $width=597);
             return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
-        }
-        else {
+        } else {
             return $this->render('default/addSponsor.html.twig', array(
                 'form' => $form->createView(),
                 'menuItems' => $this->menuItems,
@@ -497,26 +406,15 @@ class AdminController extends BaseController
     public function editSponsorPage($id, Request $request)
     {
         $this->setBasicPageData();
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT sponsor
-            FROM AppBundle:Sponsor sponsor
-            WHERE sponsor.id = :id')
-            ->setParameter('id', $id);
-        $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
-        if (count($sponsor) > 0) {
-            $form = $this->createFormBuilder($sponsor)
-                ->add('naam')
-                ->add('website')
-                ->add('omschrijving')
-                ->add('opslaan', 'submit')
-                ->getForm();
+        $sponsor = $this->getDoctrine()
+            ->getRepository('AppBundle:Sponsor')
+            ->find($id);
+        if ($sponsor) {
+            $form = $this->createForm(new EditSponsorType(), $sponsor);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($sponsor);
-                $em->flush();
+                $this->addToDB($sponsor);
                 return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
             } else {
                 return $this->render('default/addSponsor.html.twig', array(
@@ -525,6 +423,11 @@ class AdminController extends BaseController
                     'sponsors' => $this->sponsors,
                 ));
             }
+        } else {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' =>$this->sponsors,
+            ));
         }
     }
 
@@ -534,52 +437,26 @@ class AdminController extends BaseController
      */
     public function removeSponsorPage($id, Request $request)
     {
-        if($request->getMethod() == 'GET')
-        {
-            $this->setBasicPageData();
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT sponsor
-                FROM AppBundle:Sponsor sponsor
-                WHERE sponsor.id = :id')
-                ->setParameter('id', $id);
-            $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($sponsor) > 0)
-            {
+        $this->setBasicPageData();
+        $sponsor = $this->getDoctrine()
+            ->getRepository('AppBundle:Sponsor')
+            ->find($id);
+        if ($sponsor) {
+            if ($request->getMethod() == 'GET') {
                 return $this->render('default/removeSponsor.html.twig', array(
                     'content' => $sponsor->getAll(),
                     'menuItems' => $this->menuItems,
                     'sponsors' => $this->sponsors,
                 ));
+            } else {
+                $this->removeFromDB($sponsor);
+                return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
             }
-            else
-            {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'menuItems' => $this->menuItems,
-                    'sponsors' => $this->sponsors,
-                ));
-            }
-        }
-        elseif($request->getMethod() == 'POST')
-        {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT sponsor
-                FROM AppBundle:Sponsor sponsor
-                WHERE sponsor.id = :id')
-                ->setParameter('id', $id);
-            $sponsor = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($sponsor);
-            $em->flush();
-            return $this->redirectToRoute('getContent', array('page' => 'Sponsors'));
-        }
-        else
-        {
+        } else {
             return $this->render('error/pageNotFound.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' => $this->sponsors,
             ));
         }
     }
-
 }
