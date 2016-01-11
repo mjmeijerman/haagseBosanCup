@@ -99,9 +99,7 @@ class OrganisatieController extends BaseController
                 $returnData = $userObject->getVerantwoordelijkheid();
                 break;
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($userObject);
-        $em->flush();
+        $this->addToDB($userObject);
         $response = new Response($returnData);
         return $response;
     }
@@ -133,9 +131,7 @@ class OrganisatieController extends BaseController
                 $returnData = $userObject->getVerantwoordelijkheid();
                 break;
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($userObject);
-        $em->flush();
+        $this->addToDB($userObject);
         $response = new Response($returnData);
         return $response;
     }
