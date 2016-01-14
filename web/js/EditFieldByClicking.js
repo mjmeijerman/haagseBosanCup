@@ -6,6 +6,15 @@ function onChange(name, fieldName, e) {
             url: Routing.generate('editGegevens', {fieldName: fieldName, data: name}),
             success: function (data) {
                 $('#' + fieldName).text(data);
+                var melding;
+                if (data.error) {
+                    melding = '<div id="error">' + data.error + '</div>';
+                    $('#error_container').html(melding);
+                } else {
+                    melding = '<div id="error_success">De gegevens zijn succesvol opgeslagen</div>';
+                    $('#error_success_container').html(melding);
+                }
+                console.log(melding);
             }
         });
     } else {
