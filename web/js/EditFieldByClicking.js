@@ -1,11 +1,11 @@
-function onChange(name, fieldName, e) {
+function onChange(data, fieldName, e) {
     if(e.type === 'keypress' && e.keyCode !== 13) return;
-    if(name) {
+    if(data) {
         $.ajax({
             type: 'get',
-            url: Routing.generate('editGegevens', {fieldName: fieldName, data: name}),
+            url: Routing.generate('editGegevens', {fieldName: fieldName, data: data}),
             success: function (data) {
-                $('#' + fieldName).text(data);
+                $('#' + fieldName).text(data.data);
                 var melding;
                 if (data.error) {
                     melding = '<div id="error">' + data.error + '</div>';
@@ -28,17 +28,17 @@ function onChange(name, fieldName, e) {
     }
 }
 
-function onClick(name, fieldName) {
+function onClick(data, fieldName) {
     if ($('#txt_' + fieldName).length) return;
     $('#' + fieldName).html('');
-    $('<input></input>')
+    $('<input> </input>')
         .attr({
             'type': 'text',
             'name': 'fname',
             'id': 'txt_' + fieldName,
             'class': 'txt_edit',
             'size': '30',
-            'value': name
+            'value': data
         })
         .appendTo('#' + fieldName);
     $('#txt_' + fieldName).focus();

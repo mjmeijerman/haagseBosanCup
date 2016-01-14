@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -76,31 +77,53 @@ class OrganisatieController extends BaseController
     {
         /** @var User $userObject */
         $userObject = $this->getUser();
-        $returnData = 'error';
+        $returnData['data'] = '';
         switch ($fieldName) {
             case 'username':
-                $userObject->setUsername($data);
-                $returnData = $userObject->getUsername();
+                try {
+                    $userObject->setUsername($data);
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                $returnData['data'] = $userObject->getUsername();
                 break;
             case 'voornaam':
-                $userObject->setVoornaam($data);
-                $returnData = $userObject->getVoornaam();
+                try {
+                    $userObject->setVoornaam($data);
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                $returnData['data'] = $userObject->getVoornaam();
                 break;
             case 'achternaam':
-                $userObject->setAchternaam($data);
-                $returnData = $userObject->getAchternaam();
+                try {
+                    $userObject->setAchternaam($data);
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                $returnData['data'] = $userObject->getAchternaam();
                 break;
             case 'email':
-                $userObject->setEmail($data);
-                $returnData = $userObject->getEmail();
+                try {
+                    $userObject->setEmail($data);
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                $returnData['data'] = $userObject->getEmail();
                 break;
             case 'verantwoordelijkheid':
-                $userObject->setVerantwoordelijkheid($data);
-                $returnData = $userObject->getVerantwoordelijkheid();
+                try {
+                    $userObject->setVerantwoordelijkheid($data);
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                $returnData['data'] = $userObject->getVerantwoordelijkheid();
                 break;
+            default:
+                $returnData['error'] = 'An unknown error occurred, please contact webmaster@haagsebosancup.nl';
         }
         $this->addToDB($userObject);
-        $response = new Response($returnData);
+        $response = new JsonResponse($returnData);
         return $response;
     }
 
