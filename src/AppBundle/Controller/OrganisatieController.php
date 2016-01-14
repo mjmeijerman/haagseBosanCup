@@ -14,6 +14,8 @@ use Symfony\Component\HttpKernel\Exception;
 use AppBundle\Controller\BaseController;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Symfony\Component\Validator\Constraints\NotBlank as EmptyConstraint;
 
 /**
  * @Security("has_role('ROLE_ORGANISATIE')")
@@ -75,54 +77,87 @@ class OrganisatieController extends BaseController
      */
     public function editGegevens($fieldName, $data)
     {
+        if ($data == 'null') $data = false;
         /** @var User $userObject */
+        $emptyConstraint = new EmptyConstraint();
         $userObject = $this->getUser();
         $returnData['data'] = '';
+        $returnData['error'] = null;
         switch ($fieldName) {
             case 'username':
+                $returnData['data'] = $userObject->getUsername();
                 try {
                     $userObject->setUsername($data);
+                    $this->addToDB($userObject);
+                    $returnData['data'] = $userObject->getUsername();
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
                 }
-                $returnData['data'] = $userObject->getUsername();
                 break;
             case 'voornaam':
+                $returnData['data'] = $userObject->getVoornaam();
                 try {
                     $userObject->setVoornaam($data);
+                    $this->addToDB($userObject);
+                    $returnData['data'] = $userObject->getVoornaam();
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
                 }
-                $returnData['data'] = $userObject->getVoornaam();
                 break;
             case 'achternaam':
+                $returnData['data'] = $userObject->getAchternaam();
                 try {
                     $userObject->setAchternaam($data);
+                    $this->addToDB($userObject);
+                    $returnData['data'] = $userObject->getAchternaam();
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
                 }
-                $returnData['data'] = $userObject->getAchternaam();
                 break;
             case 'email':
-                try {
-                    $userObject->setEmail($data);
-                } catch (\Exception $e) {
-                    $returnData['error'] = $e->getMessage();
-                }
                 $returnData['data'] = $userObject->getEmail();
+                $errors = $this->get('validator')->validate(
+                    $data,
+                    $emptyConstraint
+                );
+                if (count($errors) == 0) {
+                    $emailConstraint = new EmailConstraint();
+                    $errors = $this->get('validator')->validate(
+                        $data,
+                        $emailConstraint
+                    );
+                    if (count($errors) == 0) {
+                        try {
+                            $userObject->setEmail($data);
+                            $this->addToDB($userObject);
+                            $returnData['data'] = $userObject->getEmail();
+                        } catch (\Exception $e) {
+                            $returnData['error'] = $e->getMessage();
+                        }
+                    } else {
+                        foreach ($errors as $error) {
+                            $returnData['error'] .= $error->getMessage() . ' ';
+                        }
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $returnData['error'] .= $error->getMessage() . ' ';
+                    }
+                }
                 break;
             case 'verantwoordelijkheid':
+                $returnData['data'] = $userObject->getVerantwoordelijkheid();
                 try {
                     $userObject->setVerantwoordelijkheid($data);
+                    $this->addToDB($userObject);
+                    $returnData['data'] = $userObject->getVerantwoordelijkheid();
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
                 }
-                $returnData['data'] = $userObject->getVerantwoordelijkheid();
                 break;
             default:
                 $returnData['error'] = 'An unknown error occurred, please contact webmaster@haagsebosancup.nl';
         }
-        $this->addToDB($userObject);
         $response = new JsonResponse($returnData);
         return $response;
     }

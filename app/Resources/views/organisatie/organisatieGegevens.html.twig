@@ -17,7 +17,13 @@
 		            <td>Emailadres: </td><td><span id="email" class="edit">{{ gegevens.email }}</span></td>
                 </tr>
                 <tr>
-		            <td>Verantwoordelijkheid: </td><td><span id="verantwoordelijkheid" class="edit">{{ gegevens.verantwoordelijkheid }}</span></td>
+		            <td>Verantwoordelijkheid: </td><td>
+		            {% if gegevens.verantwoordelijkheid %}
+		                <span id="verantwoordelijkheid" class="edit">{{ gegevens.verantwoordelijkheid }}</span>
+                    {% else %}
+                        <span id="verantwoordelijkheid" class="edit">Klik om te wijzigen</span>
+                    {% endif %}
+		            </td>
                 </tr>
                 <tr>
 		            <td>Wachtwoord: </td><td><a href=""> Wachtwoord wijzigen</a></td>
@@ -38,11 +44,11 @@
             var fieldName = this.id;
             onClick(data, fieldName);
         });
-
         $(document).on('blur keypress','.txt_edit', function(e){
+            if(e.type === 'keypress' && e.keyCode !== 13) return;
             var data = $(this).val();
             var fieldName = this.id.replace('txt_', '');
-            onChange(data, fieldName, e);
+            onChange(data, fieldName);
         });
     </script>
 
