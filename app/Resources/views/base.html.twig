@@ -10,8 +10,24 @@
 </head>
 <body>
 <center>
-    <div id="error_container"></div>
-    <div id="error_success_container"></div>
+    <div id="error_container">
+        {% if app.session.flashbag.get('error') is defined %}
+            {% for flash_message in app.session.flashbag.get('error') %}
+                <div id="error">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="error_success_container">
+        {% if app.session.flashbag.get('success') is defined %}
+            {% for flash_message in app.session.flashbag.get('success') %}
+                <div id="error_success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
     <div id="container">
         <div id="header">
             <a href="{{ path('getIndexPage') }}">

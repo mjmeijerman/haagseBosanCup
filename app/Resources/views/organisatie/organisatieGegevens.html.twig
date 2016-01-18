@@ -8,7 +8,7 @@
 		<div class="bericht">
 		    <table>
 		        <tr>
-		            <td>Gebruikersnaam: </td><td><span id="username" class="edit">{{ gegevens.username }}</span></td>
+		            <td>Gebruikersnaam: </td><td>{{ gegevens.username }}</td>
                 </tr>
                 <tr>
 		            <td>Naam: </td><td><span id="voornaam" class="edit">{{ gegevens.voornaam }}</span> <span id="achternaam" class="edit">{{ gegevens.achternaam }}</span></td>
@@ -26,7 +26,7 @@
 		            </td>
                 </tr>
                 <tr>
-		            <td>Wachtwoord: </td><td><a href=""> Wachtwoord wijzigen</a></td>
+		            <td>Wachtwoord: </td><td><a href="{{ path('editPassword', { 'page': app.request.get('page') }) }}">Wachtwoord wijzigen</a></td>
                 </tr>
 			</table>
 		</div>

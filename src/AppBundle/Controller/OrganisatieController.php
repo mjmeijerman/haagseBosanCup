@@ -26,7 +26,7 @@ class OrganisatieController extends BaseController
      * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
      * @Method("GET")
      */
-    public function getOrganisatiePage($page)
+    public function getOrganisatiePage($page, $successMessage = false)
     {
         $this->setBasicPageData('Organisatie');
         switch ($page) {
@@ -45,7 +45,7 @@ class OrganisatieController extends BaseController
             case 'Financieel':
                 return $this->getOrganisatieHomePage();
             case 'Mijn gegevens':
-                return $this->getOrganisatieGegevensPage();
+                return $this->getOrganisatieGegevensPage($successMessage);
         }
     }
 
@@ -55,12 +55,13 @@ class OrganisatieController extends BaseController
         return $userObject->getAll();
     }
 
-    private function getOrganisatieGegevensPage()
+    private function getOrganisatieGegevensPage($successMessage = false)
     {
         $gegevens = $this->getGegevens();
         return $this->render('organisatie/organisatieGegevens.html.twig', array(
             'menuItems' => $this->menuItems,
             'gegevens' => $gegevens,
+            'successMessage' => $successMessage,
         ));
     }
 
@@ -84,34 +85,44 @@ class OrganisatieController extends BaseController
         $returnData['data'] = '';
         $returnData['error'] = null;
         switch ($fieldName) {
-            case 'username':
-                $returnData['data'] = $userObject->getUsername();
-                try {
-                    $userObject->setUsername($data);
-                    $this->addToDB($userObject);
-                    $returnData['data'] = $userObject->getUsername();
-                } catch (\Exception $e) {
-                    $returnData['error'] = $e->getMessage();
-                }
-                break;
             case 'voornaam':
                 $returnData['data'] = $userObject->getVoornaam();
-                try {
-                    $userObject->setVoornaam($data);
-                    $this->addToDB($userObject);
-                    $returnData['data'] = $userObject->getVoornaam();
-                } catch (\Exception $e) {
-                    $returnData['error'] = $e->getMessage();
+                $errors = $this->get('validator')->validate(
+                    $data,
+                    $emptyConstraint
+                );
+                if (count($errors) == 0) {
+                    try {
+                        $userObject->setVoornaam($data);
+                        $this->addToDB($userObject);
+                        $returnData['data'] = $userObject->getVoornaam();
+                    } catch (\Exception $e) {
+                        $returnData['error'] = $e->getMessage();
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $returnData['error'] .= $error->getMessage() . ' ';
+                    }
                 }
                 break;
             case 'achternaam':
                 $returnData['data'] = $userObject->getAchternaam();
-                try {
-                    $userObject->setAchternaam($data);
-                    $this->addToDB($userObject);
-                    $returnData['data'] = $userObject->getAchternaam();
-                } catch (\Exception $e) {
-                    $returnData['error'] = $e->getMessage();
+                $errors = $this->get('validator')->validate(
+                    $data,
+                    $emptyConstraint
+                );
+                if (count($errors) == 0) {
+                    try {
+                        $userObject->setAchternaam($data);
+                        $this->addToDB($userObject);
+                        $returnData['data'] = $userObject->getAchternaam();
+                    } catch (\Exception $e) {
+                        $returnData['error'] = $e->getMessage();
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $returnData['error'] .= $error->getMessage() . ' ';
+                    }
                 }
                 break;
             case 'email':
@@ -158,40 +169,62 @@ class OrganisatieController extends BaseController
             default:
                 $returnData['error'] = 'An unknown error occurred, please contact webmaster@haagsebosancup.nl';
         }
-        $response = new JsonResponse($returnData);
-        return $response;
+        return new JsonResponse($returnData);
     }
 
     /**
-     * @Route("/organisatie/edit/{fieldName}/", name="removeGegevens", options={"expose"=true})
-     * @Method("GET")
+     * @Security("has_role('ROLE_ORGANISATIE')")
+     * @Route("/organisatie/{page}/editPassword/", name="editPassword")
+     * @Method({"GET", "POST"})
      */
-    public function removeGegevens($fieldName)
+    public function editPassword(Request $request, $page)
     {
-        /** @var User $userObject */
-        $userObject = $this->getUser();
-        $returnData = 'error';
-        switch ($fieldName) {
-            case 'username':
-                $returnData = $userObject->getUsername();
-                break;
-            case 'voornaam':
-                $returnData = $userObject->getVoornaam();
-                break;
-            case 'achternaam':
-                $returnData = $userObject->getAchternaam();
-                break;
-            case 'email':
-                $returnData = $userObject->getEmail();
-                break;
-            case 'verantwoordelijkheid':
-                $userObject->setVerantwoordelijkheid(null);
-                $returnData = $userObject->getVerantwoordelijkheid();
-                break;
+        if ($page == 'Mijn gegevens') {
+            $error = false;
+            if ($request->getMethod() == 'POST') {
+                if ($request->request->get('pass1') != $request->request->get('pass2')) {
+                    $this->addFlash(
+                        'error',
+                        'De wachtwoorden zijn niet gelijk'
+                    );
+                    $error = true;
+                }
+                if (strlen($request->request->get('pass1')) < 6) {
+                    $this->addFlash(
+                        'error',
+                        'Het wachtwoord moet minimaal 6 karakters bevatten'
+                    );
+                    $error = true;
+                }
+                if (strlen($request->request->get('pass1')) > 20) {
+                    $this->addFlash(
+                        'error',
+                        'Het wachtwoord mag maximaal 20 karakters bevatten'
+                    );
+                    $error = true;
+                }
+                if (!($error)) {
+                    $userObject = $this->getUser();
+                    $password = $request->request->get('pass1');
+                    $encoder = $this->container
+                        ->get('security.encoder_factory')
+                        ->getEncoder($userObject);
+                    $userObject->setPassword($encoder->encodePassword($password, $userObject->getSalt()));
+                    $this->addToDB($userObject);
+                    $this->addFlash(
+                        'success',
+                        'Het wachtwoord is succesvol gewijzigd'
+                    );
+                    return $this->redirectToRoute('organisatieGetContent', array(
+                        'page' => $page,
+                    ));
+                }
+            }
+            $this->setBasicPageData();
+            return $this->render('organisatie/editPassword.html.twig', array(
+                'menuItems' => $this->menuItems,
+            ));
         }
-        $this->addToDB($userObject);
-        $response = new Response($returnData);
-        return $response;
     }
 
 }
