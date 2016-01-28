@@ -55,27 +55,52 @@ class BaseController extends Controller
                     }
                 }
             }
-            if ($pageExists) break;
+            if ($pageExists) {
+                break;
+            }
         }
         return $pageExists;
     }
 
     protected function maand($maandNummer)
     {
-        switch($maandNummer)
-        {
-            case '01': return 'Januari'; break;
-            case '02': return 'Februari'; break;
-            case '03': return 'Maart'; break;
-            case '04': return 'April'; break;
-            case '05': return 'Mei'; break;
-            case '06': return 'Juni'; break;
-            case '07': return 'Juli'; break;
-            case '08': return 'Augustus'; break;
-            case '09': return 'September'; break;
-            case '10': return 'Oktober'; break;
-            case '11': return 'November'; break;
-            case '12': return 'December'; break;
+        switch ($maandNummer) {
+            case '01':
+                return 'Januari';
+                break;
+            case '02':
+                return 'Februari';
+                break;
+            case '03':
+                return 'Maart';
+                break;
+            case '04':
+                return 'April';
+                break;
+            case '05':
+                return 'Mei';
+                break;
+            case '06':
+                return 'Juni';
+                break;
+            case '07':
+                return 'Juli';
+                break;
+            case '08':
+                return 'Augustus';
+                break;
+            case '09':
+                return 'September';
+                break;
+            case '10':
+                return 'Oktober';
+                break;
+            case '11':
+                return 'November';
+                break;
+            case '12':
+                return 'December';
+                break;
         }
     }
 
@@ -84,16 +109,13 @@ class BaseController extends Controller
         $password = "";
         $possible = "2346789bcdfghjkmnpqrtvwxyzBCDFGHJKLMNPQRTVWXYZ";
         $maxlength = strlen($possible);
-        if ($length > $maxlength)
-        {
+        if ($length > $maxlength) {
             $length = $maxlength;
         }
         $i = 0;
-        while ($i < $length)
-        {
-            $char = substr($possible, mt_rand(0, $maxlength-1), 1);
-            if (!strstr($password, $char))
-            {
+        while ($i < $length) {
+            $char = substr($possible, mt_rand(0, $maxlength - 1), 1);
+            if (!strstr($password, $char)) {
                 $password .= $char;
                 $i++;
             }
@@ -163,7 +185,9 @@ class BaseController extends Controller
     protected function addToDB($object, $detach = null)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($detach) $em->detach($detach);
+        if ($detach) {
+            $em->detach($detach);
+        }
         $em->persist($object);
         $em->flush();
     }

@@ -78,7 +78,9 @@ class OrganisatieController extends BaseController
      */
     public function editGegevens($fieldName, $data)
     {
-        if ($data == 'null') $data = false;
+        if ($data == 'null') {
+            $data = false;
+        }
         /** @var User $userObject */
         $emptyConstraint = new EmptyConstraint();
         $userObject = $this->getUser();
