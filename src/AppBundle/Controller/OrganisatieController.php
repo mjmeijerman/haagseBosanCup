@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints\NotBlank as EmptyConstraint;
  */
 class OrganisatieController extends BaseController
 {
+
     /**
      * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
      * @Method("GET")
@@ -35,7 +37,7 @@ class OrganisatieController extends BaseController
             case 'To-do lijst':
                 return $this->getOrganisatieHomePage();
             case 'Instellingen':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieInstellingenPage($successMessage);
             case 'Mails':
                 return $this->getOrganisatieHomePage();
             case 'Inschrijvingen':
@@ -61,6 +63,40 @@ class OrganisatieController extends BaseController
         return $this->render('organisatie/organisatieGegevens.html.twig', array(
             'menuItems' => $this->menuItems,
             'gegevens' => $gegevens,
+            'successMessage' => $successMessage,
+        ));
+    }
+
+    private function getOrganisatieInstellingen()
+    {
+        $instellingen = array();
+        $instellingKeys = array(
+            self::OPENING_INSCHRIJVING,
+            self::SLUITING_INSCHRIJVING_TURNSTERS,
+            self::SLUITING_INSCHRIJVING_JURYLEDEN,
+            self::SLUITING_INSCHRIJVING_ARRANGEMENTEN,
+            self::SLUITING_UPLOADEN_VLOERMUZIEK,
+            self::MAX_AANTAL_TURNSTERS,
+        );
+        foreach ($instellingKeys as $key) {
+            /** @var Instellingen $result */
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Instellingen')
+                ->findOneBy(
+                    array('instelling' => $key),
+                    array('gewijzigd' => 'DESC')
+                );
+            $instellingen[$key] = ($result) ? "wel resultaat" : "";
+        }
+        return $instellingen;
+    }
+
+    private function getOrganisatieInstellingenPage($successMessage = false)
+    {
+        $instellingen = $this->getOrganisatieInstellingen();
+        return $this->render('organisatie/organisatieInstellingen.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'instellingen' => $instellingen,
             'successMessage' => $successMessage,
         ));
     }

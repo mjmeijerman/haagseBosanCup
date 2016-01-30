@@ -1,0 +1,63 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <h1>Instellingen</h1>
+    <p>
+
+    <div class="titel">
+        <h2>Overzicht</h2>
+    </div>
+    <div class="bericht">
+        <table>
+            {% for naam, instelling in instellingen %}
+                <tr>
+                    <td>{{ naam }}</td>
+                    <td>{{ instelling }}</td>
+                </tr>
+            {% endfor %}
+
+            {#<tr>
+                <td>Factuur e-mailen</td>
+                <td>Datum</td>
+                <td>Countdown</td>
+                <td><a href="#">Edit</a></td>
+                <!-- In-line edit -->
+            </tr>#}
+
+        </table>
+    </div>
+    </p>
+
+    <div class="titel">
+        <h2>Development</h2>
+    </div>
+    <div class="bericht">
+        <table>
+            <tr>
+                <td>Inschrijvingen verwijderen</td>
+                <td>Knop</td>
+            </tr>
+        </table>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/EditFieldByClicking.js') }}"></script>
+    <script>
+        $('.edit').click(function () {
+            var data = $(this).text();
+            var fieldName = this.id;
+            onClick(data, fieldName);
+        });
+        $(document).on('blur keypress', '.txt_edit', function (e) {
+            if (e.type === 'keypress' && e.keyCode !== 13) return;
+            var data = $(this).val();
+            var fieldName = this.id.replace('txt_', '');
+            onChange(data, fieldName);
+        });
+    </script>
+
+{% endblock %}
