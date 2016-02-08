@@ -18,7 +18,6 @@ class BaseController extends Controller
     const OPENING_INSCHRIJVING = 'Opening inschrijving';
     const SLUITING_INSCHRIJVING_TURNSTERS = 'Sluiting inschrijving turnsters';
     const SLUITING_INSCHRIJVING_JURYLEDEN = 'Sluiting inschrijving juryleden';
-    const SLUITING_INSCHRIJVING_ARRANGEMENTEN = 'Sluiting inschrijving arangementen';
     const SLUITING_UPLOADEN_VLOERMUZIEK = 'Sluiting uploaden vloermuziek';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
 

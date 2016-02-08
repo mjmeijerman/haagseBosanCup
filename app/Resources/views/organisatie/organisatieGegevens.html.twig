@@ -42,13 +42,13 @@
         $('.edit').click(function() {
             var data = $(this).text();
             var fieldName = this.id;
-            onClick(data, fieldName);
+            onClick(data, fieldName, 'text');
         });
         $(document).on('blur keypress','.txt_edit', function(e){
             if(e.type === 'keypress' && e.keyCode !== 13) return;
             var data = $(this).val();
             var fieldName = this.id.replace('txt_', '');
-            onChange(data, fieldName);
+            onChange(data, fieldName, 'editGegevens');
         });
     </script>
 

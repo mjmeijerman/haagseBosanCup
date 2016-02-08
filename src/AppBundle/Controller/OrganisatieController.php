@@ -67,17 +67,20 @@ class OrganisatieController extends BaseController
         ));
     }
 
-    private function getOrganisatieInstellingen()
+    private function getOrganisatieInstellingen($fieldname = false)
     {
         $instellingen = array();
-        $instellingKeys = array(
-            self::OPENING_INSCHRIJVING,
-            self::SLUITING_INSCHRIJVING_TURNSTERS,
-            self::SLUITING_INSCHRIJVING_JURYLEDEN,
-            self::SLUITING_INSCHRIJVING_ARRANGEMENTEN,
-            self::SLUITING_UPLOADEN_VLOERMUZIEK,
-            self::MAX_AANTAL_TURNSTERS,
-        );
+        if (!$fieldname) {
+            $instellingKeys = array(
+                self::OPENING_INSCHRIJVING,
+                self::SLUITING_INSCHRIJVING_TURNSTERS,
+                self::SLUITING_INSCHRIJVING_JURYLEDEN,
+                self::SLUITING_UPLOADEN_VLOERMUZIEK,
+                self::MAX_AANTAL_TURNSTERS,
+            );
+        } else {
+            $instellingKeys = array($fieldname);
+        }
         foreach ($instellingKeys as $key) {
             /** @var Instellingen $result */
             $result = $this->getDoctrine()
@@ -86,9 +89,58 @@ class OrganisatieController extends BaseController
                     array('instelling' => $key),
                     array('gewijzigd' => 'DESC')
                 );
-            $instellingen[$key] = ($result) ? "wel resultaat" : "";
+            if ($key == self::MAX_AANTAL_TURNSTERS) {
+                $instellingen[$key] = ($result) ? $result->getAantal() : "Klik om te wijzigen";
+            } else {
+                $instellingen[$key] = ($result) ? $result->getDatum() : "Klik om te wijzigen";
+                if ($result) {
+                    $instellingen[$key] = $instellingen[$key]->format('d-m-Y H:i');
+                }
+            }
         }
         return $instellingen;
+    }
+
+    /**
+     * @Route("/organisatie/editInstellingen/{fieldName}/{data}/", name="editInstellingen", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function editInstellingen($fieldName, $data)
+    {
+        $fieldName = str_replace('_', ' ', $fieldName);
+        $returnData['error'] = null;
+        $result = $this->getOrganisatieInstellingen($fieldName);
+        $returnData['data'] = $result[$fieldName];
+        if ($data == 'null') {
+            return new JsonResponse($returnData);
+        }
+        $instellingen = new Instellingen();
+        switch ($fieldName) {
+            case self::MAX_AANTAL_TURNSTERS:
+                try {
+                    $instellingen->setInstelling($fieldName);
+                    $instellingen->setGewijzigd(new \DateTime('now'));
+                    $instellingen->setAantal($data);
+                    $this->addToDB($instellingen);
+                    $result = $this->getOrganisatieInstellingen($fieldName);
+                    $returnData['data'] = $result[$fieldName];
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+                break;
+            default:
+                try {
+                    $instellingen->setInstelling($fieldName);
+                    $instellingen->setGewijzigd(new \DateTime('now'));
+                    $instellingen->setDatum(new \DateTime($data));
+                    $this->addToDB($instellingen);
+                    $result = $this->getOrganisatieInstellingen($fieldName);
+                    $returnData['data'] = $result[$fieldName];
+                } catch (\Exception $e) {
+                    $returnData['error'] = $e->getMessage();
+                }
+        }
+        return new JsonResponse($returnData);
     }
 
     private function getOrganisatieInstellingenPage($successMessage = false)

@@ -40,7 +40,7 @@ class Instellingen
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class Instellingen
     /**
      * Get instelling
      *
-     * @return string 
+     * @return string
      */
     public function getInstelling()
     {
@@ -86,7 +86,7 @@ class Instellingen
     /**
      * Get datum
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatum()
     {
@@ -109,7 +109,7 @@ class Instellingen
     /**
      * Get aantal
      *
-     * @return integer 
+     * @return integer
      */
     public function getAantal()
     {
@@ -132,7 +132,7 @@ class Instellingen
     /**
      * Get gewijzigd
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getGewijzigd()
     {

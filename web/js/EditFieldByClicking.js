@@ -1,10 +1,10 @@
-function onChange(data, fieldName) {
+function onChange(data, fieldName, route) {
     if(!data) {
         data = 'null';
     }
     $.ajax({
         type: 'get',
-        url: Routing.generate('editGegevens', {fieldName: fieldName, data: data}),
+        url: Routing.generate(route, {fieldName: fieldName, data: data}),
         success: function (data) {
             if (data.data) {
                 $('#' + fieldName).text(data.data);
@@ -23,12 +23,12 @@ function onChange(data, fieldName) {
     });
 }
 
-function onClick(data, fieldName) {
+function onClick(data, fieldName, type) {
     if ($('#txt_' + fieldName).length) return;
     $('#' + fieldName).html('');
     $('<input> </input>')
         .attr({
-            'type': 'text',
+            'type': type,
             'name': 'fname',
             'id': 'txt_' + fieldName,
             'class': 'txt_edit',
