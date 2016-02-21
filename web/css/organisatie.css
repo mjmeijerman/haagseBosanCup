@@ -1,5 +1,6 @@
 body {
-    background: #BFBFBF;
+	background: url(../images/organisatie_background_logo.png) left no-repeat, #BFBFBF url(../images/organisatie_background_logo_donar.png) right no-repeat;	background-size: 25%;
+	background-attachment: fixed;
     font-family: Calibri;
 }
 
