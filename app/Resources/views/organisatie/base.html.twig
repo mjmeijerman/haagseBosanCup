@@ -42,11 +42,12 @@
             {% for menuItem in menuItems %}
                 <a href="{{ path('organisatieGetContent', { 'page': menuItem.naam }) }}">{{ menuItem.naam }}</a>
             {% endfor %}
+            <a href="{{ path('getIndexPage') }}">HBC site</a>
             <a href="{{ path('logout') }}">Uitloggen</a>
         </nav>
 
         <div id="statistiek">
-            X VERENIGINGEN | X TURNSTERS | X WACHTLIJST | X JURYLID
+            X VERENIGINGEN | X TURNSTERS | X WACHTLIJST | X JURYLEDEN
         </div>
 
         <article class="index">

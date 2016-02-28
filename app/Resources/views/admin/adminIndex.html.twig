@@ -18,14 +18,16 @@
         </a></h2>
     <table border="1">
         <tr>
+            <th>Inlognaam</th>
             <th>Naam</th>
             <th>Email</th>
-            <th>Verantwoordelijkheid</th>
+            <th>Taak</th>
             <th></th>
             <th></th>
         </tr>
         {% for lid in organisatieLeden %}
             <tr>
+                <td>{{ lid.username }}</td>
                 <td>{{ lid.voornaam }} {{ lid.achternaam }}</td>
                 <td>{{ lid.email }}</td>
                 <td>{{ lid.verantwoordelijkheid }}</td>
