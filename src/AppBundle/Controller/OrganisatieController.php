@@ -67,40 +67,6 @@ class OrganisatieController extends BaseController
         ));
     }
 
-    private function getOrganisatieInstellingen($fieldname = false)
-    {
-        $instellingen = array();
-        if (!$fieldname) {
-            $instellingKeys = array(
-                self::OPENING_INSCHRIJVING,
-                self::SLUITING_INSCHRIJVING_TURNSTERS,
-                self::SLUITING_INSCHRIJVING_JURYLEDEN,
-                self::SLUITING_UPLOADEN_VLOERMUZIEK,
-                self::MAX_AANTAL_TURNSTERS,
-            );
-        } else {
-            $instellingKeys = array($fieldname);
-        }
-        foreach ($instellingKeys as $key) {
-            /** @var Instellingen $result */
-            $result = $this->getDoctrine()
-                ->getRepository('AppBundle:Instellingen')
-                ->findOneBy(
-                    array('instelling' => $key),
-                    array('gewijzigd' => 'DESC')
-                );
-            if ($key == self::MAX_AANTAL_TURNSTERS) {
-                $instellingen[$key] = ($result) ? $result->getAantal() : "Klik om te wijzigen";
-            } else {
-                $instellingen[$key] = ($result) ? $result->getDatum() : "Klik om te wijzigen";
-                if ($result) {
-                    $instellingen[$key] = $instellingen[$key]->format('d-m-Y H:i');
-                }
-            }
-        }
-        return $instellingen;
-    }
-
     /**
      * @Route("/organisatie/editInstellingen/{fieldName}/{data}/", name="editInstellingen", options={"expose"=true})
      * @Method("GET")

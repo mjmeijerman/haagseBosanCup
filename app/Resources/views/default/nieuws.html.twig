@@ -5,6 +5,8 @@
         <a href="{{ path('addNieuwsPage') }}">Nieuw nieuwsbericht plaatsen:<img src="{{ asset('images/add.png') }}"
                                                                                 width="18px"/></a>
     {% endif %}
+    <div id="inschrijven"><a href="{{ path('inschrijven') }}">Turnsters inschrijven &#187;</a></div>
+    <h1>Laatste nieuws</h1>
     {% for item in nieuwsItems %}
         <div class="date">{{ item.datumtijd }}</div>
         <hr>

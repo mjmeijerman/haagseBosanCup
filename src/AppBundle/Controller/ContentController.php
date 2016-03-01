@@ -48,10 +48,14 @@ class ContentController extends BaseController
                 default:
                     $result = $this->getDoctrine()
                         ->getRepository('AppBundle:Content')
-                        ->findOneBy(
+                        ->findBy(
                             array('pagina' => $page),
                             array('gewijzigd' => 'DESC')
                         );
+                    if (count($result) > 0) {
+                        /** @var Content $result */
+                        $result = $result[0];
+                    }
                     $content = "";
                     if ($result) $content = $result->getContent();
                     return $this->render('default/index.html.twig', array(

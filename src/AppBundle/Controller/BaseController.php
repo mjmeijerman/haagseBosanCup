@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\SendMail;
+use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,6 +25,122 @@ class BaseController extends Controller
 
     protected $sponsors = array();
     protected $menuItems = array();
+
+    protected function getOrganisatieInstellingen($fieldname = false)
+    {
+        $instellingen = array();
+        if (!$fieldname) {
+            $instellingKeys = array(
+                self::OPENING_INSCHRIJVING,
+                self::SLUITING_INSCHRIJVING_TURNSTERS,
+                self::SLUITING_INSCHRIJVING_JURYLEDEN,
+                self::SLUITING_UPLOADEN_VLOERMUZIEK,
+                self::MAX_AANTAL_TURNSTERS,
+            );
+        } else {
+            $instellingKeys = array($fieldname);
+        }
+        foreach ($instellingKeys as $key) {
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Instellingen')
+                ->findBy(
+                    array('instelling' => $key),
+                    array('gewijzigd' => 'DESC')
+                );
+            if (count($result) > 0) {
+                /** @var Instellingen $result */
+                $result = $result[0];
+            }
+            if ($key == self::MAX_AANTAL_TURNSTERS) {
+                $instellingen[$key] = ($result) ? $result->getAantal() : "Klik om te wijzigen";
+            } else {
+                $instellingen[$key] = ($result) ? $result->getDatum() : "Klik om te wijzigen";
+                if ($result) {
+                    $instellingen[$key] = $instellingen[$key]->format('d-m-Y H:i');
+                }
+            }
+        }
+        return $instellingen;
+    }
+
+    protected function usedVoorinschrijvingsToken($token)
+    {
+        /** @var Voorinschrijving $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Voorinschrijving')
+            ->findOneBy(
+                array('token' => $token)
+            );
+        $result->setUsedAt(new \DateTime('now'));
+        $this->addToDB($result);
+    }
+
+    protected function checkVoorinschrijvingsToken($token)
+    {
+        if ($token === null) {
+            return false;
+        } else {
+            /** @var Voorinschrijving $result */
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Voorinschrijving')
+                ->findOneBy(
+                    array('token' => $token)
+                );
+            if ($result) {
+                if ($result->getUsedAt() === null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected function inschrijvingToegestaan($token = null)
+    {
+        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
+        $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
+        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
+                time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS])) ||
+            $this->checkVoorinschrijvingsToken($token)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function wijzigTurnsterToegestaan()
+    {
+        /** @var \DateTime[] $instellingGeopend */
+        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
+        /** @var \DateTime[] $instellingGesloten */
+        $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
+        if ((time() > $instellingGeopend[self::OPENING_INSCHRIJVING]->getTimestamp() &&
+            time() < $instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS]->getTimestamp())
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function wijzigJuryToegestaan()
+    {
+        /** @var \DateTime[] $instellingGeopend */
+        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
+        /** @var \DateTime[] $instellingGesloten */
+        $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_JURYLEDEN);
+        if ((time() > $instellingGeopend[self::OPENING_INSCHRIJVING]->getTimestamp() &&
+            time() < $instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN]->getTimestamp())
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function uploadenVloermuziekToegestaan()
+    {
+        //todo: deze functie schrijven
+    }
 
     private function setSponsors()
     {
@@ -47,6 +165,7 @@ class BaseController extends Controller
 
     protected function checkIfPageExists($page)
     {
+        if (in_array($page, ['Inschrijvingsinformatie'])) return true;
         $pageExists = false;
         foreach ($this->menuItems as $menuItem) {
             if ($menuItem['naam'] == $page) {
@@ -133,6 +252,27 @@ class BaseController extends Controller
     {
         $this->setMenuItems($type);
         $this->setSponsors();
+    }
+
+    /**
+     * Creates a token voor voorinschrijvingen
+     * @return void
+     */
+    protected function createVoorinschrijvingToken($email)
+    {
+        $token = sha1(mt_rand());
+        $tokenObject = new Voorinschrijving();
+        $tokenObject->setToken($token);
+        $tokenObject->setCreatedAt(new \DateTime('now'));
+        $tokenObject->setTokenSentTo($email);
+
+        $subject = 'Voorinschrijving HBC';
+        $to = $email;
+        $view = 'mails/voorinschrijving.txt.twig';
+        $mailParameters = [
+            'token' =>$token,
+        ];
+        $this->sendEmail($subject, $to, $view, $mailParameters);
     }
 
     /**
