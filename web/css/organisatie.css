@@ -192,52 +192,52 @@ header h2 {
 /* CONTENT */
 
 .index {
-    width: 60%;
+	width: 90%;
 }
 
 article {
-    width: 90%;
-    float: left;
-    text-align: left;
-    padding: 1em 2.3em .6em 2.3em;
-    color: #212121;
+	width: 90%;
+	float: left;
+	text-align: left;
+	padding: 1em 2.3em .6em 2.3em;
+	color: #212121;
 }
 
 article h1 {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 article .titel {
-    display: block;
-    padding: .2em;
-    padding-left: .7em;
-    background: #212121;
-    color: #FFF;
-    border-radius: 5px;
+	display: block;
+	padding: .2em;
+	padding-left: .7em;
+	background: #212121;
+	color: #FFF;
+	border-radius: 5px;
 }
 
 article .titel h2 {
-    margin: 0;
-    font-size: 16pt;
-    font-weight: normal;
-    display: inline-block;
+	margin: 0;
+	font-size: 16pt;
+	font-weight: normal;
+	display: inline-block;
 }
 
 article .details {
-    margin-left: 5px;
-    font-style: italic;
-    font-size: 10pt;
+	margin-left: 5px;
+	font-style: italic;
+	font-size: 10pt;
 }
 
 article .bericht {
-    margin-top: .4em;
-    margin-left: 5px;
+	margin-top: .4em;
+	margin-left: 5px;
 }
 
 article h2 {
-    font-size: 14pt;
-    font-weight: normal;
-    margin: .6em 0 0 0;
+	font-size: 14pt;
+	font-weight: normal;
+	margin: .6em 0 0 0;
 }
 
 /* MAILS TABEL */
