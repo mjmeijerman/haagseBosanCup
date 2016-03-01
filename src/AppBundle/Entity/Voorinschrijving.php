@@ -24,11 +24,13 @@ class Voorinschrijving
 
     /**
      * @ORM\Column(type="datetime")
+     * @var \DateTime $createdAt
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime $usedAt
      */
     private $usedAt;
 
@@ -42,10 +44,13 @@ class Voorinschrijving
         $token = [
             'id' => $this->id,
             'token' => $this->token,
-            'createdAt' => $this->createdAt,
-            'usedAt' => $this->usedAt,
+            'createdAt' => $this->createdAt->format('d-m-Y H:i'),
             'tokenSentTo' => $this->tokenSentTo,
+            'usedAt' => '-'
         ];
+        if ($this->usedAt) {
+            $token['usedAt'] = $this->usedAt->format('d-m-Y H:i');
+        }
         return $token;
     }
 

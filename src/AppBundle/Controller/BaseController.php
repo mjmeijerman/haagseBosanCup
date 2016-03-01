@@ -258,13 +258,17 @@ class BaseController extends Controller
      * Creates a token voor voorinschrijvingen
      * @return void
      */
-    protected function createVoorinschrijvingToken($email)
+    protected function createVoorinschrijvingToken($email, $tokenObject = null)
     {
         $token = sha1(mt_rand());
-        $tokenObject = new Voorinschrijving();
+        if ($tokenObject === null) {
+            $tokenObject = new Voorinschrijving();
+        }
         $tokenObject->setToken($token);
         $tokenObject->setCreatedAt(new \DateTime('now'));
         $tokenObject->setTokenSentTo($email);
+
+        $this->addToDB($tokenObject);
 
         $subject = 'Voorinschrijving HBC';
         $to = $email;

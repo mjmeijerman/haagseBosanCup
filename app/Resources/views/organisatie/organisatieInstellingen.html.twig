@@ -32,11 +32,40 @@
         <h2>Voorinschrijvingen</h2>
     </div>
     <div class="bericht">
+        <a href="{{ path('genereerVoorinschrijving', { 'page': app.request.get('page') }) }}">
+            <img src="{{ asset('images/add.png') }}" width="20" /> Genereer nieuwe link
+        </a>
         <table>
             <tr>
-                <td>blah</td>
-                <td>blah</td>
+                <th width="30%">Voorinschrijvingslink</th>
+                <th width="30%">Verstuurd naar</th>
+                <th width="15%">Gemaakt op</th>
+                <th width="15%">Gebruikt op</th>
+                <th width="5%"></th>
+                <th width="5%"></th>
             </tr>
+            {% for voorinschrijving in voorinschrijvingen %}
+                <tr>
+                    <td>http://www.haagsebosancup.nl/inschrijven?token={{ voorinschrijving.token }}</td>
+                    <td>{{ voorinschrijving.tokenSentTo }}</td>
+                    <td>{{ voorinschrijving.createdAt }}</td>
+                    <td>{{ voorinschrijving.usedAt }}</td>
+                    <td>
+                        <a href="{{ path('refreshVoorinschrijving', { 'page': app.request.get('page'), 'id':
+                        voorinschrijving.id
+                         }) }}">
+                            <img src="{{ asset('images/refresh.png') }}" width="20" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('removeVoorinschrijving', { 'page': app.request.get('page'), 'id':
+                        voorinschrijving.id
+                         }) }}">
+                            <img src="{{ asset('images/remove.png') }}" width="20" />
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
     </p>

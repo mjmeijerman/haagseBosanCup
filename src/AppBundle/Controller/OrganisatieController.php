@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -109,12 +110,92 @@ class OrganisatieController extends BaseController
         return new JsonResponse($returnData);
     }
 
+    /**
+     * @Route("/organisatie/{page}/genereerVoorinschrijving/", name="genereerVoorinschrijving")
+     * @Method({"GET", "POST"})
+     */
+    public function genereerVoorinschrijving(Request $request, $page)
+    {
+        if ($request->request->get('email')) {
+            $this->createVoorinschrijvingToken($request->request->get('email'));
+            return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink verstuurd');
+        } else {
+            $this->setBasicPageData('Organisatie');
+            return $this->render('organisatie/genereerVoorinschrijving.html.twig', array(
+                'menuItems' => $this->menuItems,
+            ));
+        }
+    }
+
+    private function removeVoorinschrijving($id)
+    {
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Voorinschrijving')
+            ->findOneBy(
+                array('id' => $id)
+            );
+        if ($result) {
+            $this->removeFromDB($result);
+        }
+    }
+
+    /**
+     * @Route("/organisatie/{page}/removeVoorinschrijving/{id}", name="removeVoorinschrijving")
+     * @Method({"GET"})
+     */
+    public function removeVoorinschrijvingsPage($page, $id)
+    {
+        $this->removeVoorinschrijving($id);
+        return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink verwijderd');
+    }
+
+    private function refreshVoorinschrijving($id)
+    {
+        /** @var Voorinschrijving $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Voorinschrijving')
+            ->findOneBy(
+                array('id' => $id)
+            );
+        if ($result) {
+            $this->createVoorinschrijvingToken($result->getTokenSentTo(), $result);
+        }
+    }
+
+    /**
+     * @Route("/organisatie/{page}/refreshVoorinschrijving/{id}", name="refreshVoorinschrijving")
+     * @Method({"GET"})
+     */
+    public function refreshVoorinschrijvingsPage($page, $id)
+    {
+        $this->refreshVoorinschrijving($id);
+        return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink opnieuw verstuurd');
+    }
+
+    private function getVoorinschrijvingen()
+    {
+        /** @var Voorinschrijving[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:Voorinschrijving')
+            ->findBy(
+                [],
+                ['createdAt' => 'DESC']
+            );
+        $voorinschrijvingen = [];
+        foreach ($results as $result) {
+            $voorinschrijvingen[] = $result->getAll();
+        }
+        return $voorinschrijvingen;
+    }
+
     private function getOrganisatieInstellingenPage($successMessage = false)
     {
         $instellingen = $this->getOrganisatieInstellingen();
+        $voorinschrijvingen = $this->getVoorinschrijvingen();
         return $this->render('organisatie/organisatieInstellingen.html.twig', array(
             'menuItems' => $this->menuItems,
             'instellingen' => $instellingen,
+            'voorinschrijvingen' => $voorinschrijvingen,
             'successMessage' => $successMessage,
         ));
     }
