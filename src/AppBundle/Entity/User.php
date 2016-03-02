@@ -75,31 +75,47 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $verantwoordelijkheid;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
-//     *
-//     */
-//    private $vereniging;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity="Jurylid", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-//     */
-//    private $juryleden;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-//     */
-//    private $turnsters;
-//
-//    /**
-//     * @ORM\Column(type="integer", nullable=TRUE)
-//     */
-//    private $arrangementenZaterdag;
-//
-//    /**
-//     * @ORM\Column(type="integer", nullable=TRUE)
-//     */
-//    private $arrangementenZondag;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefoonnummer", type="string", length=255, nullable=true)
+     */
+    private $telefoonnummer;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="factuur_nummer", type="string", length=255, nullable=true)
+     */
+    private $factuurNummer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
+     *
+     */
+    private $vereniging;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Jurylid", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $jurylid;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $turnster;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Betaling", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $betaling;
 
     public function getAll()
     {
@@ -109,9 +125,10 @@ class User implements AdvancedUserInterface, \Serializable
             'achternaam' => $this->achternaam,
             'email' => $this->email,
             'username' => $this->username,
-            'role' => $this->role,
-            'verantwoordelijkheid' => $this->verantwoordelijkheid,
-        ];
+            'role' => $this->role];
+        if ($this->verantwoordelijkheid) {
+            $user['verantwoordelijkheid'] = $this->verantwoordelijkheid;
+        }
         return $user;
     }
 
@@ -369,5 +386,205 @@ class User implements AdvancedUserInterface, \Serializable
     public function getVerantwoordelijkheid()
     {
         return $this->verantwoordelijkheid;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->jurylid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->turnster = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->betaling = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set telefoonnummer
+     *
+     * @param string $telefoonnummer
+     * @return User
+     */
+    public function setTelefoonnummer($telefoonnummer)
+    {
+        $this->telefoonnummer = $telefoonnummer;
+
+        return $this;
+    }
+
+    /**
+     * Get telefoonnummer
+     *
+     * @return string 
+     */
+    public function getTelefoonnummer()
+    {
+        return $this->telefoonnummer;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return User
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set factuurNummer
+     *
+     * @param string $factuurNummer
+     * @return User
+     */
+    public function setFactuurNummer($factuurNummer)
+    {
+        $this->factuurNummer = $factuurNummer;
+
+        return $this;
+    }
+
+    /**
+     * Get factuurNummer
+     *
+     * @return string 
+     */
+    public function getFactuurNummer()
+    {
+        return $this->factuurNummer;
+    }
+
+    /**
+     * Set vereniging
+     *
+     * @param \AppBundle\Entity\Vereniging $vereniging
+     * @return User
+     */
+    public function setVereniging(\AppBundle\Entity\Vereniging $vereniging = null)
+    {
+        $this->vereniging = $vereniging;
+
+        return $this;
+    }
+
+    /**
+     * Get vereniging
+     *
+     * @return \AppBundle\Entity\Vereniging 
+     */
+    public function getVereniging()
+    {
+        return $this->vereniging;
+    }
+
+    /**
+     * Add jurylid
+     *
+     * @param \AppBundle\Entity\Jurylid $jurylid
+     * @return User
+     */
+    public function addJurylid(\AppBundle\Entity\Jurylid $jurylid)
+    {
+        $this->jurylid[] = $jurylid;
+
+        return $this;
+    }
+
+    /**
+     * Remove jurylid
+     *
+     * @param \AppBundle\Entity\Jurylid $jurylid
+     */
+    public function removeJurylid(\AppBundle\Entity\Jurylid $jurylid)
+    {
+        $this->jurylid->removeElement($jurylid);
+    }
+
+    /**
+     * Get jurylid
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getJurylid()
+    {
+        return $this->jurylid;
+    }
+
+    /**
+     * Add turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     * @return User
+     */
+    public function addTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster[] = $turnster;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     */
+    public function removeTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster->removeElement($turnster);
+    }
+
+    /**
+     * Get turnster
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTurnster()
+    {
+        return $this->turnster;
+    }
+
+    /**
+     * Add betaling
+     *
+     * @param \AppBundle\Entity\Betaling $betaling
+     * @return User
+     */
+    public function addBetaling(\AppBundle\Entity\Betaling $betaling)
+    {
+        $this->betaling[] = $betaling;
+
+        return $this;
+    }
+
+    /**
+     * Remove betaling
+     *
+     * @param \AppBundle\Entity\Betaling $betaling
+     */
+    public function removeBetaling(\AppBundle\Entity\Betaling $betaling)
+    {
+        $this->betaling->removeElement($betaling);
+    }
+
+    /**
+     * Get betaling
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBetaling()
+    {
+        return $this->betaling;
     }
 }
