@@ -87,7 +87,7 @@
             <th></th>
         </tr>
         <tr>
-            <td>Reglementen</td>
+            <td>{{ reglementen.naam }}</td>
             <td>http://www.haagsebosancup.nl/uploads/reglementen/{{ reglementen.locatie }}</td>
             <td>{{ reglementen.createdAt }}</td>
             <td><a href="{{ path('addReglementen', { 'page': app.request.get('page') }) }}">

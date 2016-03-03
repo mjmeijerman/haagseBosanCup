@@ -24,13 +24,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->setParameter('username', $username)
             ->getQuery()
             ->getOneOrNullResult();
-
-        if (null === $user) {
-            $message = sprintf(
-                'Dit is geen geldige inlognaam.');
-            throw new UsernameNotFoundException($message);
-        }
-        $_SESSION['username'] = $username;
         return $user;
     }
 

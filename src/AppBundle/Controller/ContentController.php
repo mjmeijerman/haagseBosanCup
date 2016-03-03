@@ -121,6 +121,7 @@ class ContentController extends BaseController
      */
     public function getNewPassPageAction(Request $request)
     {
+        $this->setBasicPageData();
         $error = "";
         if ($request->getMethod() == 'POST')
         {
@@ -132,7 +133,6 @@ class ContentController extends BaseController
                 $error = 'Deze gebruikersnaam bestaat niet';
             }
             else {
-                $user = $user[0];
                 $password = $this->generatePassword();
                 $encoder = $this->container
                     ->get('security.encoder_factory')
