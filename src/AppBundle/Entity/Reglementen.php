@@ -2,18 +2,16 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\AppBundle;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Entity\Turnster;
 
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vloermuziek")
+ * @ORM\Table(name="reglementen")
  */
-class Vloermuziek
+class Reglementen
 {
     private $temp;
 
@@ -27,26 +25,38 @@ class Vloermuziek
     /**
      * @ORM\Column(length=300)
      */
+    protected $naam;
+
+    /**
+     * @ORM\Column(length=300)
+     */
     protected $locatie;
 
     /**
-     * @Assert\File(
-     *      maxSize="5M",
-     *      )
+     * @Assert\File(maxSize="10M")
      */
     private $file;
 
     /**
-     * @ORM\OneToOne(targetEntity="Turnster", mappedBy="vloermuziek")
-     * @var Turnster
+     * @ORM\Column(length=300)
      */
-    private $turnster;
+    private $uploader;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var \DateTime $createdAt
+     */
+    private $createdAt;
+
 
     public function getAll()
     {
-        $items = new \stdClass();
-        $items->id = $this->id;
-        $items->locatie = $this->locatie;
+        $items = [
+            'id' => $this->id,
+            'naam' => $this->naam,
+            'locatie' => $this->locatie,
+            'createdAt' => $this->createdAt->format('d-m-Y H:i'),
+        ];
         return $items;
     }
 
@@ -54,31 +64,28 @@ class Vloermuziek
     {
         return null === $this->locatie
             ? null
-            : $this->getUploadRootDir() . '/' . $this->locatie;
+            : $this->getUploadRootDir().'/'.$this->locatie;
     }
 
     public function getWebPath()
     {
         return null === $this->locatie
             ? null
-            : $this->getUploadDir() . '/' . $this->locatie;
+            : $this->getUploadDir().'/'.$this->locatie;
     }
 
     public function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__ . '/../../../httpdocs/' . $this->getUploadDir();
+        return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
 
     protected function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
-        return 'uploads/vloermuziek/' . $this->turnster->getScores()->getWedstrijddag() . '/wedstrijdronde_' .
-        $this->turnster->getScores()->getWedstrijdronde() . '/baan_' . $this->turnster->getScores()->getBaan() .
-        '/groep_' .
-        $this->getTurnster()->getScores()->getGroep();
+        return 'uploads/reglementen';
     }
 
     /**
@@ -92,8 +99,33 @@ class Vloermuziek
     }
 
     /**
-     * @param $locatie
-     * @return $this
+     * Set naam
+     *
+     * @param string $naam
+     * @return FileUpload
+     */
+    public function setNaam($naam)
+    {
+        $this->naam = $naam;
+
+        return $this;
+    }
+
+    /**
+     * Get naam
+     *
+     * @return string
+     */
+    public function getNaam()
+    {
+        return $this->naam;
+    }
+
+    /**
+     * Set locatie
+     *
+     * @param string $locatie
+     * @return FileUpload
      */
     public function setLocatie($locatie)
     {
@@ -145,9 +177,8 @@ class Vloermuziek
     public function preUpload()
     {
         if (null !== $this->getFile()) {
-            $filename = $this->turnster->getScores()->getWedstrijdnummer() . '_' . $this->turnster->getVoornaam() . '_' .
-                $this->turnster->getAchternaam();
-            $this->locatie = $filename . '.' . $this->getFile()->getClientOriginalExtension();
+            $filename = 'Reglementen';
+            $this->locatie = $filename.'.'.$this->getFile()->getClientOriginalExtension();
         }
     }
 
@@ -162,7 +193,7 @@ class Vloermuziek
         }
         $this->getFile()->move($this->getUploadRootDir(), $this->locatie);
         if (isset($this->temp)) {
-            unlink($this->getUploadRootDir() . '/' . $this->temp);
+            unlink($this->getUploadRootDir().'/'.$this->temp);
             $this->temp = null;
         }
         $this->file = null;
@@ -187,25 +218,48 @@ class Vloermuziek
     }
 
     /**
-     * Set turnster
+     * Set uploader
      *
-     * @param \AppBundle\Entity\Turnster $turnster
-     * @return Vloermuziek
+     * @param string $uploader
+     * @return Reglementen
      */
-    public function setTurnster(\AppBundle\Entity\Turnster $turnster = null)
+    public function setUploader($uploader)
     {
-        $this->turnster = $turnster;
+        $this->uploader = $uploader;
 
         return $this;
     }
 
     /**
-     * Get turnster
+     * Get uploader
      *
-     * @return \AppBundle\Entity\Turnster 
+     * @return string 
      */
-    public function getTurnster()
+    public function getUploader()
     {
-        return $this->turnster;
+        return $this->uploader;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Reglementen
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

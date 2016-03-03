@@ -72,6 +72,35 @@
 
     <p>
     <div class="titel">
+        <h2>Reglementen</h2>
+    </div>
+    <div class="bericht">
+        <table id="uploads" border="1">
+        <col width="15%"/>
+        <col width="66.5%"/>
+        <col width="18.5%"/>
+        <col width="3.5%"/>
+        <tr>
+            <th>Naam</th>
+            <th>Locatie</th>
+            <th>Datum</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>Reglementen</td>
+            <td>http://www.haagsebosancup.nl/uploads/reglementen/{{ reglementen.locatie }}</td>
+            <td>{{ reglementen.createdAt }}</td>
+            <td><a href="{{ path('addReglementen', { 'page': app.request.get('page') }) }}">
+                    <img src="{{ asset('images/refresh.png') }}" width="18px"/>
+                </a>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </p>
+
+    <p>
+    <div class="titel">
         <h2>Development</h2>
     </div>
     <div class="bericht">

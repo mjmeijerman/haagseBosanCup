@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Reglementen;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,6 +50,38 @@ class OrganisatieController extends BaseController
                 return $this->getOrganisatieHomePage();
             case 'Mijn gegevens':
                 return $this->getOrganisatieGegevensPage($successMessage);
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/organisatie/{page}/uploadReglementen/", name="addReglementen")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminFileAction(Request $request, $page)
+    {
+        $this->setBasicPageData();
+        $file = new Reglementen();
+        $form = $this->createFormBuilder($file)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $file->setUploader($user->getUsername());
+            $file->setCreatedAt(new \DateTime('now'));
+            $this->addToDB($file);
+            return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+        }
+        else {
+            return $this->render('organisatie/reglementen.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+            ));
         }
     }
 
@@ -188,14 +221,38 @@ class OrganisatieController extends BaseController
         return $voorinschrijvingen;
     }
 
+    private function getReglementen()
+    {
+        /** @var Reglementen[] $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Reglementen')
+            ->findBy(
+                [],
+                ['id' => 'DESC']
+            );
+        if ($result) {
+            $reglementen = $result[0]->getAll();
+        } else {
+            $reglementen = [
+                'id' => 0,
+                'naam' => '',
+                'locatie' => '',
+                'createdAt' => '',
+            ];
+        }
+        return $reglementen;
+    }
+
     private function getOrganisatieInstellingenPage($successMessage = false)
     {
         $instellingen = $this->getOrganisatieInstellingen();
         $voorinschrijvingen = $this->getVoorinschrijvingen();
+        $reglementen = $this->getReglementen();
         return $this->render('organisatie/organisatieInstellingen.html.twig', array(
             'menuItems' => $this->menuItems,
             'instellingen' => $instellingen,
             'voorinschrijvingen' => $voorinschrijvingen,
+            'reglementen' => $reglementen,
             'successMessage' => $successMessage,
         ));
     }
