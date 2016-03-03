@@ -125,7 +125,10 @@ class User implements AdvancedUserInterface, \Serializable
             'achternaam' => $this->achternaam,
             'email' => $this->email,
             'username' => $this->username,
-            'role' => $this->role];
+            'role' => $this->role,
+            'verantwoordelijkheid' => ''
+        ];
+
         if ($this->verantwoordelijkheid) {
             $user['verantwoordelijkheid'] = $this->verantwoordelijkheid;
         }
