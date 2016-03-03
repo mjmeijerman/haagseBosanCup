@@ -1086,11 +1086,11 @@ body {
 	border-top: 1px solid #FF0000;
 	margin: 0;
 	box-shadow: 0px 0px 10px #D30000;
-	-webkit-animation: fadeout 15s 1; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadeout 15s 1; /* Firefox < 16 */
-    -ms-animation: fadeout 15s 1; /* Internet Explorer */
-    -o-animation: fadeout 15s 1; /* Opera < 12.1 */
-    animation: fadeout 15s 1;
+	-webkit-animation: fadeout 10s 1; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 10s 1; /* Firefox < 16 */
+    -ms-animation: fadeout 10s 1; /* Internet Explorer */
+    -o-animation: fadeout 10s 1; /* Opera < 12.1 */
+    animation: fadeout 10s 1;
 }
 
 .content .error {
@@ -1177,11 +1177,11 @@ body {
 	border-radius: 5px;
 	margin: 0;
 	box-shadow: 0px 0px 10px #00E07B;
-	-webkit-animation: fadeout 15s 1; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadeout 15s 1; /* Firefox < 16 */
-    -ms-animation: fadeout 15s 1; /* Internet Explorer */
-    -o-animation: fadeout 15s 1; /* Opera < 12.1 */
-    animation: fadeout 15s 1;
+	-webkit-animation: fadeout 10s 1; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 10s 1; /* Firefox < 16 */
+    -ms-animation: fadeout 10s 1; /* Internet Explorer */
+    -o-animation: fadeout 10s 1; /* Opera < 12.1 */
+    animation: fadeout 10s 1;
 }
 
 /* COUNTDOWN */
