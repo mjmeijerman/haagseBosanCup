@@ -1133,7 +1133,7 @@ body {
 	font-family: 'Oxygen', sans-serif;
 	font-weight: normal;
 	color: #FFF;
-	background-color: #75d175;
+	background-color: #A4D8A4;
 	border: 1px solid #00ce00;
 	text-shadow: 0 1px 0 rgba(0,0,0,.75);
 	box-sizing: content-box;
@@ -1157,6 +1157,30 @@ body {
 	box-shadow: 0px 0px 10px #00ff00;
 	outline: 1;
 	outline-color: #00b600;
+}
+
+.content .selectIngevuld {
+	display: block;
+	margin-left: 1em;
+	padding: .4em .5em;
+	background: #A4D8A4;
+	color: #FFF;
+	text-shadow: 0 1px 0 rgba(0,0,0,.75);
+	box-sizing: content-box;
+	border: 1px solid #00ce00;
+	border-radius: 3px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset, -1px 1px #fff;
+	box-shadow: 0px 0px 2px #00d300;
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
+.content .selectIngevuld:focus {
+	color: #FFF;
+	box-shadow: 0px 0px 10px #A5C7FE;
 }
 
 #error_success_container {
