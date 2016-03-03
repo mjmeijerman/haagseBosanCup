@@ -45,10 +45,22 @@ function check_vereniging() {
     var check2 = document.getElementById('verenigingsplaats').value;
     var check3 = theForm.elements["verenigingnaam"].value;
     if ((check3 === "" || check3 === null) && check1 !== "" && check2 !== "" && check1 !== null && check2 !== null) {
-        show_contactpersoon();
-        document.getElementById('inschrijven_vereniging_header').className = 'success';
-    }
-    else {
+        if (validate_vereniging_fields()) {
+            show_contactpersoon();
+            document.getElementById('inschrijven_vereniging_header').className = 'success';
+            if (document.getElementById("general_vereniging_error")) {
+                document.getElementById("error_container").innerHTML = '';
+            }
+        } else {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="general_vereniging_error"><b>FOUTMELDING:</b> Niet alle' +
+                ' velden zijn correct ingevoerd!</span></div>';
+            document.getElementById('inschrijven_contactpersoon').style.display = 'none';
+            document.getElementById('inschrijven_reserveren').style.display = 'none';
+            document.getElementById('inschrijven_vereniging_header').className = '';
+            document.getElementById('inschrijven_contactpersoon_header').className = '';
+        }
+    } else {
         if (check3 !== "") {
             document.getElementById("verenigingstaaternietbijikbenzozielig").checked = false;
             show_contactpersoon();
@@ -67,6 +79,7 @@ function check_vereniging() {
 
 function show_contactpersoon() {
     aantal_plekken();
+    validate_contact_fields();
     var z = document.getElementById('inschrijven_contactpersoon').style.display;
     if (z !== '') {
         var x = document.getElementById('inschrijven_contactpersoon').innerHTML;
@@ -113,9 +126,10 @@ function check_contactpersoon() {
         } else {
             document.getElementById("error_container").innerHTML = '<div id="error"><span id="general_contact_error"><b>FOUTMELDING:</b> Niet alle' +
                 ' velden zijn correct ingevoerd!</span></div>';
+            document.getElementById('inschrijven_reserveren').style.display = 'none';
+            document.getElementById('inschrijven_contactpersoon_header').className = '';
         }
-    }
-    else {
+    } else {
         document.getElementById("error_container").innerHTML = '<div id="error"><span id="general_contact_error"><b>FOUTMELDING:</b> Nog niet alle' +
             ' velden zijn ingevoerd!</span></div>';
         document.getElementById('inschrijven_reserveren').style.display = 'none';
@@ -123,9 +137,14 @@ function check_contactpersoon() {
     }
 }
 
+function validate_vereniging_fields() {
+
+    return (validate_vereniging_naam(false) && validate_vereniging_plaats());
+}
+
 function validate_contact_fields() {
 
-    return (validate_email(false))
+    return (validate_email(false), validate_voornaam(false), validate_achternaam(false), validate_telefoonnummer(false), validate_username(false), validate_wachtwoord(false), validate_wachtwoord2(false))
 }
 
 function validate_email(show_error_messages) {
@@ -133,10 +152,10 @@ function validate_email(show_error_messages) {
     var email = document.getElementById("email");
     var re = /^((?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA_Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
     if (!email.value) {
-        email.className = 'error';
+        email.className = 'text';
         if (show_error_messages) {
             document.getElementById("error_container").innerHTML = '<div id="error"><span' +
-                ' id="email_error" class="ddd"><b>FOUTMELDING:</b> Je hebt' +
+                ' id="email_error"><b>FOUTMELDING:</b> Je hebt' +
                 ' geen emailadres ingevoerd!</span></div>';
         }
     } else if (re.test(email.value)) {
@@ -145,11 +164,292 @@ function validate_email(show_error_messages) {
         if (document.getElementById("email_error")) {
             document.getElementById("error_container").innerHTML = '';
         }
+        if (show_error_messages) {
+            check_contactpersoon()
+        }
     } else {
         email.className = 'error';
         if (show_error_messages) {
-            document.getElementById("error_container").innerHTML = '<div id="error"><span id="email_error" class="' + Date.now() + '"><b>FOUTMELDING:</b> Je hebt geen' +
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="email_error"><b>FOUTMELDING:</b> Je hebt geen' +
                 ' geldig emailadres ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_voornaam(show_error_messages) {
+    var validated = false;
+    var voornaam = document.getElementById("voornaam");
+    if (!voornaam.value) {
+        voornaam.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="voornaam_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen voornaam ingevoerd!</span></div>';
+        }
+    } else if (voornaam.value.length > 1) {
+        voornaam.className = 'succesIngevuld';
+        validated = true;
+        if (document.getElementById("voornaam_error")) {
+            document.getElementById("error_container").innerHTML = '';
+        }
+        if (show_error_messages) {
+            check_contactpersoon()
+        }
+    } else {
+        voornaam.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="voornaam_error"><b>FOUTMELDING:</b> Je hebt geen' +
+                ' geldige voornaam ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_achternaam(show_error_messages) {
+    var validated = false;
+    var achternaam = document.getElementById("achternaam");
+    if (!achternaam.value) {
+        achternaam.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="achternaam_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen achternaam ingevoerd!</span></div>';
+        }
+    } else if (achternaam.value.length > 1) {
+        achternaam.className = 'succesIngevuld';
+        validated = true;
+        if (document.getElementById("achternaam_error")) {
+            document.getElementById("error_container").innerHTML = '';
+        }
+        if (show_error_messages) {
+            check_contactpersoon()
+        }
+    } else {
+        achternaam.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="achternaam_error"><b>FOUTMELDING:</b> Je hebt geen' +
+                ' geldige achternaam ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_telefoonnummer(show_error_messages) {
+
+    var validated = false;
+    var telefoonnummer = document.getElementById("telefoonnummer");
+    if (!telefoonnummer.value) {
+        telefoonnummer.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="telefoonnummer_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen telefoonnummer ingevoerd!</span></div>';
+        }
+    } else if (telefoonnummer.value.length === 10) {
+        var re = /^([0-9]+)$/;
+        if (re.test(telefoonnummer.value)) {
+            telefoonnummer.className = 'succesIngevuld';
+            validated = true;
+            if (document.getElementById("telefoonnummer_error")) {
+                document.getElementById("error_container").innerHTML = '';
+            }
+            if (show_error_messages) {
+                check_contactpersoon()
+            }
+        } else {
+            telefoonnummer.className = 'error';
+            if (show_error_messages) {
+                document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                    ' id="telefoonnummer_error"><b>FOUTMELDING:</b>Het telefoonnummer mag alleen uit' +
+                    ' cijfers bestaan!</span></div>';
+            }
+        }
+
+    } else {
+        telefoonnummer.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="telefoonnummer_error"><b>FOUTMELDING:</b>Het telefoonnummer moet uit precies 10' +
+                ' cijfers bestaan en mag geen andere karakters bevatten!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_username(show_error_messages) {
+    var validated = false;
+    var username = document.getElementById("username");
+    if (!username.value) {
+        username.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="username_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen inlognaam ingevoerd!</span></div>';
+        }
+    } else if (username.value.length > 1) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('checkUsernameAvailabilityAjaxCall', {username: username.value}),
+            success: function (data) {
+                if (data === 'true') {
+                    username.className = 'succesIngevuld';
+                    validated = true;
+                    if (document.getElementById("username_error")) {
+                        document.getElementById("error_container").innerHTML = '';
+                    }
+                    if (show_error_messages) {
+                        check_contactpersoon()
+                    }
+                } else {
+                    username.className = 'error';
+                    if (show_error_messages) {
+                        document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                            ' id="username_error"><b>FOUTMELDING:</b> Deze username is al in gebruik!</span></div>';
+                    }
+                }
+            }
+        });
+    } else {
+        username.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="username_error"><b>FOUTMELDING:</b> Je hebt geen' +
+                ' geldige inlognaam ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_vereniging_naam(show_error_messages) {
+    var validated = false;
+    var verenigingsnaam = document.getElementById("verenigingsnaam");
+    if (!verenigingsnaam.value) {
+        verenigingsnaam.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="verenigingsnaam_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen verenigingsnaam ingevoerd!</span></div>';
+        }
+    } else if (verenigingsnaam.value.length > 1) {
+        verenigingsnaam.className = 'succesIngevuld';
+        validated = true;
+        if (document.getElementById("verenigingsnaam_error")) {
+            document.getElementById("error_container").innerHTML = '';
+        }
+        if (show_error_messages) {
+            check_vereniging()
+        }
+    } else {
+        verenigingsnaam.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="verenigingsnaam_error"><b>FOUTMELDING:</b> Je hebt geen' +
+                ' geldige verenigingsnaam ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_vereniging_plaats(show_error_messages) {
+    var validated = false;
+    var plaats = document.getElementById("verenigingsplaats");
+    if (!plaats.value) {
+        plaats.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="plaats_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen plaats ingevoerd!</span></div>';
+        }
+    } else if (plaats.value.length > 1) {
+        plaats.className = 'succesIngevuld';
+        validated = true;
+        if (document.getElementById("plaats_error")) {
+            document.getElementById("error_container").innerHTML = '';
+        }
+        if (show_error_messages) {
+            check_vereniging()
+        }
+    } else {
+        plaats.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span id="plaats_error"><b>FOUTMELDING:</b> Je hebt geen' +
+                ' geldige plaats ingevoerd!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_wachtwoord(show_error_messages) {
+    var validated = false;
+    var wachtwoord = document.getElementById("wachtwoord");
+    var wachtwoord2 = document.getElementById("wachtwoord2");
+    if (!wachtwoord.value) {
+        wachtwoord.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="wachtwoord_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen wachtwoord ingevoerd!</span></div>';
+        }
+    } else if (wachtwoord.value.length > 5) {
+        if (wachtwoord2.value.length != 0 && wachtwoord.value != wachtwoord2.value) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="wachtwoord_error"><b>FOUTMELDING:</b> De ingevoerde wachtwoorden zijn niet gelijk!</span></div>';
+            wachtwoord.className = 'error';
+            wachtwoord2.className = 'error';
+        } else {
+            wachtwoord.className = 'succesIngevuld';
+            wachtwoord2.className = 'succesIngevuld';
+            validated = true;
+            if (document.getElementById("wachtwoord_error")) {
+                document.getElementById("error_container").innerHTML = '';
+            }
+            if (show_error_messages) {
+                check_contactpersoon()
+            }
+        }
+    } else {
+        wachtwoord.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="achternaam_error"><b>FOUTMELDING:</b> Dit wachtwoord is te kort!</span></div>';
+        }
+    }
+    return validated;
+}
+
+function validate_wachtwoord2(show_error_messages) {
+    var validated = false;
+    var wachtwoord = document.getElementById("wachtwoord2");
+    var wachtwoord2 = document.getElementById("wachtwoord");
+    if (!wachtwoord.value) {
+        wachtwoord.className = 'text';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="wachtwoord_error"><b>FOUTMELDING:</b> Je hebt' +
+                ' geen wachtwoord ingevoerd!</span></div>';
+        }
+    } else if (wachtwoord.value.length > 5) {
+
+        if (wachtwoord2.value.length != 0 && wachtwoord.value != wachtwoord2.value) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="wachtwoord_error"><b>FOUTMELDING:</b> De ingevoerde wachtwoorden zijn niet gelijk!</span></div>';
+            wachtwoord.className = 'error';
+            wachtwoord2.className = 'error';
+        } else {
+            wachtwoord.className = 'succesIngevuld';
+            wachtwoord2.className = 'succesIngevuld';
+            validated = true;
+            if (document.getElementById("wachtwoord_error")) {
+                document.getElementById("error_container").innerHTML = '';
+            }
+            if (show_error_messages) {
+                check_contactpersoon()
+            }
+        }
+    } else {
+        wachtwoord.className = 'error';
+        if (show_error_messages) {
+            document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+                ' id="achternaam_error"><b>FOUTMELDING:</b> Dit wachtwoord is te kort!</span></div>';
         }
     }
     return validated;

@@ -61,4 +61,30 @@ class InschrijvingController extends BaseController
         }
         return $verenigingen;
     }
+
+    /**
+     * @Route("/checkUsername/{username}/", name="checkUsernameAvailabilityAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function checkUsernameAvailabilityAjaxCall($username)
+    {
+        return new Response($this->checkUsernameAvailability($username));
+    }
+
+    private function checkUsernameAvailability($username)
+    {
+        /** @var User[] $users */
+        $users = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findAll();
+        $usernames = [];
+        foreach ($users as $user) {
+            $usernames[] = strtolower($user->getUsername());
+        }
+        if (in_array(strtolower($username), $usernames)) {
+            return 'false';
+        } else {
+            return 'true';
+        }
+    }
 }

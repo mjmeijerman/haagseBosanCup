@@ -46,13 +46,15 @@
                                                                                          id="verenigingsnaam"
                                                                                          name="verenigingsnaam"
                                                                                          placeholder="Naam vereniging"
-                                                                                         onchange="check_vereniging();update_vereningsnaam()"/>
+                                                                                         onchange="check_vereniging();update_vereningsnaam()"
+                                                                                         onkeyup="validate_vereniging_naam(true)"/>
             </div>
             <div class="row"><label for="verenigingsplaats">Plaats vereniging:</label><input type="text" class="text"
                                                                                              id="verenigingsplaats"
                                                                                              name="verenigingsplaats"
                                                                                              placeholder="Plaats"
-                                                                                             onchange="check_vereniging();update_vereningsnaam()"/>
+                                                                                             onchange="check_vereniging();update_vereningsnaam()"
+                                                                                             onkeyup="validate_vereniging_plaats(true)"/>
             </div>
         </div>
         </form>
@@ -70,11 +72,12 @@
                                                                             id="voornaam"
                                                                             placeholder="Voornaam"
                                                                             onchange="check_contactpersoon()"
-                                                                            autofocus/></div>
+                                                                            onkeyup="validate_voornaam(true)"/></div>
 
             <div class="row"><label for="achternaam">Achternaam:</label> <input type="text" class="text" id="achternaam"
                                                                                 placeholder="Achternaam"
-                                                                                onchange="check_contactpersoon()"/>
+                                                                                onchange="check_contactpersoon()"
+                                                                                onkeyup="validate_achternaam(true)"/>
             </div>
             <div class="row"><label for="email">E-mail:</label> <input type="email" class="text" id="email"
                                                                        placeholder="jouw@email.nl"
@@ -84,7 +87,8 @@
             <div class="row"><label for="telefoonnummer">Telefoonummer:</label> <input type="text" class="text"
                                                                                        id="telefoonnummer"
                                                                                        placeholder="0612345678"
-                                                                                       onchange="check_contactpersoon()"/>
+                                                                                       onchange="check_contactpersoon()"
+                                                                                       onkeyup="validate_telefoonnummer(true)"/>
             </div>
             <br/>
             Om in te kunnen loggen, heb je een account nodig.<br/>
@@ -94,15 +98,19 @@
 
             <div class="row"><label for="username">Inlognaam:</label> <input type="text" class="text" id="username"
                                                                              placeholder="kies_je_inlognaam"
-                                                                             onchange="check_contactpersoon()"/>
+                                                                             onchange="check_contactpersoon()"
+                                                                             onkeyup="validate_username(true)"/>
             </div>
             <div class="row"><label for="wachtwoord">Wachtwoord:</label> <input type="password" class="text"
                                                                                 id="wachtwoord" placeholder="********"
-                                                                                onchange="check_contactpersoon()"/>
+                                                                                onchange="check_contactpersoon()"
+                                                                                onkeyup="validate_wachtwoord(true)"/>
             </div>
             <div class="row"><label for="wachtwoord2">Nogmaals:</label> <input type="password" class="text"
                                                                                id="wachtwoord2" placeholder="********"
-                                                                               onchange="check_contactpersoon()"/></div>
+                                                                               onchange="check_contactpersoon()"
+                                                                               onkeyup="validate_wachtwoord2(true)
+                                                                               "/></div>
             <br/>
         </form>
     </div>
