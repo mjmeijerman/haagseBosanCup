@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\Vereniging;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,15 +20,45 @@ class InschrijvingController extends BaseController
 
     /**
      * @Route("/inschrijven", name="inschrijven")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
     public function inschrijvenPage(Request $request)
     {
         if ($this->inschrijvingToegestaan($request->query->get('token'))) {
-            die('Inschrijvingspagina hier');
+            $this->setBasicPageData();
+            if ($request->getMethod() == 'POST') {
+                //todo: validatie, return errors + flash messages
+                //todo: safe and return ingevulde data
+                //todo: als alles correct is, reserveer plaatsen, update token, redirect to inschrijven_turnsters
+            }
+            $vrijePlekken = $this->getVrijePlekken();
+            $verenigingen = $this->getVerenigingen();
+
+            return $this->render('inschrijven/inschrijven_contactpersoon.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+                'vrijePlekken' =>$vrijePlekken,
+                'verenigingen' => $verenigingen,
+            ));
             // todo: return inschrijvingspagina
         } else {
             return $this->redirectToRoute('getContent', array('page' => 'Inschrijvingsinformatie'));
         }
+    }
+
+    private function getVerenigingen()
+    {
+        $verenigingen = [];
+        /** @var Vereniging[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:Vereniging')
+            ->findBy(
+                [],
+                ['naam' => 'ASC']
+            );
+        foreach($results as $result) {
+            $verenigingen[] = $result->getAll();
+        }
+        return $verenigingen;
     }
 }

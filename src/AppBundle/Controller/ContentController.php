@@ -95,6 +95,15 @@ class ContentController extends BaseController
         }
     }
 
+    /**
+     * @Route("/getVrijePlekken/", name="aantalVrijePlekkenAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function aantalVrijePlekkenAjaxCall()
+    {
+        return new Response($this->getVrijePlekken());
+    }
+
     private function getNieuwsIndexPage()
     {
         $results = $this->getDoctrine()

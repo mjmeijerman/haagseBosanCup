@@ -32,6 +32,15 @@ class Vereniging
      */
     private $user;
 
+    public function getAll()
+    {
+        return [
+            'id' => $this->id,
+            'naam' => $this->naam,
+            'plaats' => $this->plaats,
+        ];
+    }
+
     /**
      * Constructor
      */

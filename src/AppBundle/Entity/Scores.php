@@ -53,11 +53,6 @@ class Scores
     private $groep;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $afgemeld = 0;
-
-    /**
      * @ORM\Column(type="decimal", precision=5, scale=3)
      */
     private $dSprong1 = 0;

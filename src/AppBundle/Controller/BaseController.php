@@ -95,6 +95,18 @@ class BaseController extends Controller
         return false;
     }
 
+    protected function getVrijePlekken()
+    {
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Turnster')
+            ->getBezettePlekken();
+        $maxPlekken = $this->getOrganisatieInstellingen(self::MAX_AANTAL_TURNSTERS);
+        if ($maxPlekken[self::MAX_AANTAL_TURNSTERS] - $result < 0) {
+            return 0;
+        }
+        return ($maxPlekken[self::MAX_AANTAL_TURNSTERS] - $result);
+    }
+
     protected function inschrijvingToegestaan($token = null)
     {
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);

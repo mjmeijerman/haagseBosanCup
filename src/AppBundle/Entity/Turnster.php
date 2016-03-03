@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\TurnsterRepository")
  * @ORM\Table(name="turnster")
  */
 class Turnster
@@ -44,6 +44,11 @@ class Turnster
      * @ORM\ManyToOne(targetEntity="User", inversedBy="turnster")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $afgemeld = 0;
 
     /**
      * @var boolean
@@ -343,5 +348,28 @@ class Turnster
     public function getScores()
     {
         return $this->scores;
+    }
+
+    /**
+     * Set afgemeld
+     *
+     * @param boolean $afgemeld
+     * @return Turnster
+     */
+    public function setAfgemeld($afgemeld)
+    {
+        $this->afgemeld = $afgemeld;
+
+        return $this;
+    }
+
+    /**
+     * Get afgemeld
+     *
+     * @return boolean 
+     */
+    public function getAfgemeld()
+    {
+        return $this->afgemeld;
     }
 }
