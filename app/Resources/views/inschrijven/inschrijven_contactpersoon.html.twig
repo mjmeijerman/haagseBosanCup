@@ -115,20 +115,20 @@
         </form>
     </div>
 
-    {#<div id="inschrijven_reserveren" style="display:none;">#}
-    {#<h4>&#187; Plekken reserveren</h4>#}
-    {#Het meest belangrijke is het inschrijven van de turnsters. Jij geeft het aantal aan, en wij reserveren de#}
-    {#plaatsen. Voor elke turnster houden wij de plekken 1 minuut langer gereserveerd, met een minimum van 5#}
-    {#minuten.<br/>#}
-    {#<br/>#}
-    {#Ik ben van plan om <input type="number" id="reserveer_aantal_invoer" class="number" placeholder="0"#}
-    {#onchange="update_reserveer_display()"/> turnsters in te schrijven.#}
-    {#<br/>#}
-    {#<br/>#}
+    <div id="inschrijven_reserveren" style="display:none;">
+        <h4>&#187; Plekken reserveren</h4>
+        Het meest belangrijke is het inschrijven van de turnsters. Jij geeft het aantal aan, en wij reserveren de
+        plaatsen. Voor elke turnster houden wij de plekken 1 minuut langer gereserveerd, met een minimum van 5
+        minuten.<br/>
+        <br/>
+        Ik ben van plan om <input type="number" id="reserveer_aantal_invoer" class="number" placeholder="0"
+                                  onchange="update_reserveer_display()"/> turnsters in te schrijven.
+        <br/>
+        <br/>
 
-    {#<div id="reserveer_button" onclick="redirect_naar_inschrijfpagina()"><span id="reserveer_aantal">0 plekken reserveren!</span>#}
-    {#</div>#}
-    {#</div>#}
+        <div id="reserveer_button" onclick="redirect_naar_inschrijfpagina()"><span id="reserveer_aantal">0 plekken reserveren!</span>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
