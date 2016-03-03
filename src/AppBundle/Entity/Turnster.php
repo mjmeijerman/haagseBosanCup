@@ -21,24 +21,24 @@ class Turnster
      * @var string
      * @ORM\Column(name="voornaam", type="string", length=255)
      */
-    private $voornaam;
+    private $voornaam = "leeg";
 
     /**
      * @var string
      * @ORM\Column(name="achternaam", type="string", length=255)
      */
-    private $achternaam;
+    private $achternaam = "leeg";
 
     /**
      * @ORM\Column(name="geboortajaar", type="integer")
      */
-    private $geboortejaar;
+    private $geboortejaar = 0;
 
     /**
      * @var string
      * @ORM\Column(name="niveau", type="string", length=12)
      */
-    private $niveau;
+    private $niveau = "leeg";
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="turnster")
@@ -56,6 +56,13 @@ class Turnster
      * @ORM\Column(type="boolean")
      */
     private $wachtlijst;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $ingevuld = false;
 
     /**
      * @ORM\Column(type="datetime")
@@ -371,5 +378,28 @@ class Turnster
     public function getAfgemeld()
     {
         return $this->afgemeld;
+    }
+
+    /**
+     * Set ingevuld
+     *
+     * @param boolean $ingevuld
+     * @return Turnster
+     */
+    public function setIngevuld($ingevuld)
+    {
+        $this->ingevuld = $ingevuld;
+
+        return $this;
+    }
+
+    /**
+     * Get ingevuld
+     *
+     * @return boolean 
+     */
+    public function getIngevuld()
+    {
+        return $this->ingevuld;
     }
 }

@@ -116,7 +116,7 @@ function check_contactpersoon() {
     var username = theForm.elements["username"];
     var wachtwoord = theForm.elements["wachtwoord"];
     var wachtwoord2 = theForm.elements["wachtwoord2"];
-    if (voornaam.value !== "" && achternaam.value !== "" && email.value !== "" && username.value !== "" && wachtwoord.value !== "" && wachtwoord2.value !== "" && wachtwoord.value == wachtwoord2.value) {
+    if (voornaam.value !== "" && achternaam.value !== "" && telefoonnummer.value, email.value !== "" && username.value !== "" && wachtwoord.value !== "" && wachtwoord2.value !== "" && wachtwoord.value == wachtwoord2.value) {
         if (validate_contact_fields()) {
             show_reserveren();
             document.getElementById('inschrijven_contactpersoon_header').className = 'success';
@@ -138,13 +138,32 @@ function check_contactpersoon() {
 }
 
 function validate_vereniging_fields() {
-
-    return (validate_vereniging_naam(false) && validate_vereniging_plaats());
+    var vereniging_naam = validate_vereniging_naam(false);
+    var vereniging_plaats = validate_vereniging_plaats(false);
+    if (vereniging_naam && vereniging_plaats) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function validate_contact_fields() {
-
-    return (validate_email(false), validate_voornaam(false), validate_achternaam(false), validate_telefoonnummer(false), validate_username(false), validate_wachtwoord(false), validate_wachtwoord2(false))
+    var email = validate_email(false);
+    var voornaam = validate_voornaam(false);
+    var achternaam = validate_achternaam(false);
+    var telefoonnummer = validate_telefoonnummer(false);
+    if (document.getElementById("username").className == 'succesIngevuld') {
+        var username = true;
+    } else {
+        var username =false;
+    }
+    var wachtwoord = validate_wachtwoord(false);
+    var wachtwoord2 =  validate_wachtwoord2(false);
+    if (email && voornaam && achternaam && telefoonnummer && username && wachtwoord && wachtwoord2) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function validate_email(show_error_messages) {
@@ -292,7 +311,7 @@ function validate_username(show_error_messages) {
             type: 'get',
             url: Routing.generate('checkUsernameAvailabilityAjaxCall', {username: username.value}),
             success: function (data) {
-                if (data === 'true') {
+                if (data == 'true') {
                     username.className = 'succesIngevuld';
                     validated = true;
                     if (document.getElementById("username_error")) {
@@ -481,4 +500,20 @@ function update_reserveer_display() {
     else {
         document.getElementById('reserveer_aantal').innerHTML = '0 plekken reserveren!';
     }
+}
+function post_gegevens()
+{
+    document.getElementById('reserveer_button').style.pointerEvents = 'none';
+    document.getElementById('post_verenigingsnaam').value = document.getElementById('verenigingsnaam').value;
+    document.getElementById('post_verenigingsplaats').value = document.getElementById('verenigingsplaats').value;
+    document.getElementById('post_verenigingsid').value = (document.getElementById('verenigingnaam').value.split("_"))[0];
+    document.getElementById('post_voornaam').value = document.getElementById('voornaam').value;
+    document.getElementById('post_achternaam').value = document.getElementById('achternaam').value;;
+    document.getElementById('post_email').value = document.getElementById('email').value;
+    document.getElementById('post_telefoonnummer').value = document.getElementById('telefoonnummer').value;
+    document.getElementById('post_username').value = document.getElementById('username').value;
+    document.getElementById('post_wachtwoord').value = document.getElementById('wachtwoord').value;
+    document.getElementById('post_wachtwoord2').value = document.getElementById('wachtwoord2').value;
+    document.getElementById('post_aantalturnsters').value = document.getElementById('reserveer_aantal_invoer').value;
+    document.forms["post_form"].submit();
 }

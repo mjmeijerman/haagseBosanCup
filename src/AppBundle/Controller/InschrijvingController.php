@@ -27,18 +27,25 @@ class InschrijvingController extends BaseController
         if ($this->inschrijvingToegestaan($request->query->get('token'))) {
             $this->setBasicPageData();
             if ($request->getMethod() == 'POST') {
-                //todo: validatie, return errors + flash messages
-                //todo: safe and return ingevulde data
-                //todo: als alles correct is, reserveer plaatsen, update token, redirect to inschrijven_turnsters
+                $postedToken = $request->request->get('csrfToken');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        var_dump($_POST);die();
+                        //todo: validatie, return errors + flash messages
+                        //todo: safe and return ingevulde data
+                        //todo: als alles correct is, reserveer plaatsen, update token, redirect to inschrijven_turnsters
+                    }
+                }
             }
             $vrijePlekken = $this->getVrijePlekken();
             $verenigingen = $this->getVerenigingen();
-
+            $csrfToken = $this->getToken();
             return $this->render('inschrijven/inschrijven_contactpersoon.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'sponsors' => $this->sponsors,
                 'vrijePlekken' =>$vrijePlekken,
                 'verenigingen' => $verenigingen,
+                'csrfToken' => $csrfToken,
             ));
             // todo: return inschrijvingspagina
         } else {

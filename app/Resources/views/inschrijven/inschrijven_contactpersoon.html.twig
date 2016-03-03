@@ -122,13 +122,27 @@
         minuten.<br/>
         <br/>
         Ik ben van plan om <input type="number" id="reserveer_aantal_invoer" class="number" placeholder="0"
-                                  onchange="update_reserveer_display()"/> turnsters in te schrijven.
+                                  onchange="update_reserveer_display()" min="1" max="100"/> turnsters in te schrijven.
         <br/>
         <br/>
 
-        <div id="reserveer_button" onclick="redirect_naar_inschrijfpagina()"><span id="reserveer_aantal">0 plekken reserveren!</span>
+        <div id="reserveer_button" onclick="post_gegevens()"><span id="reserveer_aantal">0 plekken reserveren!</span>
         </div>
     </div>
+    <form id="post_form" method="post" action="">
+        <input type="hidden" name="verenigingsnaam" id="post_verenigingsnaam"/>
+        <input type="hidden" name="verenigingsplaats" id="post_verenigingsplaats"/>
+        <input type="hidden" name="verenigingsid" id="post_verenigingsid"/>
+        <input type="hidden" name="voornaam" id="post_voornaam"/>
+        <input type="hidden" name="achternaam" id="post_achternaam"/>
+        <input type="hidden" name="email" id="post_email"/>
+        <input type="hidden" name="telefoonnummer" id="post_telefoonnummer"/>
+        <input type="hidden" name="username" id="post_username"/>
+        <input type="hidden" name="wachtwoord" id="post_wachtwoord"/>
+        <input type="hidden" name="wachtwoord2" id="post_wachtwoord2"/>
+        <input type="hidden" name="aantalturnsters" id="post_aantalturnsters"/>
+        <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
+    </form>
 {% endblock %}
 
 {% block javascript %}
