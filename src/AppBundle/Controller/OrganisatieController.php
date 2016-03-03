@@ -60,7 +60,7 @@ class OrganisatieController extends BaseController
      */
     public function addAdminFileAction(Request $request, $page)
     {
-        $this->setBasicPageData();
+        $this->setBasicPageData('Organisatie');
         $file = new Reglementen();
         $form = $this->createFormBuilder($file)
             ->add('naam')
