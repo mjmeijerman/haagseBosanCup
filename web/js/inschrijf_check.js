@@ -130,8 +130,6 @@ function check_contactpersoon() {
             document.getElementById('inschrijven_contactpersoon_header').className = '';
         }
     } else {
-        document.getElementById("error_container").innerHTML = '<div id="error"><span id="general_contact_error"><b>FOUTMELDING:</b> Nog niet alle' +
-            ' velden zijn ingevoerd!</span></div>';
         document.getElementById('inschrijven_reserveren').style.display = 'none';
         document.getElementById('inschrijven_contactpersoon_header').className = '';
     }
