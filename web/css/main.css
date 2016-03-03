@@ -398,6 +398,17 @@ body {
 	transition: .5s;
 }
 
+.content .row_turnster_wachtlijst {
+	background: #FFC1C1;
+	display: block;
+	padding: 3px 0px;
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
 .content label {
 	display: inline-block;
 	width: 120px;
