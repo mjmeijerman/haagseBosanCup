@@ -30,7 +30,7 @@ class OrganisatieController extends BaseController
      * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
      * @Method("GET")
      */
-    public function getOrganisatiePage($page, $successMessage = false)
+    public function getOrganisatiePage($page)
     {
         $this->setBasicPageData('Organisatie');
         switch ($page) {
@@ -39,7 +39,7 @@ class OrganisatieController extends BaseController
             case 'To-do lijst':
                 return $this->getOrganisatieHomePage();
             case 'Instellingen':
-                return $this->getOrganisatieInstellingenPage($successMessage);
+                return $this->getOrganisatieInstellingenPage();
             case 'Mails':
                 return $this->getOrganisatieHomePage();
             case 'Inschrijvingen':
@@ -49,7 +49,7 @@ class OrganisatieController extends BaseController
             case 'Financieel':
                 return $this->getOrganisatieHomePage();
             case 'Mijn gegevens':
-                return $this->getOrganisatieGegevensPage($successMessage);
+                return $this->getOrganisatieGegevensPage();
         }
     }
 
@@ -91,13 +91,12 @@ class OrganisatieController extends BaseController
         return $userObject->getAll();
     }
 
-    private function getOrganisatieGegevensPage($successMessage = false)
+    private function getOrganisatieGegevensPage()
     {
         $gegevens = $this->getGegevens();
         return $this->render('organisatie/organisatieGegevens.html.twig', array(
             'menuItems' => $this->menuItems,
             'gegevens' => $gegevens,
-            'successMessage' => $successMessage,
         ));
     }
 
@@ -151,7 +150,11 @@ class OrganisatieController extends BaseController
     {
         if ($request->request->get('email')) {
             $this->createVoorinschrijvingToken($request->request->get('email'));
-            return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink verstuurd');
+            $this->addFlash(
+                'success',
+                'Een voorinschrijvingslink is gemaild'
+            );
+            return $this->getOrganisatiePage($page);
         } else {
             $this->setBasicPageData('Organisatie');
             return $this->render('organisatie/genereerVoorinschrijving.html.twig', array(
@@ -179,7 +182,11 @@ class OrganisatieController extends BaseController
     public function removeVoorinschrijvingsPage($page, $id)
     {
         $this->removeVoorinschrijving($id);
-        return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink verwijderd');
+        $this->addFlash(
+            'success',
+            'De link is verwijderd'
+        );
+        return $this->getOrganisatiePage($page);
     }
 
     private function refreshVoorinschrijving($id)
@@ -192,6 +199,10 @@ class OrganisatieController extends BaseController
             );
         if ($result) {
             $this->createVoorinschrijvingToken($result->getTokenSentTo(), $result);
+            $this->addFlash(
+                'success',
+                'Een nieuwe voorinschrijvingslink is gemaild'
+            );
         }
     }
 
@@ -202,7 +213,7 @@ class OrganisatieController extends BaseController
     public function refreshVoorinschrijvingsPage($page, $id)
     {
         $this->refreshVoorinschrijving($id);
-        return $this->getOrganisatiePage($page, $successMessage = 'voorinschrijvijngslink opnieuw verstuurd');
+        return $this->getOrganisatiePage($page);
     }
 
     private function getVoorinschrijvingen()

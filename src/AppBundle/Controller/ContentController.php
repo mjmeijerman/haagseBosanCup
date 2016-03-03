@@ -122,7 +122,6 @@ class ContentController extends BaseController
     public function getNewPassPageAction(Request $request)
     {
         $this->setBasicPageData();
-        $error = "";
         if ($request->getMethod() == 'POST')
         {
             $username = $this->get('request')->request->get('username');
@@ -130,7 +129,10 @@ class ContentController extends BaseController
                 ->getRepository('AppBundle:User')
                 ->loadUserByUsername($username);
             if (!$user) {
-                $error = 'Deze gebruikersnaam bestaat niet';
+                $this->addFlash(
+                    'error',
+                    'Deze gebruikersnaam bestaat niet'
+                );
             }
             else {
                 $password = $this->generatePassword();
@@ -147,12 +149,15 @@ class ContentController extends BaseController
                     'password' => $password,
                 );
                 $this->sendEmail($subject, $to, $view, $mailParameters);
-                $error = 'Een nieuw wachtwoord is gemaild';
+                $this->addFlash(
+                    'success',
+                    'Een nieuw wachtwoord is gemaild'
+                );
+                return $this->redirectToRoute('login_route');
             }
         }
 
         return $this->render('security/newPass.html.twig', array(
-            'error' => $error,
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
         ));
