@@ -26,10 +26,7 @@ class InschrijvingController extends BaseController
     private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            if ($request->request->get('remove_session')) {
-                $session->clear();
-                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
-            } elseif ($request->request->get('ids')) {
+            if ($request->request->get('ids')) {
                 $ids = explode('.', $request->request->get('ids'));
                 array_pop($ids);
                 foreach ($ids as $id) {
@@ -67,6 +64,10 @@ class InschrijvingController extends BaseController
                         }
                     }
                 }
+            }
+            if ($request->request->get('remove_session')) {
+                $session->clear();
+                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
             }
         }
         $turnsterFields = [];
