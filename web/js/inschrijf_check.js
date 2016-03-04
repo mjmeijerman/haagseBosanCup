@@ -558,11 +558,16 @@ function get_niveaus(key) {
         type: 'get',
         url: Routing.generate('getAvailableNiveausAjaxCall', {geboorteJaar: geboorteJaar}),
         success: function (data) {
-            console.log(data);
             niveau.innerHTML = '';
             for (var field in data) {
                 niveau.innerHTML += '<option value="' + data[field] + '">' + data[field] + '</option>';
             }
         }
     });
+}
+
+function afsluiten()
+{
+    document.getElementById('remove_session').value = true;
+    document.forms["turnsters"].submit();
 }

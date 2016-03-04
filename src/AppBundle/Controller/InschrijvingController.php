@@ -26,40 +26,45 @@ class InschrijvingController extends BaseController
     private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            $ids = explode('.', $request->request->get('ids'));
-            array_pop($ids);
-            foreach ($ids as $id) {
-                if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
+            if ($request->request->get('remove_session')) {
+                $session->clear();
+                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
+            } elseif ($request->request->get('ids')) {
+                $ids = explode('.', $request->request->get('ids'));
+                array_pop($ids);
+                foreach ($ids as $id) {
+                    if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
                         $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get('niveau_' . trim($id))) {
-                    /** @var Turnster $turnster */
-                    if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-                        ->findOneBy(['id' => trim($id)])) {
-                        $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                        $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
-                        $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
-                        $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
-                        $turnster->setExpirationDate(null);
-                        $turnster->setIngevuld(true);
-                        $this->addToDB($turnster);
-                    } else {
-                        $turnster = new Turnster();
-                        $scores = new Scores();
-                        if ($this->getVrijePlekken() > 0) {
-                            $turnster->setWachtlijst(false);
+                        /** @var Turnster $turnster */
+                        if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+                            ->findOneBy(['id' => trim($id)])) {
+                            $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                            $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                            $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                            $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                            $turnster->setExpirationDate(null);
+                            $turnster->setIngevuld(true);
+                            $this->addToDB($turnster);
                         } else {
-                            $turnster->setWachtlijst(true);
+                            $turnster = new Turnster();
+                            $scores = new Scores();
+                            if ($this->getVrijePlekken() > 0) {
+                                $turnster->setWachtlijst(false);
+                            } else {
+                                $turnster->setWachtlijst(true);
+                            }
+                            $turnster->setCreationDate(new \DateTime('now'));
+                            $turnster->setExpirationDate(null);
+                            $turnster->setScores($scores);
+                            $turnster->setUser($user);
+                            $turnster->setIngevuld(true);
+                            $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                            $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                            $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                            $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                            $user->addTurnster($turnster);
+                            $this->addToDB($user);
                         }
-                        $turnster->setCreationDate(new \DateTime('now'));
-                        $turnster->setExpirationDate(null);
-                        $turnster->setScores($scores);
-                        $turnster->setUser($user);
-                        $turnster->setIngevuld(true);
-                        $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                        $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
-                        $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
-                        $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
-                        $user->addTurnster($turnster);
-                        $this->addToDB($user);
                     }
                 }
             }

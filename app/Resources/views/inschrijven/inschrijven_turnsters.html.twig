@@ -63,6 +63,9 @@
                 <br/>
             <center><div id="controle_button" onclick="post_turnsters()">Ingevoerde turnsters
                     opslaan!</div></center>
+                <br>
+                <center><div id="controle_button" onclick="afsluiten()">Afsluiten!</div></center>
+                <input type="hidden" id="remove_session" name="remove_session"/>
         </form>
 
         <h4>&#187; Opgeslagen deelnemers</h4>
@@ -72,7 +75,7 @@
                 <th></th>
                 <th>Voornaam</th>
                 <th>Achternaam</th>
-                <th>Gebboortejaar</th>
+                <th>Geboortejaar</th>
                 <th>Niveau</th>
             </tr>
         {% for turnster in opgeslagenTurnsters %}
