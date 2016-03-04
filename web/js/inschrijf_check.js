@@ -413,7 +413,14 @@ function validate_wachtwoord(show_error_messages) {
             wachtwoord.className = 'error';
             wachtwoord2.className = 'error';
         } else if (wachtwoord2.value.length == 0) {
-            
+            wachtwoord.className = 'succesIngevuld';
+            validated = true;
+            if (document.getElementById("wachtwoord_error")) {
+                document.getElementById("error_container").innerHTML = '';
+            }
+            if (show_error_messages) {
+                check_contactpersoon()
+            }
         } else {
             wachtwoord.className = 'succesIngevuld';
             wachtwoord2.className = 'succesIngevuld';
