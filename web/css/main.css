@@ -767,6 +767,14 @@ body {
 	background: #F5F5A7;
 }
 
+.content .controle_wachtlijst {
+	background: #FFC1C1;
+}
+
+.content .controle_nummer {
+	width: 2em;
+}
+
 .content .controle_voornaam {
 	width: 12em;
 }
