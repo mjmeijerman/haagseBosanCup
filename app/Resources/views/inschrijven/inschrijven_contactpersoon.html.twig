@@ -1,56 +1,71 @@
 {% extends 'default/base.html.twig' %}
 
 {% block body %}
-    <script src="{{ asset('js/jquery.js') }}"></script>
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-    <script src="{{ asset('js/inschrijf_check.js') }}"></script>
-    <h1>Inschrijven</h1>
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+<script src="{{ asset('js/inschrijf_check.js') }}"></script>
+<h1>Inschrijven</h1>
 
-    Op dit moment zijn er nog <span id="aantal_vrije_plekken" style="font-weight: bold;">{{ vrijePlekken }}</span> vrije
-    plekken!
+Op dit moment zijn er nog <span id="aantal_vrije_plekken" style="font-weight: bold;">{{ vrijePlekken }}</span> vrije
+plekken!
 
-    <div id="inschrijven_vereniging">
-        <h4 id="inschrijven_vereniging_header">&#187; Vereniging</h4>
-        Laten we beginnen met het selecteren van de vereniging waarvoor je inschrijft:<br/>
-        <br/>
+<div id="inschrijven_vereniging">
+    <h4 id="inschrijven_vereniging_header" class="{{ classNames.inschrijven_vereniging_header }}">&#187; Vereniging</h4>
+    Laten we beginnen met het selecteren van de vereniging waarvoor je inschrijft:<br/>
+    <br/>
 
-        <div class="row">
-            <form name="vereniging">
-                <select name="vereniging" class="select" onchange="aantal_plekken();check_vereniging();
+    <div class="row">
+        <form name="vereniging">
+            <select name="vereniging" class="{{ classNames.verenigingnaam }}" onchange="aantal_plekken();
+                        check_vereniging();
                 update_vereningsnaam()"
-                        id="verenigingnaam">
+                    id="verenigingnaam">
 
-                    <option class="option" value="" selected>
-                        Selecteer een vereniging
-                    </option>
-                    {% for vereniging in verenigingen %}
-                        <option class="option"
-                                value="{{ vereniging.id }}_{{ vereniging.naam }}, {{ vereniging.plaats }}">
-                            {{ vereniging.naam }}, {{ vereniging.plaats }}</option>
-                    {% endfor %}
-                </select>
-        </div>
-        <br/>
-        <input type="checkbox" id="verenigingstaaternietbijikbenzozielig" onchange="vereniging_bestaat_niet()"> <label
-                for="verenigingstaaternietbijikbenzozielig" style="width: auto;">Mijn vereniging staat er niet bij!
-            &#128533;</label>
+                <option class="option" value="" selected>
+                    Selecteer een vereniging
+                </option>
+                {% for vereniging in verenigingen %}
+                    <option class="option"
+                            {% if vereniging.id == values.verenigingId %}
+                                selected
+                            {% endif %}
+                            value="{{ vereniging.id }}_{{ vereniging.naam }}, {{ vereniging.plaats }}">
+                        {{ vereniging.naam }}, {{ vereniging.plaats }}</option>
+                {% endfor %}
+            </select>
+    </div>
+    <br/>
+    <input type="checkbox" id="verenigingstaaternietbijikbenzozielig"
+           onchange="vereniging_bestaat_niet()" {{ verenigingOption }}> <label
+            for="verenigingstaaternietbijikbenzozielig" style="width: auto;">Mijn vereniging staat er niet bij!
+        &#128533;</label>
 
+    {% if verenigingOption == "checked" %}
+    <div id="inschrijven_nieuwe_vereniging" style="display:{{ display }};">
+        {% else %}
         <div id="inschrijven_nieuwe_vereniging" style="display:none;">
+            {% endif %}
+
             <br/>
             <hr>
             <br/>Staat je vereniging er niet bij?! Geen zorgen! Vul hier de details van je vereniging in en je kunt
             alsnog verder met inschrijven.<br/><br/>
 
-            <div class="row"><label for="verenigingsnaam">Naam vereniging:</label><input type="text" class="text"
+            <div class="row"><label for="verenigingsnaam">Naam vereniging:</label><input type="text"
+                                                                                         class="{{ classNames.verenigingsnaam }}"
                                                                                          id="verenigingsnaam"
+                                                                                         value="{{ values.verenigingsnaam }}"
                                                                                          name="verenigingsnaam"
                                                                                          placeholder="Naam vereniging"
                                                                                          onchange="check_vereniging();update_vereningsnaam()"
                                                                                          onkeyup="validate_vereniging_naam(true)"/>
             </div>
-            <div class="row"><label for="verenigingsplaats">Plaats vereniging:</label><input type="text" class="text"
+            <div class="row"><label for="verenigingsplaats">Plaats vereniging:</label><input type="text"
+                                                                                             class="{{ classNames.verenigingsplaats }}"
                                                                                              id="verenigingsplaats"
+                                                                                             value="{{ values
+                                                                                             .verenigingsplaats }}"
                                                                                              name="verenigingsplaats"
                                                                                              placeholder="Plaats"
                                                                                              onchange="check_vereniging();update_vereningsnaam()"
@@ -61,31 +76,40 @@
 
     </div>
 
-    <div id="inschrijven_contactpersoon" style="display:none;">
-        <h4 id="inschrijven_contactpersoon_header">&#187; Contactpersoon</h4>
+    <div id="inschrijven_contactpersoon" style="display:{{ display }};">
+        <h4 id="inschrijven_contactpersoon_header" class="{{ classNames.inschrijven_contactpersoon_header }}">&#187;
+            Contactpersoon</h4>
         Super! Je kunt nu verder met inschrijven voor <span id="inschrijven_verenigingsnaam"></span>.<br/>
         Dan zouden we nu graag wat gegevens van de contactpersoon willen hebben.<br/>
         <br/>
 
         <form name="inschrijven_contactpersoon">
-            <div class="row"><label for="voornaam">Voornaam:</label> <input type="text" class="text"
+            <div class="row"><label for="voornaam">Voornaam:</label> <input type="text"
+                                                                            class="{{ classNames.voornaam }}"
                                                                             id="voornaam"
+                                                                            value="{{ values.voornaam }}"
                                                                             placeholder="Voornaam"
                                                                             onchange="check_contactpersoon()"
                                                                             onkeyup="validate_voornaam(true)"/></div>
 
-            <div class="row"><label for="achternaam">Achternaam:</label> <input type="text" class="text" id="achternaam"
+            <div class="row"><label for="achternaam">Achternaam:</label> <input type="text" class="{{ classNames
+                .achternaam }}" id="achternaam"
                                                                                 placeholder="Achternaam"
+                                                                                value="{{ values.achternaam }}"
                                                                                 onchange="check_contactpersoon()"
                                                                                 onkeyup="validate_achternaam(true)"/>
             </div>
-            <div class="row"><label for="email">E-mail:</label> <input type="email" class="text" id="email"
+            <div class="row"><label for="email">E-mail:</label> <input type="email" class="{{ classNames.email }}"
+                                                                       id="email"
+                                                                       value="{{ values.email }}"
                                                                        placeholder="jouw@email.nl"
                                                                        onchange="check_contactpersoon()"
                                                                        onkeyup="validate_email(true)"/></div>
 
-            <div class="row"><label for="telefoonnummer">Telefoonummer:</label> <input type="text" class="text"
+            <div class="row"><label for="telefoonnummer">Telefoonummer:</label> <input type="text"
+                                                                                       class="{{ classNames.telefoonnummer }}"
                                                                                        id="telefoonnummer"
+                                                                                       value="{{ values.telefoonnummer }}"
                                                                                        placeholder="0612345678"
                                                                                        onchange="check_contactpersoon()"
                                                                                        onkeyup="validate_telefoonnummer(true)"/>
@@ -96,17 +120,24 @@
             <br/>
             <br/>
 
-            <div class="row"><label for="username">Inlognaam:</label> <input type="text" class="text" id="username"
+            <div class="row"><label for="username">Inlognaam:</label> <input type="text"
+                                                                             class="{{ classNames.username }}"
+                                                                             id="username"
+                                                                             value="{{ values.username }}"
                                                                              placeholder="kies_je_inlognaam"
                                                                              onchange="check_contactpersoon();validate_username(true)"/>
             </div>
-            <div class="row"><label for="wachtwoord">Wachtwoord:</label> <input type="password" class="text"
+            <div class="row"><label for="wachtwoord">Wachtwoord:</label> <input type="password" class="{{ classNames
+                .wachtwoord }}"
                                                                                 id="wachtwoord" placeholder="********"
+                                                                                value="{{ values.wachtwoord }}"
                                                                                 onchange="check_contactpersoon()"
                                                                                 onkeyup="validate_wachtwoord(true)"/>
             </div>
-            <div class="row"><label for="wachtwoord2">Nogmaals:</label> <input type="password" class="text"
+            <div class="row"><label for="wachtwoord2">Nogmaals:</label> <input type="password" class="{{ classNames
+                .wachtwoord2 }}"
                                                                                id="wachtwoord2" placeholder="********"
+                                                                               value="{{ values.wachtwoord2 }}"
                                                                                onchange="check_contactpersoon()"
                                                                                onkeyup="validate_wachtwoord2(true)
                                                                                "/></div>
@@ -114,18 +145,25 @@
         </form>
     </div>
 
-    <div id="inschrijven_reserveren" style="display:none;">
-        <h4>&#187; Plekken reserveren</h4>
+    <div id="inschrijven_reserveren" style="display:{{ display }};">
+        <h4 id="aantal_plekken_header" class="{{ classNames.aantal_plekken_header }}">&#187; Plekken reserveren</h4>
         Het meest belangrijke is het inschrijven van de turnsters. Jij geeft het aantal aan, en wij reserveren de
         plaatsen. Voor elke turnster houden wij de plekken 1 minuut langer gereserveerd, met een minimum van 5
         minuten.<br/>
         <br/>
-        Ik ben van plan om <input type="number" id="reserveer_aantal_invoer" class="number" placeholder="0"
-                                  onchange="update_reserveer_display()" min="1" max="100"/> turnsters in te schrijven.
+        Ik ben van plan om <input type="number" id="reserveer_aantal_invoer" class="{{ classNames.aantalTurnsters }}" placeholder="0"
+                                  onchange="update_reserveer_display()" min="1" max="100" value="{{ values
+        .aantalTurnsters
+        }}"/>
+        turnsters
+        in te
+        schrijven.
         <br/>
         <br/>
 
-        <div id="reserveer_button" onclick="post_gegevens()"><span id="reserveer_aantal">0 plekken reserveren!</span>
+        <div id="reserveer_button" onclick="post_gegevens()"><span id="reserveer_aantal">{{ values
+                .aantalTurnsters
+                }} plekken reserveren!</span>
         </div>
     </div>
     <form id="post_form" method="post" action="">
@@ -139,11 +177,11 @@
         <input type="hidden" name="username" id="post_username"/>
         <input type="hidden" name="wachtwoord" id="post_wachtwoord"/>
         <input type="hidden" name="wachtwoord2" id="post_wachtwoord2"/>
-        <input type="hidden" name="aantalturnsters" id="post_aantalturnsters"/>
+        <input type="hidden" name="aantalTurnsters" id="post_aantalturnsters"/>
         <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
     </form>
-{% endblock %}
+    {% endblock %}
 
-{% block javascript %}
-    {{ parent() }}
-{% endblock %}
+    {% block javascript %}
+        {{ parent() }}
+    {% endblock %}

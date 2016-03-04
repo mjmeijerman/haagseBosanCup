@@ -498,21 +498,40 @@ function show_reserveren() {
 
 function update_reserveer_display() {
     aantal_plekken();
-    var z = document.getElementById('reserveer_aantal_invoer').value;
-    if (z !== '') {
-        if (z == 1) {
-            document.getElementById('reserveer_aantal').innerHTML = '1 plek reserveren!';
+    if (document.getElementById('reserveer_aantal_invoer').value < 1) {
+        document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+            ' id="aantal_error"><b>FOUTMELDING:</b> Het aantal turnsters moet groter zijn dan 0!</span></div>';
+        document.getElementById('reserveer_aantal_invoer').className = 'error';
+        document.getElementById('aantal_plekken_header').className = '';
+        document.getElementById('reserveer_aantal').innerHTML = '0 plekken reserveren!';
+    } else {
+        var z = document.getElementById('reserveer_aantal_invoer').value;
+        if (z !== '') {
+            if (z == 1) {
+                document.getElementById('reserveer_aantal').innerHTML = '1 plek reserveren!';
+            }
+            else {
+                document.getElementById('reserveer_aantal').innerHTML = z + ' plekken reserveren!';
+            }
+            document.getElementById("error_container").innerHTML = '';
+            document.getElementById('reserveer_aantal_invoer').className = 'succesIngevuld';
+            document.getElementById('aantal_plekken_header').className = 'success';
         }
         else {
-            document.getElementById('reserveer_aantal').innerHTML = z + ' plekken reserveren!';
+            document.getElementById('reserveer_aantal').innerHTML = '0 plekken reserveren!';
+            document.getElementById('reserveer_aantal_invoer').className = 'text';
+            document.getElementById('aantal_plekken_header').className = '';
         }
-    }
-    else {
-        document.getElementById('reserveer_aantal').innerHTML = '0 plekken reserveren!';
     }
 }
 function post_gegevens()
 {
+    if (document.getElementById('reserveer_aantal_invoer').value < 1) {
+        document.getElementById("error_container").innerHTML = '<div id="error"><span' +
+            ' id="aantal_error"><b>FOUTMELDING:</b> Het aantal turnsters moet groter zijn dan 0!</span></div>';
+        document.getElementById('reserveer_aantal_invoer').className = 'error';
+        return;
+    }
     document.getElementById('reserveer_button').style.pointerEvents = 'none';
     document.getElementById('post_verenigingsnaam').value = document.getElementById('verenigingsnaam').value;
     document.getElementById('post_verenigingsplaats').value = document.getElementById('verenigingsplaats').value;
