@@ -1,0 +1,326 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    {#<div id="inschrijven"><a href="#">Turnster toevoegen &#187;</a></div>#}
+
+    <h1>Uw gegevens</h1>
+    {#<i>Wil je gegevens bewerken? Dat is heel simpel, je hoeft er alleen maar op te klikken!</i>#}
+
+    <h4>&#187; Vereniging</h4>
+    <table class="controle_tabel">
+        <tr>
+            <td>
+                {{ contactgegevens.vereniging }}
+            </td>
+        </tr>
+    </table>
+
+    <h4>&#187; Contactpersoon</h4>
+    <table class="aanpas_tabel">
+        <tr>
+            <td>Gebruikersnaam:</td>
+            <td>{{ contactgegevens.gebruikersnaam }}</td>
+        </tr>
+        <tr>
+            <td>Voornaam:</td>
+            <td>{{ contactgegevens.voornaam }}</td>
+        </tr>
+        <tr>
+            <td>Achternaam:</td>
+            <td>{{ contactgegevens.achternaam }}</td>
+        </tr>
+        <tr>
+            <td>E-mailadres:</td>
+            <td>{{ contactgegevens.email }}</td>
+        </tr>
+        <tr>
+            <td>Wachtwoord:</td>
+            <td>Wijzigen</td>
+        </tr>
+    </table>
+
+    {#<a href="#" id="factuur">&#187; Factuur downloaden</a>#}
+    {#<a href="#" id="indeling">&#187; Wedstrijdindeling downloaden</a>#}
+
+    <h4>&#187; Deelnemers ({{ turnsters|length }})</h4>
+    <table id="deelnemers">
+
+        <tr>
+            <th width="20">
+                #
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                Achternaam
+            </th>
+            <th>
+                Geb. jaar
+            </th>
+            <th>
+                Cat.
+            </th>
+            <th>
+                Niv.
+            </th>
+            <th>
+                Nr.
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        {% for turnster in turnsters %}
+        <tr>
+            <td>
+                {{ loop.index }}
+            </td>
+            <td>
+                {{ turnster.voornaam }}
+            </td>
+            <td>
+                {{ turnster.achternaam }}
+            </td>
+            <td>
+                {{ turnster.geboorteJaar }}
+            </td>
+            <td>
+                {{ turnster.categorie }}
+            </td>
+            <td>
+                {{ turnster.niveau }}
+            </td>
+            <td>
+                {{ turnster.wedstrijdnummer }}
+            </td>
+            <td>
+                <img src="{{ asset('images/refresh.png') }}" height="18">
+                <img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"
+                                                                        height="18">
+            </td>
+            <td>
+                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
+            <td>Muziek uploaden</td>
+            <td><img src="{{ asset('images/edit.png') }}"></td>
+            <td>Inschrijving bewerken</td>
+        </tr>
+        <tr>
+            <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
+            <td>Muziek beluisteren</td>
+            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+            <td>Inschrijving verwijderen</td>
+        </tr>
+        <tr>
+            <td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>
+            <td>Muziek opnieuw uploaden</td>
+        </tr>
+    </table>
+
+
+    <h4>&#187; Wachtlijst {{ wachtlijstTurnsters|length }}</h4>
+    <table id="wachtlijst">
+        <tr>
+            <th width="20">
+                #
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                Achternaam
+            </th>
+            <th>
+                Geb. jaar
+            </th>
+            <th>
+                Cat.
+            </th>
+            <th>
+                Niv.
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        {% for wachtlijst in wachtlijstTurnsters %}
+        <tr>
+            <td>
+                {{ loop.index }}
+            </td>
+            <td>
+                {{ wachtlijst.voornaam }}
+            </td>
+            <td>
+                {{ wachtlijst.achternaam }}
+            </td>
+            <td>
+                {{ wachtlijst.geboorteJaar }}
+            </td>
+            <td>
+                {{ wachtlijst.categorie }}
+            </td>
+            <td>
+                {{ wachtlijst.niveau }}
+            </td>
+            <td>
+                <img src="{{ asset('images/refresh.png') }}" height="18">
+                <img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"
+                                                                        height="18">
+            </td>
+            <td>
+                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
+            <td>Muziek uploaden</td>
+            <td><img src="{{ asset('images/edit.png') }}"></td>
+            <td>Inschrijving bewerken</td>
+        </tr>
+        <tr>
+            <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
+            <td>Muziek beluisteren</td>
+            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+            <td>Inschrijving verwijderen</td>
+        </tr>
+        <tr>
+            <td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>
+            <td>Muziek opnieuw uploaden</td>
+        </tr>
+    </table>
+
+    <h4>&#187; Juryleden ({{ juryleden|length }})</h4>
+    <table id="juryleden">
+        <tr>
+            <th width="20">
+                #
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                Achternaam
+            </th>
+            <th>
+                Opmerking
+            </th>
+            <th>
+                Brevet
+            </th>
+        </tr>
+        {% for jurylid in juryleden %}
+        <tr>
+            <td>
+                {{ loop.index }}
+            </td>
+            <td>
+                {{ jurylid.voornaam }}
+            </td>
+            <td>
+                {{ jurylid.achtgernaam }}
+            </td>
+            <td>
+                {{ jurylid.opmerking }}
+            </td>
+            <td>
+                {{ jurylid.brevet }}
+            </td>
+            <td>
+                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td><img src="{{ asset('images/edit.png') }}"></td>
+            <td>Jurylid bewerken</td>
+        </tr>
+        <tr>
+            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+            <td>Jurylid verwijderen</td>
+        </tr>
+    </table>
+
+    <h4>&#187; Afmeldingen {{ afgemeldTurnsters|length }}</h4>
+    <table id="afmeldingen">
+        <tr>
+            <th width="20">
+                #
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                Achternaam
+            </th>
+            <th>
+                Geb. jaar
+            </th>
+            <th>
+                Cat.
+            </th>
+            <th>
+                Niv.
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        {% for afmelding in afgemeldTurnsters %}
+            <tr>
+                <td>
+                    {{ loop.index }}
+                </td>
+                <td>
+                    {{ afmelding.voornaam }}
+                </td>
+                <td>
+                    {{ afmelding.achternaam }}
+                </td>
+                <td>
+                    {{ afmelding.geboorteJaar }}
+                </td>
+                <td>
+                    {{ afmelding.categorie }}
+                </td>
+                <td>
+                    {{ afmelding.niveau }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h4 id="contact">&#187; Contact</h4>
+    Problemen? Stuur een mail naar de betreffende afdeling:<br/>
+    <br/>
+    <li><a href="mailto:jury@haagsebosancup.nl">jury@haagsebosancup.nl</a></li>
+    <li><a href="mailto:webmaster@haagsebosancup.nl">webmaster@haagsebosancup.nl</a></li>
+    <br/>
+    Bij algemene vragen, of bij twijfel, mail dan naar:
+    <br/>
+    <li><a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></li>
+{% endblock %}
