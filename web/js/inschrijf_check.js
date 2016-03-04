@@ -546,9 +546,9 @@ function post_gegevens() {
     document.forms["post_form"].submit();
 }
 
-function get_niveaus() {
-    var geboorteJaar = document.getElementById('geboorteJaar').value;
-    var niveau = document.getElementById('mogelijke_niveaus');
+function get_niveaus(key) {
+    var geboorteJaar = document.getElementById('geboorteJaar_' + key).value;
+    var niveau = document.getElementById('mogelijke_niveaus_' + key);
     $.ajax({
         type: 'get',
         url: Routing.generate('getAvailableNiveausAjaxCall', {geboorteJaar: geboorteJaar}),

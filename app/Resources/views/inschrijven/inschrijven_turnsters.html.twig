@@ -39,7 +39,7 @@
                 <input type="text" class="turnster_achternaam" id="achternaam_{{ key }}" name="achternaam_{{ key }}"
                        placeholder="Achternaam" />  <!-- vergeet de spatie niet -->
                 <select class="turnster_niveau" id="geboorteJaar_{{ key }}" name="geboorteJaar_{{ key }}" onchange="get_niveaus
-                ()">
+                ({{ key }})">
                     <option value="" selected>Geboortejaar</option>
                     {% for geboorteJaar in geboorteJaren %}
                         <option value="{{ geboorteJaar }}">{{ geboorteJaar }}</option>
