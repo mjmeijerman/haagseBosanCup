@@ -68,7 +68,7 @@ function check_vereniging() {
             document.getElementById('verenigingstaaternietbijikbenzozielig').checked = false;
             document.getElementById('inschrijven_nieuwe_vereniging').style.display = 'none';
             document.getElementById('inschrijven_vereniging_header').className = 'success';
-            document.getElementById('verenigingnaam').className = 'success';
+            document.getElementById('verenigingnaam').className = 'selectIngevuld';
         }
         else {
             document.getElementById('inschrijven_contactpersoon').style.display = 'none';
