@@ -71,20 +71,13 @@
         <h4>&#187; Opgeslagen deelnemers</h4>
         De volgende turnsters zijn succesvol opgeslagen:
         <table class="controle_tabel">
-            <tr>
-                <th></th>
-                <th>Voornaam</th>
-                <th>Achternaam</th>
-                <th>Geboortejaar</th>
-                <th>Niveau</th>
-            </tr>
         {% for turnster in opgeslagenTurnsters %}
             <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ turnster.voornaam }}</td>
-                <td>{{ turnster.achternaam }}</td>
-                <td>{{ turnster.geboortejaar }}</td>
-                <td>{{ turnster.niveau }}</td>
+                <td class="controle_nummer">{{ loop.index }}</td>
+                <td class="controle_voornaam">{{ turnster.voornaam }}</td>
+                <td class="controle_achternaam">{{ turnster.achternaam }}</td>
+                <td class="controle_geboortejaar">{{ turnster.geboortejaar }}</td>
+                <td class="controle_niveau">{{ turnster.niveau }}</td>
             </tr>
         {% endfor %}
         </table>
