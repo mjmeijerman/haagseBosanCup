@@ -412,6 +412,8 @@ function validate_wachtwoord(show_error_messages) {
                 ' id="wachtwoord_error"><b>FOUTMELDING:</b> De ingevoerde wachtwoorden zijn niet gelijk!</span></div>';
             wachtwoord.className = 'error';
             wachtwoord2.className = 'error';
+        } else if (wachtwoord2.value.length == 0) {
+            
         } else {
             wachtwoord.className = 'succesIngevuld';
             wachtwoord2.className = 'succesIngevuld';
