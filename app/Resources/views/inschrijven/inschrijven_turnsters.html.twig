@@ -22,35 +22,69 @@
         aftelt (rechts bovenin). <br><br>
 
         Tip: als de tijd bijna om is en je hebt nog niet alle gegevens ingevoerd kun je op opslaan klikken om alle
-        ingevoerde turnsters alvast op te slaan.
-        <br />
-        <br />
-        {% for key, turnster in turnsterFields %}
+        ingevoerde turnsters alvast op te slaan. De ingevoerde turnsters zullen dan verdwijnen van het
+        inschrijfformulier en kun je later via het inloggedeelte nog wijzigen. Ook het toevoegen van extra turnsters
+        kan via het inloggedeelte.
+        <br/>
+        <br/>
+
+        <form method="post" action="" name="turnsters">
+            <input type="hidden" name="ids" value="
+            {% for key, turnster in turnsterFields %}
+                {{ key }}.
+            {% endfor %}
+            "/>
+            {% for key, turnster in turnsterFields %}
             {% if turnster %}
-                <div class="row_turnster_wachtlijst">
-            {% else %}
+            <div class="row_turnster_wachtlijst">
+                {% else %}
                 <div class="row_turnster">
-            {% endif %}
-                {{ loop.index }} |
-                <input type="text" class="turnster_voornaam" id="voornaam_{{ key }}" name="voornaam_{{ key }}"
-                       placeholder="Voornaam" /> <!--
+                    {% endif %}
+                    {{ loop.index }} |
+                    <input type="text" class="turnster_voornaam" id="voornaam_{{ key }}" name="voornaam_{{ key }}"
+                           placeholder="Voornaam"/> <!--
                 vergeet de
             spatie niet -->
-                <input type="text" class="turnster_achternaam" id="achternaam_{{ key }}" name="achternaam_{{ key }}"
-                       placeholder="Achternaam" />  <!-- vergeet de spatie niet -->
-                <select class="turnster_niveau" id="geboorteJaar_{{ key }}" name="geboorteJaar_{{ key }}" onchange="get_niveaus
-                ({{ key }})">
-                    <option value="" selected>Geboortejaar</option>
-                    {% for geboorteJaar in geboorteJaren %}
-                        <option value="{{ geboorteJaar }}">{{ geboorteJaar }}</option>
-                    {% endfor %}
-                </select>
-                <select class="turnster_niveau" id="mogelijke_niveaus_{{ key }}" name="niveau_{{ key }}">
-                    <option value="" selected>Niveau</option>
-                </select>
-            </div>
+                    <input type="text" class="turnster_achternaam" id="achternaam_{{ key }}" name="achternaam_{{ key }}"
+                           placeholder="Achternaam"/> <!-- vergeet de spatie niet -->
+                    <select class="turnster_niveau" id="geboorteJaar_{{ key }}" name="geboorteJaar_{{ key }}"
+                            onchange="get_niveaus
+                                    ({{ key }})">
+                        <option value="" selected>Geboortejaar</option>
+                        {% for geboorteJaar in geboorteJaren %}
+                            <option value="{{ geboorteJaar }}">{{ geboorteJaar }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="turnster_niveau" id="mogelijke_niveaus_{{ key }}" name="niveau_{{ key }}">
+                        <option value="" selected>Niveau</option>
+                    </select>
+                </div>
         {% endfor %}
-        <br />
+                <br/>
+            <center><div id="controle_button" onclick="post_turnsters()">Ingevoerde turnsters
+                    opslaan!</div></center>
+        </form>
+
+        <h4>&#187; Opgeslagen deelnemers</h4>
+        De volgende turnsters zijn succesvol opgeslagen:
+        <table class="controle_tabel">
+            <tr>
+                <th></th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+                <th>Gebboortejaar</th>
+                <th>Niveau</th>
+            </tr>
+        {% for turnster in opgeslagenTurnsters %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ turnster.voornaam }}</td>
+                <td>{{ turnster.achternaam }}</td>
+                <td>{{ turnster.geboortejaar }}</td>
+                <td>{{ turnster.niveau }}</td>
+            </tr>
+        {% endfor %}
+        </table>
     </div>
 {% endblock %}
 

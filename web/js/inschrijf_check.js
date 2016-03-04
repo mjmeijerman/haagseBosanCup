@@ -524,6 +524,11 @@ function update_reserveer_display() {
         }
     }
 }
+
+function post_turnsters() {
+    document.forms["turnsters"].submit();
+}
+
 function post_gegevens() {
     if (document.getElementById('reserveer_aantal_invoer').value < 1) {
         document.getElementById("error_container").innerHTML = '<div id="error"><span' +

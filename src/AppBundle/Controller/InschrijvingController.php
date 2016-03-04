@@ -25,6 +25,45 @@ class InschrijvingController extends BaseController
 {
     private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
     {
+        if ($request->getMethod() == 'POST') {
+            $ids = explode('.', $request->request->get('ids'));
+            array_pop($ids);
+            foreach ($ids as $id) {
+                if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
+                        $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get('niveau_' . trim($id))) {
+                    /** @var Turnster $turnster */
+                    if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+                        ->findOneBy(['id' => trim($id)])) {
+                        $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                        $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                        $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                        $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                        $turnster->setExpirationDate(null);
+                        $turnster->setIngevuld(true);
+                        $this->addToDB($turnster);
+                    } else {
+                        $turnster = new Turnster();
+                        $scores = new Scores();
+                        if ($this->getVrijePlekken() > 0) {
+                            $turnster->setWachtlijst(false);
+                        } else {
+                            $turnster->setWachtlijst(true);
+                        }
+                        $turnster->setCreationDate(new \DateTime('now'));
+                        $turnster->setExpirationDate(null);
+                        $turnster->setScores($scores);
+                        $turnster->setUser($user);
+                        $turnster->setIngevuld(true);
+                        $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                        $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                        $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                        $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                        $user->addTurnster($turnster);
+                        $this->addToDB($user);
+                    }
+                }
+            }
+        }
         $turnsterFields = [];
         $timeToExpiration = 0;
         /** @var Turnster[] $turnsters */
@@ -47,6 +86,7 @@ class InschrijvingController extends BaseController
             }
         }
         $geboorteJaren = $this->getGeboorteJaren();
+        $opgeslagenTurnsters = [];
         foreach ($turnsters as $turnster) {
             if ($turnster->getExpirationDate()) {
                 $turnsterFields[$turnster->getId()] = $turnster->getWachtlijst();
@@ -56,6 +96,14 @@ class InschrijvingController extends BaseController
                 if ($timeToExpiration < 0) {
                     $timeToExpiration = 0;
                 }
+            } else {
+                $opgeslagenTurnsters[] = [
+                    'voornaam' => $turnster->getVoornaam(),
+                    'achternaam' => $turnster->getAchternaam(),
+                    'geboortejaar' => $turnster->getGeboortejaar(),
+                    'niveau' => $turnster->getNiveau(),
+                    'wachtlijst' => $turnster->getWachtlijst(),
+                ];
             }
         }
         $tijdTot = date('d-m-Y H:i', (time() + ($timeToExpiration)*60));
@@ -68,6 +116,7 @@ class InschrijvingController extends BaseController
             'turnsterFields' => $turnsterFields,
             'tijdTot' => $tijdTot,
             'geboorteJaren' => $geboorteJaren,
+            'opgeslagenTurnsters' => $opgeslagenTurnsters,
         ));
     }
 
