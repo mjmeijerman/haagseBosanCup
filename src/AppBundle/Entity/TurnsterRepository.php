@@ -26,4 +26,14 @@ class TurnsterRepository extends EntityRepository
             ->getSingleScalarResult();
         return $bezettePlekken;
     }
+
+    public function getGereserveerdePlekken()
+    {
+        $gereserveerdePlekken = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.expirationDate IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+        return $gereserveerdePlekken;
+    }
 }

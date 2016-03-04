@@ -89,7 +89,7 @@ class Turnster
     private $vloermuziek;
 
     /**
-     * @ORM\OneToOne(targetEntity="Scores", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToOne(targetEntity="Scores", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="score_id", referencedColumnName="id", nullable=true)
      **/
     private $scores;

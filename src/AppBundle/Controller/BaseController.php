@@ -75,10 +75,12 @@ class BaseController extends Controller
         $this->addToDB($result);
     }
 
-    protected function checkVoorinschrijvingsToken($token)
+    protected function checkVoorinschrijvingsToken($token, Session $session)
     {
         if ($token === null) {
             return false;
+        } elseif ($token == $session->get('token')) {
+            return true;
         } else {
             /** @var Voorinschrijving $result */
             $result = $this->getDoctrine()
@@ -107,13 +109,13 @@ class BaseController extends Controller
         return ($maxPlekken[self::MAX_AANTAL_TURNSTERS] - $result);
     }
 
-    protected function inschrijvingToegestaan($token = null)
+    protected function inschrijvingToegestaan($token = null, Session $session)
     {
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
         if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
                 time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS])) ||
-            $this->checkVoorinschrijvingsToken($token)
+            $this->checkVoorinschrijvingsToken($token, $session)
         ) {
             return true;
         }

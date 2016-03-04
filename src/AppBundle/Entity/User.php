@@ -108,7 +108,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $jurylid;
 
     /**
-     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"})
      */
     private $turnster;
 

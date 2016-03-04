@@ -514,12 +514,12 @@ function update_reserveer_display() {
                 document.getElementById('reserveer_aantal').innerHTML = z + ' plekken reserveren!';
             }
             document.getElementById("error_container").innerHTML = '';
-            document.getElementById('reserveer_aantal_invoer').className = 'succesIngevuld';
+            document.getElementById('reserveer_aantal_invoer').className = 'numberIngevuld';
             document.getElementById('aantal_plekken_header').className = 'success';
         }
         else {
             document.getElementById('reserveer_aantal').innerHTML = '0 plekken reserveren!';
-            document.getElementById('reserveer_aantal_invoer').className = 'text';
+            document.getElementById('reserveer_aantal_invoer').className = 'number';
             document.getElementById('aantal_plekken_header').className = '';
         }
     }
@@ -537,7 +537,7 @@ function post_gegevens()
     document.getElementById('post_verenigingsplaats').value = document.getElementById('verenigingsplaats').value;
     document.getElementById('post_verenigingsid').value = (document.getElementById('verenigingnaam').value.split("_"))[0];
     document.getElementById('post_voornaam').value = document.getElementById('voornaam').value;
-    document.getElementById('post_achternaam').value = document.getElementById('achternaam').value;;
+    document.getElementById('post_achternaam').value = document.getElementById('achternaam').value;
     document.getElementById('post_email').value = document.getElementById('email').value;
     document.getElementById('post_telefoonnummer').value = document.getElementById('telefoonnummer').value;
     document.getElementById('post_username').value = document.getElementById('username').value;
