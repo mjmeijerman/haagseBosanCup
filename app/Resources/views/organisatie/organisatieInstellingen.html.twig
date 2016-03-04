@@ -7,7 +7,7 @@
         <h2>Overzicht</h2>
     </div>
     <div class="bericht">
-        <table>
+        <table class="instellingen_overzicht">
             {% for naam, instelling in instellingen %}
                 <tr>
                     <td>{{ naam }}</td>
@@ -35,7 +35,7 @@
         <a href="{{ path('genereerVoorinschrijving', { 'page': app.request.get('page') }) }}">
             <img src="{{ asset('images/add.png') }}" width="20" /> Genereer nieuwe link
         </a>
-        <table class="inschrijvingen_nieuw">
+        <table class="instellingen">
             <tr>
                 <th width="30%">Voorinschrijvingslink</th>
                 <th width="30%">Verstuurd naar</th>
@@ -75,7 +75,7 @@
         <h2>Reglementen</h2>
     </div>
     <div class="bericht">
-        <table id="uploads" border="1">
+        <table id="uploads" border="1" class="instellingen">
         <col width="15%"/>
         <col width="66.5%"/>
         <col width="18.5%"/>
