@@ -86,7 +86,12 @@
 
 {% block javascripts %}
     <script>
-        var deadline = new Date(Date.parse(new Date()) + 1 * 1 * {{ timeToExpiration }} * 60 * 1000);
-        initializeClock('countdown_inner', deadline);
+		{% if timeToExpiration == 0 %}
+			var deadline = new Date(Date.parse(new Date()) + 1 * 1 * 1 * 1 * 1000);
+			initializeClock('countdown_inner', deadline);
+		{% else %}
+			var deadline = new Date(Date.parse(new Date()) + 1 * 1 * {{ timeToExpiration }} * 60 * 1000);
+			initializeClock('countdown_inner', deadline);
+		{% endif %}
     </script>
 {% endblock %}
