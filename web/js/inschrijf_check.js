@@ -156,10 +156,10 @@ function validate_contact_fields() {
     if (document.getElementById("username").className == 'succesIngevuld') {
         var username = true;
     } else {
-        var username =false;
+        var username = false;
     }
     var wachtwoord = validate_wachtwoord(false);
-    var wachtwoord2 =  validate_wachtwoord2(false);
+    var wachtwoord2 = validate_wachtwoord2(false);
     if (email && voornaam && achternaam && telefoonnummer && username && wachtwoord && wachtwoord2) {
         return true;
     } else {
@@ -524,8 +524,7 @@ function update_reserveer_display() {
         }
     }
 }
-function post_gegevens()
-{
+function post_gegevens() {
     if (document.getElementById('reserveer_aantal_invoer').value < 1) {
         document.getElementById("error_container").innerHTML = '<div id="error"><span' +
             ' id="aantal_error"><b>FOUTMELDING:</b> Het aantal turnsters moet groter zijn dan 0!</span></div>';
@@ -545,4 +544,20 @@ function post_gegevens()
     document.getElementById('post_wachtwoord2').value = document.getElementById('wachtwoord2').value;
     document.getElementById('post_aantalturnsters').value = document.getElementById('reserveer_aantal_invoer').value;
     document.forms["post_form"].submit();
+}
+
+function get_niveaus() {
+    var geboorteJaar = document.getElementById('geboorteJaar').value;
+    var niveau = document.getElementById('mogelijke_niveaus');
+    $.ajax({
+        type: 'get',
+        url: Routing.generate('getAvailableNiveausAjaxCall', {geboorteJaar: geboorteJaar}),
+        success: function (data) {
+            console.log(data);
+            niveau.innerHTML = '';
+            for (var field in data) {
+                niveau.innerHTML += '<option value="' + data[field] + '">' + data[field] + '</option>';
+            }
+        }
+    });
 }

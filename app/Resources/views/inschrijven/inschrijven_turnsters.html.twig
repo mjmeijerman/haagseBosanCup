@@ -1,0 +1,62 @@
+{% extends 'inschrijven/base.html.twig' %}
+
+{% block body %}
+
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ asset('js/inschrijf_check.js') }}"></script>
+    <script src="{{ asset('js/countdown_clock.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+    <h1>Inschrijven</h1>
+    <div id="inschrijven_deelnemers">
+        <h4>&#187; Details deelnemers</h4>
+        Joepie! Er zijn {{ turnsterFields|length }} plekken gereserveerd! Nu kun je in alle rust de details van je
+        turnsters invoeren. Je hebt
+        tot {{ tijdTot }} voor de niet-ingevulde plekken worden vrijgegeven. Turnsters in rood zullen op de
+        wachtlijst geplaatst worden!
+        <br>
+        <br>
+        We hebben ook een mooie klok voor je
+        aangezet die
+        aftelt (rechts bovenin). <br><br>
+
+        Tip: als de tijd bijna om is en je hebt nog niet alle gegevens ingevoerd kun je op opslaan klikken om alle
+        ingevoerde turnsters alvast op te slaan.
+        <br />
+        <br />
+        {% for key, turnster in turnsterFields %}
+            {% if turnster %}
+                <div class="row_turnster_wachtlijst">
+            {% else %}
+                <div class="row_turnster">
+            {% endif %}
+                {{ loop.index }} |
+                <input type="text" class="turnster_voornaam" id="voornaam_{{ key }}" name="voornaam_{{ key }}"
+                       placeholder="Voornaam" /> <!--
+                vergeet de
+            spatie niet -->
+                <input type="text" class="turnster_achternaam" id="achternaam_{{ key }}" name="achternaam_{{ key }}"
+                       placeholder="Achternaam" />  <!-- vergeet de spatie niet -->
+                <select class="turnster_niveau" id="geboorteJaar_{{ key }}" name="geboorteJaar_{{ key }}" onchange="get_niveaus
+                ()">
+                    <option value="" selected>Geboortejaar</option>
+                    {% for geboorteJaar in geboorteJaren %}
+                        <option value="{{ geboorteJaar }}">{{ geboorteJaar }}</option>
+                    {% endfor %}
+                </select>
+                <select class="turnster_niveau" id="mogelijke_niveaus_{{ key }}" name="niveau_{{ key }}">
+                    <option value="" selected>Niveau</option>
+                </select>
+            </div>
+        {% endfor %}
+        <br />
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var deadline = new Date(Date.parse(new Date()) + 1 * 1 * {{ timeToExpiration }} * 60 * 1000);
+        initializeClock('countdown_inner', deadline);
+    </script>
+{% endblock %}

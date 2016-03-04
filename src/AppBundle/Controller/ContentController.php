@@ -101,6 +101,7 @@ class ContentController extends BaseController
      */
     public function aantalVrijePlekkenAjaxCall()
     {
+        $this->updateGereserveerdePlekken();
         return new Response($this->getVrijePlekken());
     }
 

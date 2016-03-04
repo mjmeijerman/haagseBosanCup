@@ -7,6 +7,7 @@ use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vereniging;
 use AppBundle\Entity\Voorinschrijving;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,6 +23,53 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 class InschrijvingController extends BaseController
 {
+    private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
+    {
+        $turnsterFields = [];
+        $timeToExpiration = 0;
+        /** @var Turnster[] $turnsters */
+        $turnsters = $user->getTurnster();
+        if (count($turnsters) < $session->get('aantalTurnsters')) {
+            for ($i = 0; $i < ($session->get('aantalTurnsters') - count($turnsters)); $i++) {
+                $turnster = new Turnster();
+                $scores = new Scores();
+                if ($this->getVrijePlekken() > $i) {
+                    $turnster->setWachtlijst(false);
+                } else {
+                    $turnster->setWachtlijst(true);
+                }
+                $turnster->setCreationDate(new \DateTime('now'));
+                $turnster->setExpirationDate(new \DateTime('now + 2 minutes'));
+                $turnster->setScores($scores);
+                $turnster->setUser($user);
+                $user->addTurnster($turnster);
+                $this->addToDB($user);
+            }
+        }
+        $geboorteJaren = $this->getGeboorteJaren();
+        foreach ($turnsters as $turnster) {
+            if ($turnster->getExpirationDate()) {
+                $turnsterFields[$turnster->getId()] = $turnster->getWachtlijst();
+                if ($timeToExpiration == 0) {
+                    $timeToExpiration = floor(($turnster->getExpirationDate()->getTimestamp() - time() - 120)/60);
+                }
+                if ($timeToExpiration < 0) {
+                    $timeToExpiration = 0;
+                }
+            }
+        }
+        $tijdTot = date('d-m-Y H:i', (time() + ($timeToExpiration)*60));
+        $csrfToken = $this->getToken();
+        return $this->render('inschrijven/inschrijven_turnsters.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'sponsors' => $this->sponsors,
+            'csrfToken' => $csrfToken,
+            'timeToExpiration' => $timeToExpiration,
+            'turnsterFields' => $turnsterFields,
+            'tijdTot' => $tijdTot,
+            'geboorteJaren' => $geboorteJaren,
+        ));
+    }
 
     /**
      * @Route("/inschrijven", name="inschrijven")
@@ -29,11 +77,14 @@ class InschrijvingController extends BaseController
      */
     public function inschrijvenPage(Request $request)
     {
-        /*$user = $this->getDoctrine()->getRepository('AppBundle:User')
-            ->loadUserByUsername('test3ed');
-        $this->removeFromDB($user);*/
+        $this->updateGereserveerdePlekken();
         $session = new Session();
         if ($this->inschrijvingToegestaan($request->query->get('token'), $session)) {
+            $this->setBasicPageData();
+            if ($session->get('username') && $user = $this->getDoctrine()->getRepository('AppBundle:User')
+                    ->loadUserByUsername($session->get('username'))){
+                return $this->InschrijvenPageDeelTwee($user, $session, $request);
+            }
             $display = "none";
             $verenigingOption = '';
             $values = [
@@ -65,7 +116,6 @@ class InschrijvingController extends BaseController
                 'inschrijven_contactpersoon_header' => '',
                 'aantal_plekken_header' => '',
             ];
-            $this->setBasicPageData();
             if ($request->getMethod() == 'POST') {
                 $display = "";
                 if ($request->request->get('verenigingsid')) {
@@ -296,8 +346,9 @@ class InschrijvingController extends BaseController
                                 }
                                 $turnster->setCreationDate(new \DateTime('now'));
                                 $turnster->setExpirationDate(new \DateTime('now + ' . ($this->getMinutesToExpiration($request->request->get('aantalTurnsters'))
-                                 + 2) . 'minutes'));
+                                 + 3) . 'minutes'));
                                 $turnster->setScores($scores);
+                                $turnster->setUser($contactpersoon);
                                 $contactpersoon->addTurnster($turnster);
                             }
                             $this->addToDB($contactpersoon);
@@ -311,7 +362,9 @@ class InschrijvingController extends BaseController
                                 'inlognaam' => $contactpersoon->getUsername(),
                             ];
                             $this->sendEmail($subject, $to, $view, $parameters);
-                            // todo: redirect to inschrijven_turnsters
+                            $session->set('username', $contactpersoon->getUsername());
+                            $session->set('aantalTurnsters', $request->request->get('aantalTurnsters'));
+                            return $this->InschrijvenPageDeelTwee($contactpersoon, $session, $request);
                         }
                     }
                 }
@@ -330,7 +383,6 @@ class InschrijvingController extends BaseController
                 'classNames' => $classNames,
                 'values' => $values,
             ));
-            // todo: return inschrijvingspagina
         } else {
             return $this->redirectToRoute('getContent', array('page' => 'Inschrijvingsinformatie'));
         }
@@ -372,6 +424,7 @@ class InschrijvingController extends BaseController
 
     private function checkUsernameAvailability($username)
     {
+        $this->updateGereserveerdePlekken();
         /** @var User[] $users */
         $users = $this->getDoctrine()
             ->getRepository('AppBundle:User')
@@ -385,5 +438,15 @@ class InschrijvingController extends BaseController
         } else {
             return 'true';
         }
+    }
+
+    /**
+     * @Route("/getAvailableNiveausAjaxCall/{geboorteJaar}/", name="getAvailableNiveausAjaxCall",
+     * options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getAvailableNiveausAjaxCall($geboorteJaar)
+    {
+        return new JsonResponse($this->getAvailableNiveaus($geboorteJaar));
     }
 }

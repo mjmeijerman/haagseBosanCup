@@ -22,6 +22,7 @@ class TurnsterRepository extends EntityRepository
         $bezettePlekken = $this->createQueryBuilder('u')
             ->select('count(u.id)')
             ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 0')
             ->getQuery()
             ->getSingleScalarResult();
         return $bezettePlekken;
@@ -35,5 +36,17 @@ class TurnsterRepository extends EntityRepository
             ->getQuery()
             ->getResult();
         return $gereserveerdePlekken;
+    }
+
+    public function getWachtlijstPlekken($limit)
+    {
+        $result = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 1')
+            ->orderBy('u.id')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+        return $result;
     }
 }

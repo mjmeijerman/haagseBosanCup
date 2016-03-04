@@ -103,7 +103,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $vereniging;
 
     /**
-     * @ORM\OneToMany(targetEntity="Jurylid", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToMany(targetEntity="Jurylid", mappedBy="user", cascade={"persist", "remove"})
      */
     private $jurylid;
 
@@ -113,7 +113,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $turnster;
 
     /**
-     * @ORM\OneToMany(targetEntity="Betaling", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToMany(targetEntity="Betaling", mappedBy="user", cascade={"persist", "remove"})
      */
     private $betaling;
 

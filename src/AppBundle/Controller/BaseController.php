@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\SendMail;
+use AppBundle\Entity\Turnster;
+use AppBundle\Entity\User;
 use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -95,6 +97,85 @@ class BaseController extends Controller
             }
         }
         return false;
+    }
+
+    protected function updateGereserveerdePlekken()
+    {
+        /** @var Turnster[] $gereserveerdePlekken */
+        $gereserveerdePlekken = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getGereserveerdePlekken();
+        foreach ($gereserveerdePlekken as $gereserveerdePlek) {
+            if ($gereserveerdePlek->getExpirationDate() < new \DateTime('now')) {
+                $this->removeFromDB($gereserveerdePlek);
+            }
+        }
+        $sluitingInschrijving = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
+        if (strtotime($sluitingInschrijving[self::SLUITING_INSCHRIJVING_TURNSTERS]) > time()) {
+            /** @var Turnster[] $wachtlijstPlekken */
+            $wachtlijstPlekken = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+                ->getWachtlijstPlekken($this->getVrijePlekken());
+            foreach ($wachtlijstPlekken as $wachtlijstPlek) {
+                $wachtlijstPlek->setWachtlijst(false);
+                $this->addToDB($wachtlijstPlek);
+            }
+        }
+        /** @var User[] $contactpersonen */
+//        $contactpersonen = $this->getDoctrine()->getRepository('AppBundle:User')
+//            ->loadUsersByRole('ROLE_CONTACT');
+//        foreach ($contactpersonen as $contactpersoon) {
+//            if (count($contactpersoon->getTurnster()) == 0) {
+//                $this->removeFromDB($contactpersoon);
+//            }
+//        }
+    }
+
+    protected function getCategorie($geboorteJaar)
+    {
+        $leeftijd = (date('Y', time())-$geboorteJaar);
+        if ($leeftijd < 8) {
+            return '';
+        } elseif ($leeftijd == 8) {
+            return 'Voorinstap';
+        } elseif ($leeftijd == 9) {
+            return 'Instap';
+        } elseif ($leeftijd == 10) {
+            return 'Pupil 1';
+        } elseif ($leeftijd == 11) {
+            return 'Pupil 2';
+        } elseif ($leeftijd == 12) {
+            return 'Jeugd 1';
+        } elseif ($leeftijd == 13) {
+            return 'Jeugd 2';
+        } elseif ($leeftijd == 14 || $leeftijd == 15) {
+            return 'Junior';
+        } else {
+            return 'Senior';
+        }
+    }
+
+    protected function getAvailableNiveaus($geboorteJaar)
+    {
+        $leeftijd = (date('Y', time())-$geboorteJaar);
+        if ($leeftijd < 8) {
+            return [];
+        } elseif ($leeftijd == 8 || $leeftijd == 9) {
+            return ['N2', 'D1', 'D2'];
+        } elseif ($leeftijd == 10 || $leeftijd == 11) {
+            return ['N3', 'D1', 'D2'];
+        } elseif ($leeftijd == 12) {
+            return ['N4', 'D1', 'D2'];
+        } else {
+            return ['Div. 3', 'Div. 4', 'Div. 5'];
+        }
+    }
+
+    protected function getGeboorteJaren()
+    {
+        $geboorteJaren = [];
+        for ($i = (date('Y', time())-8); $i >= 1950 ; $i--) {
+            $geboorteJaren[] = $i;
+        }
+        return $geboorteJaren;
     }
 
     protected function getVrijePlekken()
