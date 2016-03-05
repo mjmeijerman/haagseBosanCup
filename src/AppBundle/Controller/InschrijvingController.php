@@ -351,9 +351,16 @@ class InschrijvingController extends BaseController
 
                         $validationAantalturnsters = false;
                         if ($request->request->get('aantalTurnsters') > 0) {
-                            $validationAantalturnsters = true;
-                            $classNames['aantalTurnsters'] = 'numberIngevuld';
-                            $classNames['aantal_plekken_header'] = 'success';
+                            if ($request->request->get('aantalTurnsters') > 70) {
+                                $this->addFlash(
+                                    'error',
+                                    'Je probeert te veel plekken te reserveren!'
+                                );
+                            } else{
+                                $validationAantalturnsters = true;
+                                $classNames['aantalTurnsters'] = 'numberIngevuld';
+                                $classNames['aantal_plekken_header'] = 'success';
+                            }
                         } else {
                             $this->addFlash(
                                 'error',

@@ -70,7 +70,7 @@ class OrganisatieController extends BaseController
             if ($request->getMethod() == 'POST') {
                 if ($request->request->get('bevestig')) {
                     $this->removeFromDB($result);
-                    return ($this->getOrganisatieInschrijvingenPage());
+                    return ($this->getOrganisatiePage('Inschrijvingen'));
                 }
             }
             $contactpersoon = [
@@ -82,7 +82,7 @@ class OrganisatieController extends BaseController
                 'contactpersoon' => $contactpersoon,
             ));
         }
-        return ($this->getOrganisatieInschrijvingenPage());
+        return ($this->getOrganisatiePage('Inschrijvingen'));
     }
 
     /**

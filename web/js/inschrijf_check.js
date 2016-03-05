@@ -281,7 +281,7 @@ function validate_telefoonnummer(show_error_messages) {
             telefoonnummer.className = 'error';
             if (show_error_messages) {
                 document.getElementById("error_container").innerHTML = '<div id="error"><span' +
-                    ' id="telefoonnummer_error"><b>FOUTMELDING:</b>Het telefoonnummer mag alleen uit' +
+                    ' id="telefoonnummer_error"><b>FOUTMELDING:</b> Het telefoonnummer mag alleen uit' +
                     ' cijfers bestaan!</span></div>';
             }
         }
@@ -290,7 +290,7 @@ function validate_telefoonnummer(show_error_messages) {
         telefoonnummer.className = 'error';
         if (show_error_messages) {
             document.getElementById("error_container").innerHTML = '<div id="error"><span' +
-                ' id="telefoonnummer_error"><b>FOUTMELDING:</b>Het telefoonnummer moet uit precies 10' +
+                ' id="telefoonnummer_error"><b>FOUTMELDING:</b> Het telefoonnummer moet uit precies 10' +
                 ' cijfers bestaan en mag geen andere karakters bevatten!</span></div>';
         }
     }
