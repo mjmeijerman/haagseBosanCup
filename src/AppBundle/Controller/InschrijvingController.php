@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -25,49 +26,80 @@ class InschrijvingController extends BaseController
 {
     private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
     {
+        $aantalJury = (ceil($session->get('aantalTurnsters')/10) - count($user->getJurylid()));
         if ($request->getMethod() == 'POST') {
-            if ($request->request->get('ids')) {
-                $ids = explode('.', $request->request->get('ids'));
-                array_pop($ids);
-                foreach ($ids as $id) {
-                    if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
-                        $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get('niveau_' . trim($id))) {
-                        /** @var Turnster $turnster */
-                        if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-                            ->findOneBy(['id' => trim($id)])) {
-                            $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                            $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
-                            $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
-                            $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
-                            $turnster->setExpirationDate(null);
-                            $turnster->setIngevuld(true);
-                            $this->addToDB($turnster);
-                        } else {
-                            $turnster = new Turnster();
-                            $scores = new Scores();
-                            if ($this->getVrijePlekken() > 0) {
-                                $turnster->setWachtlijst(false);
-                            } else {
-                                $turnster->setWachtlijst(true);
+            $postedToken = $request->request->get('csrfToken');
+            if (!empty($postedToken)) {
+                if ($this->isTokenValid($postedToken)) {
+                    if ($request->request->get('ids')) {
+                        $ids = explode('.', $request->request->get('ids'));
+                        array_pop($ids);
+                        foreach ($ids as $id) {
+                            if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
+                                $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get('niveau_' . trim($id))) {
+                                /** @var Turnster $turnster */
+                                if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+                                    ->findOneBy(['id' => trim($id)])) {
+                                    $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                                    $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                                    $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                                    $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                                    $turnster->setExpirationDate(null);
+                                    $turnster->setIngevuld(true);
+                                    $this->addToDB($turnster);
+                                } else {
+                                    $turnster = new Turnster();
+                                    $scores = new Scores();
+                                    if ($this->getVrijePlekken() > 0) {
+                                        $turnster->setWachtlijst(false);
+                                    } else {
+                                        $turnster->setWachtlijst(true);
+                                    }
+                                    $turnster->setCreationDate(new \DateTime('now'));
+                                    $turnster->setExpirationDate(null);
+                                    $turnster->setScores($scores);
+                                    $turnster->setUser($user);
+                                    $turnster->setIngevuld(true);
+                                    $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
+                                    $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                                    $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
+                                    $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                                    $user->addTurnster($turnster);
+                                    $this->addToDB($user);
+                                }
                             }
-                            $turnster->setCreationDate(new \DateTime('now'));
-                            $turnster->setExpirationDate(null);
-                            $turnster->setScores($scores);
-                            $turnster->setUser($user);
-                            $turnster->setIngevuld(true);
-                            $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                            $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
-                            $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
-                            $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
-                            $user->addTurnster($turnster);
-                            $this->addToDB($user);
+                        }
+                        for ($i = 1; $i <= $aantalJury; $i++) {
+                            if ($request->request->get('jury_voornaam_' . $i) && $request->request->get('jury_achternaam_' . $i)
+                                && $request->request->get('jury_email_' . $i) && $request->request->get('jury_brevet_' . $i)
+                                && $request->request->get('jury_dag_'. $i)) {
+                                $jurylid = new Jurylid();
+                                $jurylid->setVoornaam($request->request->get('jury_voornaam_' . $i));
+                                $jurylid->setAchternaam($request->request->get('jury_achternaam_' . $i));
+                                $jurylid->setEmail($request->request->get('jury_email_' . $i));
+                                $jurylid->setBrevet($request->request->get('jury_brevet_' . $i));
+                                $jurylid->setOpmerking($request->request->get('jury_opmerking_' . $i));
+                                if ($request->request->get('jury_dag_' . $i) == 'za') {
+                                    $jurylid->setZaterdag(true);
+                                    $jurylid->setZondag(false);
+                                } elseif ($request->request->get('jury_dag_' . $i) == 'zo') {
+                                    $jurylid->setZaterdag(false);
+                                    $jurylid->setZondag(true);
+                                } else {
+                                    $jurylid->setZaterdag(true);
+                                    $jurylid->setZondag(true);
+                                }
+                                $jurylid->setUser($user);
+                                $user->addJurylid($jurylid);
+                                $this->addToDB($user);
+                            }
                         }
                     }
+                    if ($request->request->get('remove_session')) {
+                        $session->clear();
+                        return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
+                    }
                 }
-            }
-            if ($request->request->get('remove_session')) {
-                $session->clear();
-                return $this->redirectToRoute('getContent', array('page' => 'Laatste nieuws'));
             }
         }
         $turnsterFields = [];
@@ -112,8 +144,21 @@ class InschrijvingController extends BaseController
                 ];
             }
         }
+        $opgeslagenJuryleden = [];
+        /** @var Jurylid[] $juryleden */
+        $juryleden = $user->getJurylid();
+        foreach ($juryleden as $jurylid) {
+            $opgeslagenJuryleden[] = [
+                'voornaam' => $jurylid->getVoornaam(),
+                'achternaam' => $jurylid->getAchternaam(),
+                'email' => $jurylid->getEmail(),
+                'brevet' => $jurylid->getBrevet(),
+            ];
+        }
         $tijdTot = date('d-m-Y H:i', (time() + ($timeToExpiration)*60));
         $csrfToken = $this->getToken();
+        $optegevenJury = ceil($session->get('aantalTurnsters')/10);
+        $aantalJury = (ceil($session->get('aantalTurnsters')/10) - count($user->getJurylid()));
         return $this->render('inschrijven/inschrijven_turnsters.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' => $this->sponsors,
@@ -123,6 +168,9 @@ class InschrijvingController extends BaseController
             'tijdTot' => $tijdTot,
             'geboorteJaren' => $geboorteJaren,
             'opgeslagenTurnsters' => $opgeslagenTurnsters,
+            'aantalJury' => $aantalJury,
+            'opgeslagenJuryleden' => $opgeslagenJuryleden,
+            'optegevenJury' => $optegevenJury,
         ));
     }
 
@@ -213,10 +261,12 @@ class InschrijvingController extends BaseController
                                 $classNames['verenigingnaam'] = 'error';
                             }
                         } else {
+                            $vereniging = new Vereniging();
                             $validationVereniging['verengingsId'] = true;
                             if (strlen($request->request->get('verenigingsnaam')) > 1) {
                                 $validationVereniging['verenigingsnaam'] = true;
                                 $classNames['verenigingsnaam'] = 'succesIngevuld';
+                                $vereniging->setNaam($request->request->get('verenigingsnaam'));
                             } else {
                                 $this->addFlash(
                                     'error',
@@ -227,12 +277,16 @@ class InschrijvingController extends BaseController
                             if (strlen($request->request->get('verenigingsplaats')) > 1) {
                                 $validationVereniging['verenigingsplaats'] = true;
                                 $classNames['verenigingsplaats'] = 'succesIngevuld';
+                                $vereniging->setPlaats($request->request->get('verenigingsplaats'));
                             } else {
                                 $this->addFlash(
                                     'error',
                                     'geen geldige verenigingsplaats ingevoerd'
                                 );
                                 $classNames['verenigingsplaats'] = 'error';
+                            }
+                            if (!(in_array(false, $validationVereniging))) {
+                                $this->addToDB($vereniging);
                             }
                         }
                         if (!(in_array(false, $validationVereniging))) {
