@@ -87,6 +87,7 @@ class ContactpersoonController extends BaseController
                     'niveau' => $turnsterObject->getNiveau(),
                     'wedstrijdnummer' => $turnsterObject->getScores()->getWedstrijdnummer(),
                     'vloermuziek' => $locatie,
+					'opmerking' => $turnsterObject->getOpmerking(),
                 ];
             }
         }
