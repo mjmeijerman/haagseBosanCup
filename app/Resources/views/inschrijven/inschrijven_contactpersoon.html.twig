@@ -6,6 +6,7 @@
 <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 <script src="{{ asset('js/inschrijf_check.js') }}"></script>
 <h1>Inschrijven</h1>
+<i>Bij problemen en paniek kun je bellen met: 06-55726426</i><br />
 
 Op dit moment zijn er nog <span id="aantal_vrije_plekken" style="font-weight: bold;">{{ vrijePlekken }}</span> vrije
 plekken!
@@ -162,10 +163,8 @@ plekken!
         <br/>
         <br/>
 
-        <div id="reserveer_button" onclick="post_gegevens()"><span id="reserveer_aantal">{{ values
-                .aantalTurnsters
-                }} plekken reserveren!</span>
-        </div>
+        <a href="" id="reserveer_button" onclick="post_gegevens()"><span id="reserveer_aantal">0 plekken reserveren!</span>
+        </a>
     </div>
     <form id="post_form" method="post" action="">
         <input type="hidden" name="verenigingsnaam" id="post_verenigingsnaam"/>

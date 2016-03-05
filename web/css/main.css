@@ -512,12 +512,14 @@ body {
 	-moz-transition: .5s;
 	-webkit-transition: .5s;
 	transition: .5s;
+	text-decoration: none;
 }
 
 .content #reserveer_button:hover {
 	background: rgba(0,127,255,0.8);
 	cursor: pointer;
 	color: #FFF;
+	text-decoration: none;
 }
 
 .content .turnster_voornaam {
