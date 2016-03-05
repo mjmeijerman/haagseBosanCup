@@ -71,7 +71,8 @@ plekken!
                                                                                              .verenigingsplaats }}"
                                                                                              name="verenigingsplaats"
                                                                                              placeholder="Plaats"
-                                                                                             onchange="check_vereniging();update_vereningsnaam();validate_vereniging_plaats(true)" autocomplete="off"/>
+                                                                                             onchange="check_vereniging();update_vereningsnaam()"
+                                                                                             onkeyup="validate_vereniging_plaats(true)" autocomplete="off"/>
             </div>
         </div>
         </form>
@@ -141,7 +142,7 @@ plekken!
                                                                                id="wachtwoord2" placeholder="********"
                                                                                value="{{ values.wachtwoord2 }}"
                                                                                onchange="check_contactpersoon()"
-                                                                               onkeypress="validate_wachtwoord2(true)"
+                                                                               onkeyup="validate_wachtwoord2(true)"
                                                                                autocomplete="off"/></div>
             <br/>
         </form>
