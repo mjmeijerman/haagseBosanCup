@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\Reglementen;
+use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,7 +45,7 @@ class OrganisatieController extends BaseController
             case 'Mails':
                 return $this->getOrganisatieHomePage();
             case 'Inschrijvingen':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieInschrijvingenPage();
             case 'Juryzaken':
                 return $this->getOrganisatieHomePage();
             case 'Financieel':
@@ -52,6 +53,36 @@ class OrganisatieController extends BaseController
             case 'Mijn gegevens':
                 return $this->getOrganisatieGegevensPage();
         }
+    }
+
+    /**
+     * @Route("/organisatie/removeContactpersoon/{id}/", name="removeContactpersoon")
+     * @Method({"GET", "POST"})
+     */
+    public function removeContactpersoon(Request $request, $id)
+    {
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findOneBy(
+                array('id' => $id)
+            );
+        if ($result) {
+            if ($request->getMethod() == 'POST') {
+                if ($request->request->get('bevestig')) {
+                    $this->removeFromDB($result);
+                    return ($this->getOrganisatieInschrijvingenPage());
+                }
+            }
+            $contactpersoon = [
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging' => $result->getVereniging()->getNaam() . ', ' . $result->getVereniging()->getPlaats(),
+            ];
+            return $this->render('organisatie/removeContactpersoon.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'contactpersoon' => $contactpersoon,
+            ));
+        }
+        return ($this->getOrganisatieInschrijvingenPage());
     }
 
     /**
@@ -273,6 +304,48 @@ class OrganisatieController extends BaseController
     {
         return $this->render('organisatie/organisatieIndex.html.twig', array(
             'menuItems' => $this->menuItems,
+        ));
+    }
+
+    private function getContactpersonen()
+    {
+        /** @var User[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUsersByRole('ROLE_CONTACT');
+        $contactpersonen = [];
+        foreach ($results as $result) {
+            /** @var Turnster[] $turnsters */
+            $turnsters = $result->getTurnster();
+            $turnstersGeplaatst = [];
+            $turnstersWachtlijst = [];
+            foreach ($turnsters as $turnster) {
+                if ($turnster->getAfgemeld()) continue;
+                if ($turnster->getWachtlijst()) {
+                    $turnstersWachtlijst[] = $turnster;
+                } else {
+                    $turnstersGeplaatst[] = $turnster;
+                }
+            }
+            $juryleden = $result->getJurylid();
+            $contactpersonen[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging' => $result->getVereniging()->getNaam() . ', ' . $result->getVereniging()->getPlaats(),
+                'turnstersGeplaatst' => count($turnstersGeplaatst),
+                'turnstersWachtlijst' => count($turnstersWachtlijst),
+                'aantalJuryleden' => count($juryleden),
+            ];
+        }
+        return $contactpersonen;
+    }
+
+    private function getOrganisatieInschrijvingenPage()
+    {
+        $contactpersonen = $this->getContactpersonen();
+        return $this->render('organisatie/organisatieInschrijvingen.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'contactpersonen' => $contactpersonen,
         ));
     }
 

@@ -1,0 +1,289 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <h1>Inschrijvingen</h1>
+
+			<p>
+				<div class="titel">
+					<h2>Status</h2>
+				</div>
+				<div class="bericht">
+					{#<table>#}
+						{#<tr>#}
+							{#<td class="cat">Voorinstap</td>#}
+							{#<td></td>#}
+							{#<td class="niv_vol">D1</td>#}
+							{#<td class="niv_vol">D2</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Instap</td>#}
+							{#<td class="niv_vol">N2</td>#}
+							{#<td class="niv">D1</td>#}
+							{#<td class="niv">D2</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Pupil 1</td>#}
+							{#<td class="niv_bijnavol">N3</td>#}
+							{#<td class="niv">D1</td>#}
+							{#<td class="niv">D2</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Pupil 2</td>#}
+							{#<td class="niv">N3</td>#}
+							{#<td class="niv">D1</td>#}
+							{#<td class="niv">D2</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Jeugd 1</td>#}
+							{#<td class="niv">N4</td>#}
+							{#<td class="niv">D1</td>#}
+							{#<td class="niv">D2</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Jeugd 2</td>#}
+							{#<td class="niv">Div 3</td>#}
+							{#<td class="niv">Div 4</td>#}
+							{#<td class="niv">Div 5</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Junior</td>#}
+							{#<td class="niv_bijnavol">Div 3</td>#}
+							{#<td class="niv_bijnavol">Div 4</td>#}
+							{#<td class="niv">Div 5</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td class="cat">Senior</td>#}
+							{#<td class="niv">Div 3</td>#}
+							{#<td class="niv">Div 4</td>#}
+							{#<td class="niv_bijnavol">Div 5</td>#}
+							{#<td> | 50</td>#}
+						{#</tr>#}
+					{#</table>#}
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Geplaatst</h2>
+				</div>
+				<div class="bericht">
+					{#<table class="inschrijvingen">#}
+						{#<tr>#}
+							{#<th><a href="#">Voorinstap D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Pupil 2 N3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 3</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Voorinstap D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Pupil 2 D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 4</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 4</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap N2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Pupil 2 D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 5</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 5</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 N4</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 3</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 4</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 N3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 5</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 D1</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 D2</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+					{#</table>#}
+
+					<h2>Nieuwste 5</h2>
+					{#<table class="inschrijvingen_nieuw">#}
+						{#<tr>#}
+							{#<th>Naam</th>#}
+							{#<th>Vereniging</th>#}
+							{#<th>Categorie</th>#}
+							{#<th>Niveau</th>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td>Jankees Polderman</td>#}
+							{#<td>DEVONA WATERINGEN</td>#}
+							{#<td>Pupil 1</td>#}
+							{#<td>D2</td>#}
+						{#</tr>#}
+					{#</table>#}
+					{#<br />#}
+					{#<a href="#">Volledig overzicht</a>#}
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Wachtlijst</h2>
+				</div>
+				<div class="bericht">
+					{#Groene tekst = aantal plaatsen vrij in specifieke cat/niv, geen plaatsen vrij = geen groene tekst#}
+					{#<table class="inschrijvingen">#}
+						{#<tr>#}
+							{#<th><a href="#">Voorinstap D1</a></th>#}
+							{#<td><span class="vrij">3</span> | 0</td>#}
+							{#<th><a href="#">Pupil 2 N3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 3</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Voorinstap D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Pupil 2 D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 4</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 4</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap N2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Pupil 2 D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 2 Div 5</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Senior Div 5</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 N4</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 3</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Instap D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 D1</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 4</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 N3</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Jeugd 1 D2</a></th>#}
+							{#<td>0</td>#}
+							{#<th><a href="#">Junior Div 5</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 D1</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<th><a href="#">Pupil 1 D2</a></th>#}
+							{#<td>0</td>#}
+						{#</tr>#}
+					{#</table>#}
+					{##}
+					{#<h2>Nieuwste 5</h2>#}
+					{#<table class="inschrijvingen_nieuw">#}
+						{#<tr>#}
+							{#<th>Naam</th>#}
+							{#<th>Vereniging</th>#}
+							{#<th>Categorie</th>#}
+							{#<th>Niveau</th>#}
+						{#</tr>#}
+						{#<tr>#}
+							{#<td>Jankees Polderman</td>#}
+							{#<td>DEVONA WATERINGEN</td>#}
+							{#<td>Pupil 1</td>#}
+							{#<td>D2</td>#}
+						{#</tr>#}
+					{#</table>#}
+					{#<br />#}
+					{#<a href="#">Volledig overzicht</a>#}
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Contactpersonen</h2>
+				</div>
+				<div class="bericht">
+					<table class="overzicht">
+						<tr>
+							<th>Naam</th>
+							<th>Vereniging</th>
+							<th>Turnsters geplaatst</th>
+							<th>wachtlijst</th>
+							<th>juryleden</th>
+							<th></th>
+						</tr>
+						{% for contactpersoon in contactpersonen %}
+						<tr>
+							<td>{{ contactpersoon.naam }}</td>
+							<td>{{ contactpersoon.vereniging }}</td>
+							<td>{{ contactpersoon.turnstersGeplaatst }}</td>
+							<td>{{ contactpersoon.turnstersWachtlijst }}</td>
+							<td>{{ contactpersoon.aantalJuryleden }}</td>
+							<td>
+							 	<a href="{{ path('removeContactpersoon', { 'id': contactpersoon.id }) }}">
+									<img src="{{ asset('images/remove.png') }}" width="15"/>
+								</a>
+							</td>
+						</tr>
+						{% endfor %}
+					</table>
+					<br />
+					<a href="#">Volledig overzicht</a><br />
+					dump
+				</div>
+			</p>
+
+
+{% endblock %}
