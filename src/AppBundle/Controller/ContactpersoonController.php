@@ -67,6 +67,7 @@ class ContactpersoonController extends BaseController
                     'geboorteJaar' => $turnsterObject->getGeboortejaar(),
                     'categorie' => $this->getCategorie($turnsterObject->getGeboortejaar()),
                     'niveau' => $turnsterObject->getNiveau(),
+                    'opmerking' => $turnsterObject->getOpmerking(),
                 ];
             } elseif ($turnsterObject->getWachtlijst()) {
                 $wachtlijst[] = [
@@ -77,6 +78,7 @@ class ContactpersoonController extends BaseController
                     'categorie' => $this->getCategorie($turnsterObject->getGeboortejaar()),
                     'niveau' => $turnsterObject->getNiveau(),
                     'vloermuziek' => $locatie,
+                    'opmerking' => $turnsterObject->getOpmerking(),
                 ];
             }  else {
                 $turnsters[] = [
@@ -88,7 +90,7 @@ class ContactpersoonController extends BaseController
                     'niveau' => $turnsterObject->getNiveau(),
                     'wedstrijdnummer' => $turnsterObject->getScores()->getWedstrijdnummer(),
                     'vloermuziek' => $locatie,
-					'opmerking' => $turnsterObject->getOpmerking(),
+                    'opmerking' => $turnsterObject->getOpmerking(),
                 ];
             }
         }

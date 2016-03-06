@@ -161,7 +161,7 @@
             </th>
         </tr>
         {% for wachtlijst in wachtlijstTurnsters %}
-        <tr>
+            <tr title="{{ wachtlijst.opmerking }}">
             <td>
                 {{ loop.index }}
             </td>
@@ -281,7 +281,7 @@
             </th>
         </tr>
         {% for afmelding in afgemeldTurnsters %}
-            <tr>
+            <tr title="{{ afmelding.opmerking }}">
                 <td>
                     {{ loop.index }}
                 </td>
