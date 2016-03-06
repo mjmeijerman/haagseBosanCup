@@ -771,7 +771,11 @@ body {
 }
 
 .content .controle_wachtlijst {
-	background: #FFC1C1;
+	background: #FFC1C1 !important;
+}
+
+.content .controle_wachtlijst:hover {
+	background: #F5F5A7 !important;
 }
 
 .content .controle_nummer {
