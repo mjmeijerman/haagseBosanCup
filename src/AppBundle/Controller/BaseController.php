@@ -77,9 +77,11 @@ class BaseController extends Controller
         $this->addToDB($result);
     }
 
-    protected function checkVoorinschrijvingsToken($token, Session $session)
+    protected function checkVoorinschrijvingsToken($token, Session $session = null)
     {
         if ($token === null) {
+            return false;
+        } elseif ($session == null) {
             return false;
         } elseif ($token == $session->get('token')) {
             return true;
@@ -190,7 +192,41 @@ class BaseController extends Controller
         return ($maxPlekken[self::MAX_AANTAL_TURNSTERS] - $result);
     }
 
-    protected function inschrijvingToegestaan($token = null, Session $session)
+    protected function getTijdVol()
+    {
+        $datumGeopend = 0;
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Instellingen')
+            ->findBy(
+                array('instelling' => self::OPENING_INSCHRIJVING),
+                array('gewijzigd' => 'DESC')
+            );
+        if (count($result) > 0) {
+            $datumGeopend = $result[0];
+        }
+        /** @var Instellingen $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:Instellingen')
+            ->getTijdVol($datumGeopend);
+        if ($result) {
+            return $result->getDatum();
+        } else {
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Turnster')
+                ->getTijdVol();
+            $instelling = new Instellingen();
+            $instelling->setInstelling('tijdVol');
+            $instelling->setGewijzigd(new \DateTime('now'));
+            $instelling->setDatum($result[0]['creationDate']);
+            $this->addToDB($instelling);
+            $result = $this->getDoctrine()
+                ->getRepository('AppBundle:Instellingen')
+                ->getTijdVol($datumGeopend);
+            return $result->getDatum();
+        }
+    }
+
+    protected function inschrijvingToegestaan($token = null, Session $session = null)
     {
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);

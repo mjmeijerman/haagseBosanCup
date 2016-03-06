@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -107,6 +108,9 @@ class ContentController extends BaseController
 
     private function getNieuwsIndexPage()
     {
+        $aantalPlekken = -1;
+        $tijdVol = false;
+        $tijdTotVol = false;
         $results = $this->getDoctrine()
             ->getRepository('AppBundle:Nieuwsbericht')
             ->findBy(
@@ -114,6 +118,33 @@ class ContentController extends BaseController
                 array('id' => 'DESC'),
                 10
             );
+        if ($this->inschrijvingToegestaan()) {
+            $aantalPlekken = $this->getVrijePlekken();
+            if ($aantalPlekken == 0) {
+                /** @var \DateTime $tijdVolObject */
+                $tijdVolObject = $this->getTijdVol();
+                $tijdVol['datum'] = $tijdVolObject->format('d-m-Y');
+                $tijdVol['tijd'] = $tijdVolObject->format('H:i:s');
+                $result = $this->getDoctrine()
+                    ->getRepository('AppBundle:Instellingen')
+                    ->findBy(
+                        array('instelling' => self::OPENING_INSCHRIJVING),
+                        array('gewijzigd' => 'DESC')
+                    );
+                $datumGeopend = 0;
+                if (count($result) > 0) {
+                    /** @var Instellingen[] $result */
+                    /** @var \DateTime $datumGeopend */
+                    $datumGeopend = $result[0]->getDatum();
+                }
+                $timestampVol = ($tijdVolObject->getTimestamp() - $datumGeopend->getTimestamp());
+                $tijdTotVolDate = date('H:i:s', $timestampVol);
+                $result = explode(':', $tijdTotVolDate);
+                $tijdTotVol['uur'] = $result[0] - 1;
+                $tijdTotVol['minuten'] = $result[1];
+                $tijdTotVol['secondes'] = $result[2];
+            }
+        }
         $nieuwsItems = array();
         foreach ($results as $result) {
             $nieuwsItems[] = $result->getAll();
@@ -122,6 +153,9 @@ class ContentController extends BaseController
             'nieuwsItems' => $nieuwsItems,
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
+            'aantalPlekken' => $aantalPlekken,
+            'tijdVol' => $tijdVol,
+            'tijdTotVol' => $tijdTotVol,
         ));
     }
 

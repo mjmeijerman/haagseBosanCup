@@ -132,7 +132,11 @@
         De volgende turnsters zijn succesvol opgeslagen:
         <table class="controle_tabel">
             {% for turnster in opgeslagenTurnsters %}
-                <tr>
+                {% if turnster.wachtlijst %}
+                    <tr class="controle_wachtlijst">
+                {% else %}
+                    <tr>
+                {% endif %}
                     <td class="controle_nummer">{{ loop.index }}</td>
                     <td class="controle_voornaam">{{ turnster.voornaam }}</td>
                     <td class="controle_achternaam">{{ turnster.achternaam }}</td>

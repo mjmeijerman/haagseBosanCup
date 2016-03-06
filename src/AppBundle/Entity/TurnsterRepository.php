@@ -49,4 +49,16 @@ class TurnsterRepository extends EntityRepository
             ->getResult();
         return $result;
     }
+
+    public function getTijdVol()
+    {
+        $result = $this->createQueryBuilder('u')
+            ->select('u.creationDate')
+            ->where('u.wachtlijst = 0')
+            ->orderBy('u.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        return $result;
+    }
 }
