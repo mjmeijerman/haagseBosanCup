@@ -6,6 +6,7 @@ use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Nieuwsbericht;
+use AppBundle\Entity\Scores;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -110,6 +111,129 @@ class ContactpersoonController extends BaseController
             'wachtlijstTurnsters' => $wachtlijst,
             'afgemeldTurnsters' => $afgemeld,
             'juryleden' => $juryleden,
+        ));
+    }
+
+    /**
+     * @Route("/contactpersoon/addTurnster/", name="addTurnster")
+     * @Method({"GET", "POST"})
+     */
+    public function addTurnster(Request $request)
+    {
+        $this->setBasicPageData();
+        $turnster = [
+            'voornaam' => '',
+            'achternaam' => '',
+            'geboortejaar' => '',
+            'niveau' => '',
+            'opmerking' => '',
+        ];
+        $classNames = [
+            'voornaam' => 'text',
+            'achternaam' => 'text',
+            'geboortejaar' => 'turnster_niveau',
+            'niveau' => 'turnster_niveau',
+            'opmerking' => 'text',
+        ];
+        $geboorteJaren = $this->getGeboorteJaren();
+        $vrijePlekken = $this->getVrijePlekken();
+        $csrfToken = $this->getToken();
+        if ($request->getMethod() == 'POST') {
+            $turnster = [
+                'voornaam' => $request->request->get('voornaam'),
+                'achternaam' => $request->request->get('achternaam'),
+                'geboortejaar' => $request->request->get('geboorteJaar'),
+                'niveau' => $request->request->get('niveau'),
+                'opmerking' => $request->request->get('opmerking'),
+            ];
+            $postedToken = $request->request->get('csrfToken');
+            if (!empty($postedToken)) {
+                if ($this->isTokenValid($postedToken)) {
+                    $validationTurnster = [
+                        'voornaam' => false,
+                        'achternaam' => false,
+                        'geboorteJaar' => false,
+                        'niveau' => false,
+                        'opmerking' => true,
+                    ];
+
+                    $classNames['opmerking'] = 'succesIngevuld';
+
+                    if (strlen($request->request->get('voornaam')) > 1) {
+                        $validationTurnster['voornaam'] = true;
+                        $classNames['voornaam'] = 'succesIngevuld';
+                    } else {
+                        $this->addFlash(
+                            'error',
+                            'geen geldige voornaam ingevoerd'
+                        );
+                        $classNames['voornaam'] = 'error';
+                    }
+
+                    if (strlen($request->request->get('achternaam')) > 1) {
+                        $validationTurnster['achternaam'] = true;
+                        $classNames['achternaam'] = 'succesIngevuld';
+                    } else {
+                        $this->addFlash(
+                            'error',
+                            'geen geldige achternaam ingevoerd'
+                        );
+                        $classNames['achternaam'] = 'error';
+                    }
+                    if ($request->request->get('geboorteJaar')) {
+                        $validationTurnster['geboorteJaar'] = true;
+                        $classNames['geboortejaar'] = 'succesIngevuld';
+                    } else {
+                        $this->addFlash(
+                            'error',
+                            'geen geboortejaar ingevoerd'
+                        );
+                        $classNames['geboortejaar'] = 'error';
+                    }
+
+                    if ($request->request->get('niveau')) {
+                        $validationTurnster['niveau'] = true;
+                        $classNames['niveau'] = 'succesIngevuld';
+                    } else {
+                        $this->addFlash(
+                            'error',
+                            'geen niveau ingevoerd'
+                        );
+                        $classNames['niveau'] = 'error';
+                    }
+                    if (!(in_array(false, $validationTurnster))) {
+                        $turnster = new Turnster();
+                        $scores = new Scores();
+                        if ($this->getVrijePlekken() > 0) {
+                            $turnster->setWachtlijst(false);
+                        } else {
+                            $turnster->setWachtlijst(true);
+                        }
+                        $turnster->setCreationDate(new \DateTime('now'));
+                        $turnster->setExpirationDate(null);
+                        $turnster->setScores($scores);
+                        $turnster->setUser($this->getUser());
+                        $turnster->setIngevuld(true);
+                        $turnster->setVoornaam($request->request->get('voornaam'));
+                        $turnster->setAchternaam($request->request->get('achternaam'));
+                        $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
+                        $turnster->setNiveau($request->request->get('niveau'));
+                        $turnster->setOpmerking($request->request->get('opmerking'));
+                        $this->getUser()->addTurnster($turnster);
+                        $this->addToDB($this->getUser());
+                        return $this->redirectToRoute('getContactpersoonIndexPage');
+                    }
+                }
+            }
+        }
+        return $this->render('contactpersoon/addTurnster.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'sponsors' => $this->sponsors,
+            'vrijePlekken' => $vrijePlekken,
+            'turnster' => $turnster,
+            'geboorteJaren' => $geboorteJaren,
+            'classNames' => $classNames,
+            'csrfToken' => $csrfToken,
         ));
     }
 }

@@ -1,7 +1,13 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block body %}
-    {#<div id="inschrijven"><a href="#">Turnster toevoegen &#187;</a></div>#}
+    <div id="inschrijven">
+        <a href="{{ path('addTurnster') }}">Turnster toevoegen &#187;</a>
+    </div>
+
+
+
+
 
     <h1>Uw gegevens</h1>
     {#<i>Wil je gegevens bewerken? Dat is heel simpel, je hoeft er alleen maar op te klikken!</i>#}
@@ -98,12 +104,12 @@
                 {{ turnster.wedstrijdnummer }}
             </td>
             <td>
-                <img src="{{ asset('images/refresh.png') }}" height="18">
-                <img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"
-                                                                        height="18">
+                {#<img src="{{ asset('images/refresh.png') }}" height="18">#}
+                {#<img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"#}
+                                                                        {#height="18">#}
             </td>
             <td>
-                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
+                {#<img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>#}
             </td>
         </tr>
         {% endfor %}
@@ -111,20 +117,20 @@
     <br/>
     <table>
         <tr>
-            <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
-            <td>Muziek uploaden</td>
+            {#<td><img src="{{ asset('images/upload.png') }}" height="18"></td>#}
+            {#<td>Muziek uploaden</td>#}
             <td><img src="{{ asset('images/edit.png') }}"></td>
             <td>Inschrijving bewerken</td>
         </tr>
         <tr>
-            <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
-            <td>Muziek beluisteren</td>
+            {#<td><img src="{{ asset('images/listen.png') }}" height="18"></td>#}
+            {#<td>Muziek beluisteren</td>#}
             <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Inschrijving verwijderen</td>
+            <td>Turnster afmelden</td>
         </tr>
         <tr>
-            <td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>
-            <td>Muziek opnieuw uploaden</td>
+            {#<td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>#}
+            {#<td>Muziek opnieuw uploaden</td>#}
         </tr>
     </table>
 
@@ -153,9 +159,6 @@
             <th>
 
             </th>
-            <th>
-
-            </th>
         </tr>
         {% for wachtlijst in wachtlijstTurnsters %}
         <tr>
@@ -178,12 +181,7 @@
                 {{ wachtlijst.niveau }}
             </td>
             <td>
-                <img src="{{ asset('images/refresh.png') }}" height="18">
-                <img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"
-                                                                        height="18">
-            </td>
-            <td>
-                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
+                {#<img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>#}
             </td>
         </tr>
         {% endfor %}
@@ -191,20 +189,12 @@
     <br/>
     <table>
         <tr>
-            <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
-            <td>Muziek uploaden</td>
             <td><img src="{{ asset('images/edit.png') }}"></td>
             <td>Inschrijving bewerken</td>
         </tr>
         <tr>
-            <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
-            <td>Muziek beluisteren</td>
             <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Inschrijving verwijderen</td>
-        </tr>
-        <tr>
-            <td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>
-            <td>Muziek opnieuw uploaden</td>
+            <td>Turnster afmelden</td>
         </tr>
     </table>
 
@@ -258,7 +248,7 @@
         </tr>
         <tr>
             <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Jurylid verwijderen</td>
+            <td>Jurylid afmelden</td>
         </tr>
     </table>
 
