@@ -1067,6 +1067,34 @@ body {
 	color: #FFFF00;
 }
 
+/* JURY TOEVOEGEN KNOP */
+
+.content #add_jury a:link, .content #add_jury a:visited {
+	background: #F2E609;
+	padding: .4em .8em;
+	border-radius: 5px;
+	color: #333;
+	text-decoration: none;
+	float: right;
+	box-shadow: 2px 2px 2px #000;
+	margin-top: 5px; /* Of niet */
+	margin-right: 5px;
+	
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+}
+
+.content #add_jury a:hover, .content #add_jury a:active {
+	margin-right: 15px; /* Of niet */
+	margin-top: 0px; /* Of niet */
+	background: #333;
+	color: #FFFF00;
+	box-shadow: 8px 8px 20px #333; /* Of 2px 2px 2px #333 */
+}
+
 /* SPONSOREN */
 
 #s {
