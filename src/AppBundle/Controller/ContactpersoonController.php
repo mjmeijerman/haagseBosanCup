@@ -253,6 +253,10 @@ class ContactpersoonController extends BaseController
                             $turnster->setOpmerking($request->request->get('opmerking'));
                             $this->getUser()->addTurnster($turnster);
                             $this->addToDB($this->getUser());
+                            $this->addFlash(
+                                'success',
+                                'Gegevens succesvol toegevoegd!'
+                            );
                             return $this->redirectToRoute('getContactpersoonIndexPage');
                         }
                     }
@@ -387,6 +391,10 @@ class ContactpersoonController extends BaseController
                                 $turnster->setNiveau($request->request->get('niveau'));
                                 $turnster->setOpmerking($request->request->get('opmerking'));
                                 $this->addToDB($turnster);
+                                $this->addFlash(
+                                    'success',
+                                    'Gegevens succesvol gewijzigd!'
+                                );
                                 return $this->redirectToRoute('getContactpersoonIndexPage');
                             }
                         }
@@ -584,6 +592,10 @@ class ContactpersoonController extends BaseController
                             $jurylid->setUser($this->getUser());
                             $this->getUser()->addJurylid($jurylid);
                             $this->addToDB($this->getUser());
+                            $this->addFlash(
+                                'success',
+                                'Jurylid succesvol toegevoegd!'
+                            );
                             return $this->redirectToRoute('getContactpersoonIndexPage');
                         }
                     }
@@ -761,6 +773,10 @@ class ContactpersoonController extends BaseController
                                     $jurylid->setZondag(true);
                                 }
                                 $this->addToDB($jurylid);
+                                $this->addFlash(
+                                    'success',
+                                    'Gegevens succesvol gewijzigd!'
+                                );
                                 return $this->redirectToRoute('getContactpersoonIndexPage');
                             }
                         }
