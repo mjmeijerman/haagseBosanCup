@@ -52,7 +52,9 @@
         </tr>
     </table>
 
-    {#<a href="#" id="factuur">&#187; Factuur downloaden</a>#}
+    {% if factuurBekijkenToegestaan %}
+        <a href="#" id="factuur">&#187; Factuur downloaden</a>
+    {% endif %}
     {#<a href="#" id="indeling">&#187; Wedstrijdindeling downloaden</a>#}
 
     <h4>&#187; Deelnemers ({{ turnsters|length }})</h4>
@@ -111,9 +113,12 @@
                     {{ turnster.wedstrijdnummer }}
                 </td>
                 <td>
-                    {% if uploadenVloermuziekToegestaan %}
-                        <img src="{{ asset('images/refresh.png') }}" height="18">
-                        <img src="{{ asset('images/upload.png') }}" height="18">
+                    {% if uploadenVloermuziekToegestaan and turnster.keuze %}
+                        {% if turnster.vloermuziek %}
+                            <img src="{{ asset('images/refresh.png') }}" height="18">
+                        {% else %}
+                            <img src="{{ asset('images/upload.png') }}" height="18">
+                        {% endif %}
                     {% endif %}
                     {% if turnster.vloermuziek %}
                         <img src="{{ asset('images/listen.png') }}" height="18">
@@ -121,7 +126,10 @@
                 </td>
                 <td>
                     {% if wijzigenTurnsterToegestaan %}
-                        <img src="{{ asset('images/edit.png') }}">
+                        <a href="{{ path('editTurnster', { 'turnsterId': turnster.id }) }}"
+                           style="text-decoration: none">
+                            <img src="{{ asset('images/edit.png') }}">
+                        </a>
                     {% endif %}
                     {% if verwijderenTurnsterToegestaan %}
                         <form method="post" name="remove_turnster_{{ turnster.id }}"
@@ -215,7 +223,10 @@
                 </td>
                 <td>
                     {% if wijzigenTurnsterToegestaan %}
-                        <img src="{{ asset('images/edit.png') }}">
+                        <a href="{{ path('editTurnster', { 'turnsterId': wachtlijst.id }) }}"
+                           style="text-decoration: none">
+                            <img src="{{ asset('images/edit.png') }}">
+                        </a>
                     {% endif %}
                     {% if verwijderenTurnsterToegestaan %}
                         <form method="post" name="remove_turnster_{{ wachtlijst.id }}"
@@ -295,7 +306,9 @@
                 </td>
                 <td>
                     {% if wijzigJuryToegestaan %}
-                        <img src="{{ asset('images/edit.png') }}">
+                        <a href="{{ path('editJury', { 'juryId': jurylid.id }) }}" style="text-decoration: none">
+                            <img src="{{ asset('images/edit.png') }}">
+                        </a>
                     {% endif %}
                     {% if verwijderJuryToegestaan %}
                         <form method="post" name="remove_jury_{{ jurylid.id }}"

@@ -24,6 +24,7 @@ class BaseController extends Controller
     const SLUITING_INSCHRIJVING_TURNSTERS = 'Sluiting inschrijving turnsters';
     const SLUITING_INSCHRIJVING_JURYLEDEN = 'Sluiting inschrijving juryleden';
     const SLUITING_UPLOADEN_VLOERMUZIEK = 'Sluiting uploaden vloermuziek';
+    const FACTUUR_BEKIJKEN_TOEGESTAAN = 'Factuur publiceren';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
 
     protected $sponsors = array();
@@ -77,6 +78,15 @@ class BaseController extends Controller
             );
         $result->setUsedAt(new \DateTime('now'));
         $this->addToDB($result);
+    }
+
+    protected function isKeuzeOefenstof($geboorteJaar)
+    {
+        $leeftijd = (date('Y', time())-$geboorteJaar);
+        if ($leeftijd >= 13) {
+            return true;
+        }
+        return false;
     }
 
     protected function checkVoorinschrijvingsToken($token, Session $session = null)
@@ -278,6 +288,12 @@ class BaseController extends Controller
     }
 
     protected function uploadenVloermuziekToegestaan()
+    {
+        return false;
+        //todo: deze functie schrijven
+    }
+
+    protected function factuurBekijkenToegestaan()
     {
         return false;
         //todo: deze functie schrijven
