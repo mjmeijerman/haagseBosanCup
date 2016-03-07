@@ -1240,7 +1240,7 @@ body {
 	color: #FFF;
 	border: 1px solid #FF0000;
 	box-shadow: 0px 0px 10px #FF0000;
-	outline: 1;
+	/*outline: 1;*/
 	outline-color: #B60000;
 }
 
@@ -1273,7 +1273,7 @@ body {
 	color: #FFF;
 	border: 1px solid #00ff00;
 	box-shadow: 0px 0px 10px #00ff00;
-	outline: 1;
+	/*outline: 1;*/
 	outline-color: #00b600;
 }
 
@@ -1741,7 +1741,8 @@ body {
 	0% { opacity: 0;}
 	10% {opacity: 1;}
     90% { opacity: 1; }
-    100%   { opacity: 0; }
+	100%   { opacity: 0; }
+}
 
 /* Opera < 12.1 */
 @-o-keyframes fadeout {
