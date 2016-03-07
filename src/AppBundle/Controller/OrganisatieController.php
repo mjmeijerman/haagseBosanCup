@@ -61,6 +61,7 @@ class OrganisatieController extends BaseController
      */
     public function removeContactpersoon(Request $request, $id)
     {
+        $this->setBasicPageData('Organisatie');
         $result = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findOneBy(
@@ -70,7 +71,7 @@ class OrganisatieController extends BaseController
             if ($request->getMethod() == 'POST') {
                 if ($request->request->get('bevestig')) {
                     $this->removeFromDB($result);
-                    return ($this->getOrganisatiePage('Inschrijvingen'));
+                    return $this->redirectToRoute('organisatieGetContent', ['page' => 'Inschrijvingen']);
                 }
             }
             $contactpersoon = [
@@ -82,7 +83,7 @@ class OrganisatieController extends BaseController
                 'contactpersoon' => $contactpersoon,
             ));
         }
-        return ($this->getOrganisatiePage('Inschrijvingen'));
+        return $this->redirectToRoute('organisatieGetContent', ['page' => 'Inschrijvingen']);
     }
 
     /**
@@ -186,7 +187,7 @@ class OrganisatieController extends BaseController
                 'success',
                 'Een voorinschrijvingslink is gemaild'
             );
-            return $this->getOrganisatiePage($page);
+            return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
             $this->setBasicPageData('Organisatie');
             return $this->render('organisatie/genereerVoorinschrijving.html.twig', array(
@@ -218,7 +219,7 @@ class OrganisatieController extends BaseController
             'success',
             'De link is verwijderd'
         );
-        return $this->getOrganisatiePage($page);
+        return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
     }
 
     private function refreshVoorinschrijving($id)
@@ -245,7 +246,7 @@ class OrganisatieController extends BaseController
     public function refreshVoorinschrijvingsPage($page, $id)
     {
         $this->refreshVoorinschrijving($id);
-        return $this->getOrganisatiePage($page);
+        return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
     }
 
     private function getVoorinschrijvingen()

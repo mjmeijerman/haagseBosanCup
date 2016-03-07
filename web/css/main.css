@@ -786,6 +786,10 @@ body {
 	background: #F5F5A7;
 }
 
+.content .fake_link {
+	cursor: pointer;
+}
+
 .content .controle_wachtlijst {
 	background: #FFC1C1 !important;
 }

@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception;
 class BaseController extends Controller
 {
     const OPENING_INSCHRIJVING = 'Opening inschrijving';
+    const OPENING_UPLOADEN_VLOERMUZIEK = 'Opening uploaden vloermuziek';
     const SLUITING_INSCHRIJVING_TURNSTERS = 'Sluiting inschrijving turnsters';
     const SLUITING_INSCHRIJVING_JURYLEDEN = 'Sluiting inschrijving juryleden';
     const SLUITING_UPLOADEN_VLOERMUZIEK = 'Sluiting uploaden vloermuziek';
@@ -34,6 +35,7 @@ class BaseController extends Controller
         if (!$fieldname) {
             $instellingKeys = array(
                 self::OPENING_INSCHRIJVING,
+                self::OPENING_UPLOADEN_VLOERMUZIEK,
                 self::SLUITING_INSCHRIJVING_TURNSTERS,
                 self::SLUITING_INSCHRIJVING_JURYLEDEN,
                 self::SLUITING_UPLOADEN_VLOERMUZIEK,
@@ -241,12 +243,21 @@ class BaseController extends Controller
 
     protected function wijzigTurnsterToegestaan()
     {
+        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
+        $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
+        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
+            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS]))
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function verwijderenTurnsterToegestaan()
+    {
         /** @var \DateTime[] $instellingGeopend */
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
-        /** @var \DateTime[] $instellingGesloten */
-        $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
-        if ((time() > $instellingGeopend[self::OPENING_INSCHRIJVING]->getTimestamp() &&
-            time() < $instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS]->getTimestamp())
+        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]))
         ) {
             return true;
         }
@@ -255,12 +266,10 @@ class BaseController extends Controller
 
     protected function wijzigJuryToegestaan()
     {
-        /** @var \DateTime[] $instellingGeopend */
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
-        /** @var \DateTime[] $instellingGesloten */
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_JURYLEDEN);
-        if ((time() > $instellingGeopend[self::OPENING_INSCHRIJVING]->getTimestamp() &&
-            time() < $instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN]->getTimestamp())
+        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
+            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN]))
         ) {
             return true;
         } else {
@@ -270,6 +279,7 @@ class BaseController extends Controller
 
     protected function uploadenVloermuziekToegestaan()
     {
+        return false;
         //todo: deze functie schrijven
     }
 

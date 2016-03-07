@@ -1,12 +1,16 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block body %}
-    <div id="inschrijven">
-        <a href="{{ path('addTurnster') }}">Turnster toevoegen &#187;</a>
-    </div>
-	<div id="add_jury">
-        <a href="{{ path('addJury') }}">Jurylid toevoegen &#187;</a>
-    </div>
+    {% if wijzigenTurnsterToegestaan %}
+        <div id="inschrijven">
+            <a href="{{ path('addTurnster') }}">Turnster toevoegen &#187;</a>
+        </div>
+    {% endif %}
+    {% if wijzigJuryToegestaan %}
+        <div id="add_jury">
+            <a href="{{ path('addJury') }}">Jurylid toevoegen &#187;</a>
+        </div>
+    {% endif %}
 
 
 
@@ -84,56 +88,82 @@
             </th>
         </tr>
         {% for turnster in turnsters %}
-        <tr title="{{ turnster.opmerking }}">
-            <td>
-                {{ loop.index }}
-            </td>
-            <td>
-                {{ turnster.voornaam }}
-            </td>
-            <td>
-                {{ turnster.achternaam }}
-            </td>
-            <td>
-                {{ turnster.geboorteJaar }}
-            </td>
-            <td>
-                {{ turnster.categorie }}
-            </td>
-            <td>
-                {{ turnster.niveau }}
-            </td>
-            <td>
-                {{ turnster.wedstrijdnummer }}
-            </td>
-            <td>
-                {#<img src="{{ asset('images/refresh.png') }}" height="18">#}
-                {#<img src="{{ asset('images/upload.png') }}" height="18"><img src="{{ asset('images/listen.png') }}"#}
-                                                                        {#height="18">#}
-            </td>
-            <td>
-                {#<img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>#}
-            </td>
-        </tr>
+            <tr title="{{ turnster.opmerking }}">
+                <td>
+                    {{ loop.index }}
+                </td>
+                <td>
+                    {{ turnster.voornaam }}
+                </td>
+                <td>
+                    {{ turnster.achternaam }}
+                </td>
+                <td>
+                    {{ turnster.geboorteJaar }}
+                </td>
+                <td>
+                    {{ turnster.categorie }}
+                </td>
+                <td>
+                    {{ turnster.niveau }}
+                </td>
+                <td>
+                    {{ turnster.wedstrijdnummer }}
+                </td>
+                <td>
+                    {% if uploadenVloermuziekToegestaan %}
+                        <img src="{{ asset('images/refresh.png') }}" height="18">
+                        <img src="{{ asset('images/upload.png') }}" height="18">
+                    {% endif %}
+                    {% if turnster.vloermuziek %}
+                        <img src="{{ asset('images/listen.png') }}" height="18">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if wijzigenTurnsterToegestaan %}
+                        <img src="{{ asset('images/edit.png') }}">
+                    {% endif %}
+                    {% if verwijderenTurnsterToegestaan %}
+                        <form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeTurnster') }}" style="display: inline;">
+                            <div class="fake_link" onclick="remove_turnster('{{ turnster.id }}',
+                                    '{{ turnster.voornaam }}', '{{ turnster.achternaam }}')" style="display: inline">
+                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+                            </div>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
         {% endfor %}
     </table>
     <br/>
     <table>
         <tr>
-            {#<td><img src="{{ asset('images/upload.png') }}" height="18"></td>#}
-            {#<td>Muziek uploaden</td>#}
-            <td><img src="{{ asset('images/edit.png') }}"></td>
-            <td>Inschrijving bewerken</td>
+            {% if uploadenVloermuziekToegestaan %}
+                <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
+                <td>Muziek uploaden</td>
+            {% endif %}
+            {% if wijzigenTurnsterToegestaan %}
+                <td><img src="{{ asset('images/edit.png') }}"></td>
+                <td>Inschrijving bewerken</td>
+            {% endif %}
         </tr>
         <tr>
-            {#<td><img src="{{ asset('images/listen.png') }}" height="18"></td>#}
-            {#<td>Muziek beluisteren</td>#}
-            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Turnster afmelden</td>
+            {% if uploadenVloermuziekToegestaan %}
+                <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
+                <td>Muziek beluisteren</td>
+            {% endif %}
+            {% if verwijderenTurnsterToegestaan %}
+                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td>Turnster afmelden</td>
+            {% endif %}
         </tr>
         <tr>
-            {#<td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>#}
-            {#<td>Muziek opnieuw uploaden</td>#}
+            {% if uploadenVloermuziekToegestaan %}
+                <td><img src="{{ asset('images/refresh.png') }}" width="15"/></td>
+                <td>Muziek opnieuw uploaden</td>
+            {% endif %}
         </tr>
     </table>
 
@@ -165,39 +195,56 @@
         </tr>
         {% for wachtlijst in wachtlijstTurnsters %}
             <tr title="{{ wachtlijst.opmerking }}">
-            <td>
-                {{ loop.index }}
-            </td>
-            <td>
-                {{ wachtlijst.voornaam }}
-            </td>
-            <td>
-                {{ wachtlijst.achternaam }}
-            </td>
-            <td>
-                {{ wachtlijst.geboorteJaar }}
-            </td>
-            <td>
-                {{ wachtlijst.categorie }}
-            </td>
-            <td>
-                {{ wachtlijst.niveau }}
-            </td>
-            <td>
-                {#<img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>#}
-            </td>
-        </tr>
+                <td>
+                    {{ loop.index }}
+                </td>
+                <td>
+                    {{ wachtlijst.voornaam }}
+                </td>
+                <td>
+                    {{ wachtlijst.achternaam }}
+                </td>
+                <td>
+                    {{ wachtlijst.geboorteJaar }}
+                </td>
+                <td>
+                    {{ wachtlijst.categorie }}
+                </td>
+                <td>
+                    {{ wachtlijst.niveau }}
+                </td>
+                <td>
+                    {% if wijzigenTurnsterToegestaan %}
+                        <img src="{{ asset('images/edit.png') }}">
+                    {% endif %}
+                    {% if verwijderenTurnsterToegestaan %}
+                        <form method="post" name="remove_turnster_{{ wachtlijst.id }}"
+                              action="{{ path('removeTurnster') }}" style="display: inline;">
+                            <div class="fake_link" onclick="remove_turnster('{{ wachtlijst.id }}',
+                                    '{{ wachtlijst.voornaam }}', '{{ wachtlijst.achternaam }}')"
+                                 style="display: inline">
+                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <input type="hidden" name="turnsterId" value="{{ wachtlijst.id }}"/>
+                            </div>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
         {% endfor %}
     </table>
     <br/>
     <table>
         <tr>
-            <td><img src="{{ asset('images/edit.png') }}"></td>
-            <td>Inschrijving bewerken</td>
+            {% if wijzigenTurnsterToegestaan %}
+                <td><img src="{{ asset('images/edit.png') }}"></td>
+                <td>Inschrijving bewerken</td>
+            {% endif %}
         </tr>
         <tr>
-            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Turnster afmelden</td>
+            {% if verwijderenTurnsterToegestaan %}
+                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td>Turnster afmelden</td>
+            {% endif %}
         </tr>
     </table>
 
@@ -219,39 +266,65 @@
             <th>
                 Brevet
             </th>
+            <th>
+                Dag
+            </th>
+            <th>
+
+            </th>
         </tr>
         {% for jurylid in juryleden %}
-        <tr>
-            <td>
-                {{ loop.index }}
-            </td>
-            <td>
-                {{ jurylid.voornaam }}
-            </td>
-            <td>
-                {{ jurylid.achternaam }}
-            </td>
-            <td>
-                {{ jurylid.opmerking }}
-            </td>
-            <td>
-                {{ jurylid.brevet }}
-            </td>
-            <td>
-                <img src="{{ asset('images/edit.png') }}"> <img src="{{ asset('images/remove.png') }}" width="15"/>
-            </td>
-        </tr>
-            {% endfor %}
+            <tr>
+                <td>
+                    {{ loop.index }}
+                </td>
+                <td>
+                    {{ jurylid.voornaam }}
+                </td>
+                <td>
+                    {{ jurylid.achternaam }}
+                </td>
+                <td>
+                    {{ jurylid.opmerking }}
+                </td>
+                <td>
+                    {{ jurylid.brevet }}
+                </td>
+                <td>
+                    {{ jurylid.dag }}
+                </td>
+                <td>
+                    {% if wijzigJuryToegestaan %}
+                        <img src="{{ asset('images/edit.png') }}">
+                    {% endif %}
+                    {% if verwijderJuryToegestaan %}
+                        <form method="post" name="remove_jury_{{ jurylid.id }}"
+                              action="{{ path('removeJury') }}" style="display: inline;">
+                            <div class="fake_link" onclick="remove_jury('{{ jurylid.id }}',
+                                    '{{ jurylid.voornaam }}', '{{ jurylid.achternaam }}')"
+                                 style="display: inline">
+                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <input type="hidden" name="juryId" value="{{ jurylid.id }}"/>
+                            </div>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
     </table>
     <br/>
     <table>
         <tr>
-            <td><img src="{{ asset('images/edit.png') }}"></td>
-            <td>Jurylid bewerken</td>
+            {% if wijzigJuryToegestaan %}
+                <td><img src="{{ asset('images/edit.png') }}"></td>
+                <td>Jurylid bewerken</td>
+            {% endif %}
         </tr>
         <tr>
-            <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
-            <td>Jurylid afmelden</td>
+            {% if verwijderJuryToegestaan %}
+                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td>Jurylid afmelden</td>
+            {% endif %}
         </tr>
     </table>
 
@@ -316,4 +389,22 @@
     Bij algemene vragen, of bij twijfel, mail dan naar:
     <br/>
     <li><a href="mailto:info@haagsebosancup.nl">info@haagsebosancup.nl</a></li>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="application/javascript">
+
+        function remove_turnster(id, voornaam, achternaam) {
+            if (confirm("Weet je zeker dat je " + voornaam + " " + achternaam + " wilt afmelden?")) {
+                document.forms["remove_turnster_" + id].submit();
+            }
+        }
+
+        function remove_jury(id, voornaam, achternaam) {
+            if (confirm("Weet je zeker dat je " + voornaam + " " + achternaam + " wilt afmelden?")) {
+                document.forms["remove_jury_" + id].submit();
+            }
+        }
+
+    </script>
 {% endblock %}

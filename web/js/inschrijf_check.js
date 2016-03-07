@@ -563,7 +563,7 @@ function get_niveaus(key, turnsterNiveau) {
         type: 'get',
         url: Routing.generate('getAvailableNiveausAjaxCall', {geboorteJaar: geboorteJaar}),
         success: function (data) {
-            niveau.innerHTML = '';
+            niveau.innerHTML = '<option value="" selected>Niveau</option>';
             for (var field in data) {
                 var selected = '';
                 if (turnsterNiveau == data[field]) {

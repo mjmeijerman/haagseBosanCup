@@ -39,6 +39,12 @@ class ContactpersoonController extends BaseController
      */
     public function getIndexPageAction()
     {
+        $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan(); //todo: deze functie nog schrijven
+        $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
+        $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
+        $wijzigJuryToegestaan = $this->wijzigJuryToegestaan();
+        $verwijderJuryToegestaan = $this->wijzigJuryToegestaan();
+        $this->updateGereserveerdePlekken();
         $this->setBasicPageData();
         /** @var User $user */
         $user = $this->getUser();
@@ -81,7 +87,7 @@ class ContactpersoonController extends BaseController
                     'vloermuziek' => $locatie,
                     'opmerking' => $turnsterObject->getOpmerking(),
                 ];
-            }  else {
+            } else {
                 $turnsters[] = [
                     'id' => $turnsterObject->getId(),
                     'voornaam' => $turnsterObject->getVoornaam(),
@@ -100,10 +106,12 @@ class ContactpersoonController extends BaseController
         $juryObjecten = $user->getJurylid();
         foreach ($juryObjecten as $juryObject) {
             $juryleden[] = [
+                'id' => $juryObject->getId(),
                 'voornaam' => $juryObject->getVoornaam(),
                 'achternaam' => $juryObject->getAchternaam(),
                 'opmerking' => $juryObject->getOpmerking(),
                 'brevet' => $juryObject->getBrevet(),
+                'dag' => $this->getBeschikbareDag($juryObject),
             ];
         }
         return $this->render('contactpersoon/contactpersoonIndex.html.twig', array(
@@ -114,7 +122,24 @@ class ContactpersoonController extends BaseController
             'wachtlijstTurnsters' => $wachtlijst,
             'afgemeldTurnsters' => $afgemeld,
             'juryleden' => $juryleden,
+            'wijzigenTurnsterToegestaan' => $wijzigenTurnsterToegestaan,
+            'verwijderenTurnsterToegestaan' => $verwijderenTurnsterToegestaan,
+            'wijzigJuryToegestaan' => $wijzigJuryToegestaan,
+            'verwijderJuryToegestaan' => $verwijderJuryToegestaan,
+            'uploadenVloermuziekToegestaan' => $uploadenVloermuziekToegestaan,
         ));
+    }
+
+    private function getBeschikbareDag($juryObject)
+    {
+        /** @var Jurylid $juryObject */
+        if ($juryObject->getZaterdag() && $juryObject->getZondag()) {
+            return 'Beide';
+        } elseif ($juryObject->getZaterdag()) {
+            return 'Za';
+        } else {
+            return 'Zo';
+        }
     }
 
     /**
@@ -123,121 +148,129 @@ class ContactpersoonController extends BaseController
      */
     public function addTurnster(Request $request)
     {
-        $this->setBasicPageData();
-        $turnster = [
-            'voornaam' => '',
-            'achternaam' => '',
-            'geboortejaar' => '',
-            'niveau' => '',
-            'opmerking' => '',
-        ];
-        $classNames = [
-            'voornaam' => 'text',
-            'achternaam' => 'text',
-            'geboortejaar' => 'turnster_niveau',
-            'niveau' => 'turnster_niveau',
-            'opmerking' => 'text',
-        ];
-        $geboorteJaren = $this->getGeboorteJaren();
-        $vrijePlekken = $this->getVrijePlekken();
-        $csrfToken = $this->getToken();
-        if ($request->getMethod() == 'POST') {
+        if ($this->wijzigTurnsterToegestaan()) {
+            $this->setBasicPageData();
             $turnster = [
-                'voornaam' => $request->request->get('voornaam'),
-                'achternaam' => $request->request->get('achternaam'),
-                'geboortejaar' => $request->request->get('geboorteJaar'),
-                'niveau' => $request->request->get('niveau'),
-                'opmerking' => $request->request->get('opmerking'),
+                'voornaam' => '',
+                'achternaam' => '',
+                'geboortejaar' => '',
+                'niveau' => '',
+                'opmerking' => '',
             ];
-            $postedToken = $request->request->get('csrfToken');
-            if (!empty($postedToken)) {
-                if ($this->isTokenValid($postedToken)) {
-                    $validationTurnster = [
-                        'voornaam' => false,
-                        'achternaam' => false,
-                        'geboorteJaar' => false,
-                        'niveau' => false,
-                        'opmerking' => true,
-                    ];
+            $classNames = [
+                'voornaam' => 'text',
+                'achternaam' => 'text',
+                'geboortejaar' => 'turnster_niveau',
+                'niveau' => 'turnster_niveau',
+                'opmerking' => 'text',
+            ];
+            $geboorteJaren = $this->getGeboorteJaren();
+            $vrijePlekken = $this->getVrijePlekken();
+            $csrfToken = $this->getToken();
+            if ($request->getMethod() == 'POST') {
+                $turnster = [
+                    'voornaam' => $request->request->get('voornaam'),
+                    'achternaam' => $request->request->get('achternaam'),
+                    'geboortejaar' => $request->request->get('geboorteJaar'),
+                    'niveau' => $request->request->get('niveau'),
+                    'opmerking' => $request->request->get('opmerking'),
+                ];
+                $postedToken = $request->request->get('csrfToken');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $validationTurnster = [
+                            'voornaam' => false,
+                            'achternaam' => false,
+                            'geboorteJaar' => false,
+                            'niveau' => false,
+                            'opmerking' => true,
+                        ];
 
-                    $classNames['opmerking'] = 'succesIngevuld';
+                        $classNames['opmerking'] = 'succesIngevuld';
 
-                    if (strlen($request->request->get('voornaam')) > 1) {
-                        $validationTurnster['voornaam'] = true;
-                        $classNames['voornaam'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen geldige voornaam ingevoerd'
-                        );
-                        $classNames['voornaam'] = 'error';
-                    }
-
-                    if (strlen($request->request->get('achternaam')) > 1) {
-                        $validationTurnster['achternaam'] = true;
-                        $classNames['achternaam'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen geldige achternaam ingevoerd'
-                        );
-                        $classNames['achternaam'] = 'error';
-                    }
-                    if ($request->request->get('geboorteJaar')) {
-                        $validationTurnster['geboorteJaar'] = true;
-                        $classNames['geboortejaar'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen geboortejaar ingevoerd'
-                        );
-                        $classNames['geboortejaar'] = 'error';
-                    }
-
-                    if ($request->request->get('niveau')) {
-                        $validationTurnster['niveau'] = true;
-                        $classNames['niveau'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen niveau ingevoerd'
-                        );
-                        $classNames['niveau'] = 'error';
-                    }
-                    if (!(in_array(false, $validationTurnster))) {
-                        $turnster = new Turnster();
-                        $scores = new Scores();
-                        if ($this->getVrijePlekken() > 0) {
-                            $turnster->setWachtlijst(false);
+                        if (strlen($request->request->get('voornaam')) > 1) {
+                            $validationTurnster['voornaam'] = true;
+                            $classNames['voornaam'] = 'succesIngevuld';
                         } else {
-                            $turnster->setWachtlijst(true);
+                            $this->addFlash(
+                                'error',
+                                'geen geldige voornaam ingevoerd'
+                            );
+                            $classNames['voornaam'] = 'error';
                         }
-                        $turnster->setCreationDate(new \DateTime('now'));
-                        $turnster->setExpirationDate(null);
-                        $turnster->setScores($scores);
-                        $turnster->setUser($this->getUser());
-                        $turnster->setIngevuld(true);
-                        $turnster->setVoornaam($request->request->get('voornaam'));
-                        $turnster->setAchternaam($request->request->get('achternaam'));
-                        $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
-                        $turnster->setNiveau($request->request->get('niveau'));
-                        $turnster->setOpmerking($request->request->get('opmerking'));
-                        $this->getUser()->addTurnster($turnster);
-                        $this->addToDB($this->getUser());
-                        return $this->redirectToRoute('getContactpersoonIndexPage');
+
+                        if (strlen($request->request->get('achternaam')) > 1) {
+                            $validationTurnster['achternaam'] = true;
+                            $classNames['achternaam'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen geldige achternaam ingevoerd'
+                            );
+                            $classNames['achternaam'] = 'error';
+                        }
+                        if ($request->request->get('geboorteJaar')) {
+                            $validationTurnster['geboorteJaar'] = true;
+                            $classNames['geboortejaar'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen geboortejaar ingevoerd'
+                            );
+                            $classNames['geboortejaar'] = 'error';
+                        }
+
+                        if ($request->request->get('niveau')) {
+                            $validationTurnster['niveau'] = true;
+                            $classNames['niveau'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen niveau ingevoerd'
+                            );
+                            $classNames['niveau'] = 'error';
+                        }
+                        if (!(in_array(false, $validationTurnster))) {
+                            $turnster = new Turnster();
+                            $scores = new Scores();
+                            if ($this->getVrijePlekken() > 0) {
+                                $turnster->setWachtlijst(false);
+                            } else {
+                                $turnster->setWachtlijst(true);
+                            }
+                            $turnster->setCreationDate(new \DateTime('now'));
+                            $turnster->setExpirationDate(null);
+                            $turnster->setScores($scores);
+                            $turnster->setUser($this->getUser());
+                            $turnster->setIngevuld(true);
+                            $turnster->setVoornaam($request->request->get('voornaam'));
+                            $turnster->setAchternaam($request->request->get('achternaam'));
+                            $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
+                            $turnster->setNiveau($request->request->get('niveau'));
+                            $turnster->setOpmerking($request->request->get('opmerking'));
+                            $this->getUser()->addTurnster($turnster);
+                            $this->addToDB($this->getUser());
+                            return $this->redirectToRoute('getContactpersoonIndexPage');
+                        }
                     }
                 }
             }
+            return $this->render('contactpersoon/addTurnster.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+                'vrijePlekken' => $vrijePlekken,
+                'turnster' => $turnster,
+                'geboorteJaren' => $geboorteJaren,
+                'classNames' => $classNames,
+                'csrfToken' => $csrfToken,
+            ));
+        } else {
+            $this->addFlash(
+                'error',
+                'Not authorized!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
         }
-        return $this->render('contactpersoon/addTurnster.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'sponsors' => $this->sponsors,
-            'vrijePlekken' => $vrijePlekken,
-            'turnster' => $turnster,
-            'geboorteJaren' => $geboorteJaren,
-            'classNames' => $classNames,
-            'csrfToken' => $csrfToken,
-        ));
     }
 
     /**
@@ -246,147 +279,237 @@ class ContactpersoonController extends BaseController
      */
     public function addJury(Request $request)
     {
-        $this->setBasicPageData();
-        $jury = [
-            'voornaam' => '',
-            'achternaam' => '',
-            'email' => '',
-            'brevet' => '',
-            'opmerking' => '',
-            'dag' => '',
-        ];
-        $classNames = [
-            'voornaam' => 'text',
-            'achternaam' => 'text',
-            'email' => 'text',
-            'brevet' => 'turnster_niveau',
-            'opmerking' => 'text',
-            'dag' => 'turnster_niveau',
-        ];
-        $csrfToken = $this->getToken();
-        if ($request->getMethod() == 'POST') {
+        if ($this->wijzigJuryToegestaan()) {
+            $this->setBasicPageData();
             $jury = [
-                'voornaam' => $request->request->get('voornaam'),
-                'achternaam' => $request->request->get('achternaam'),
-                'email' => $request->request->get('email'),
-                'brevet' => $request->request->get('brevet'),
-                'dag' => $request->request->get('dag'),
-                'opmerking' => $request->request->get('opmerking'),
+                'voornaam' => '',
+                'achternaam' => '',
+                'email' => '',
+                'brevet' => '',
+                'opmerking' => '',
+                'dag' => '',
             ];
-            $postedToken = $request->request->get('csrfToken');
-            if (!empty($postedToken)) {
-                if ($this->isTokenValid($postedToken)) {
-                    $validationJury = [
-                        'voornaam' => false,
-                        'achternaam' => false,
-                        'email' => false,
-                        'brevet' => false,
-                        'dag' => false,
-                        'opmerking' => true,
-                    ];
+            $classNames = [
+                'voornaam' => 'text',
+                'achternaam' => 'text',
+                'email' => 'text',
+                'brevet' => 'turnster_niveau',
+                'opmerking' => 'text',
+                'dag' => 'turnster_niveau',
+            ];
+            $csrfToken = $this->getToken();
+            if ($request->getMethod() == 'POST') {
+                $jury = [
+                    'voornaam' => $request->request->get('voornaam'),
+                    'achternaam' => $request->request->get('achternaam'),
+                    'email' => $request->request->get('email'),
+                    'brevet' => $request->request->get('brevet'),
+                    'dag' => $request->request->get('dag'),
+                    'opmerking' => $request->request->get('opmerking'),
+                ];
+                $postedToken = $request->request->get('csrfToken');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $validationJury = [
+                            'voornaam' => false,
+                            'achternaam' => false,
+                            'email' => false,
+                            'brevet' => false,
+                            'dag' => false,
+                            'opmerking' => true,
+                        ];
 
-                    $classNames['opmerking'] = 'succesIngevuld';
+                        $classNames['opmerking'] = 'succesIngevuld';
 
-                    if (strlen($request->request->get('voornaam')) > 1) {
-                        $validationJury['voornaam'] = true;
-                        $classNames['voornaam'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen geldige voornaam ingevoerd'
-                        );
-                        $classNames['voornaam'] = 'error';
-                    }
-
-                    if (strlen($request->request->get('achternaam')) > 1) {
-                        $validationJury['achternaam'] = true;
-                        $classNames['achternaam'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen geldige achternaam ingevoerd'
-                        );
-                        $classNames['achternaam'] = 'error';
-                    }
-
-                    if (strlen($request->request->get('email')) > 1) {
-                        $emailConstraint = new EmailConstraint();
-                        $errors = $this->get('validator')->validate(
-                            $request->request->get('email'),
-                            $emailConstraint
-                        );
-                        if (count($errors) == 0) {
-                            $validationJury['email'] = true;
-                            $classNames['email'] = 'succesIngevuld';
+                        if (strlen($request->request->get('voornaam')) > 1) {
+                            $validationJury['voornaam'] = true;
+                            $classNames['voornaam'] = 'succesIngevuld';
                         } else {
-                            foreach ($errors as $error) {
-                                $this->addFlash(
-                                    'error',
-                                    $error->getMessage()
-                                );
+                            $this->addFlash(
+                                'error',
+                                'geen geldige voornaam ingevoerd'
+                            );
+                            $classNames['voornaam'] = 'error';
+                        }
+
+                        if (strlen($request->request->get('achternaam')) > 1) {
+                            $validationJury['achternaam'] = true;
+                            $classNames['achternaam'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen geldige achternaam ingevoerd'
+                            );
+                            $classNames['achternaam'] = 'error';
+                        }
+
+                        if (strlen($request->request->get('email')) > 1) {
+                            $emailConstraint = new EmailConstraint();
+                            $errors = $this->get('validator')->validate(
+                                $request->request->get('email'),
+                                $emailConstraint
+                            );
+                            if (count($errors) == 0) {
+                                $validationJury['email'] = true;
+                                $classNames['email'] = 'succesIngevuld';
+                            } else {
+                                foreach ($errors as $error) {
+                                    $this->addFlash(
+                                        'error',
+                                        $error->getMessage()
+                                    );
+                                }
+                                $classNames['email'] = 'error';
                             }
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen email ingevoerd'
+                            );
                             $classNames['email'] = 'error';
                         }
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen email ingevoerd'
-                        );
-                        $classNames['email'] = 'error';
-                    }
 
-                    if ($request->request->get('brevet')) {
-                        $validationJury['brevet'] = true;
-                        $classNames['brevet'] = 'brevet';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen brevet ingevoerd'
-                        );
-                        $classNames['brevet'] = 'error';
-                    }
-
-                    if ($request->request->get('dag')) {
-                        $validationJury['dag'] = true;
-                        $classNames['dag'] = 'succesIngevuld';
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'geen dag ingevoerd'
-                        );
-                        $classNames['dag'] = 'error';
-                    }
-                    if (!(in_array(false, $validationJury))) {
-                        $jurylid = new Jurylid();
-                        $jurylid->setVoornaam($request->request->get('voornaam'));
-                        $jurylid->setAchternaam($request->request->get('achternaam'));
-                        $jurylid->setEmail($request->request->get('email'));
-                        $jurylid->setBrevet($request->request->get('brevet'));
-                        $jurylid->setOpmerking($request->request->get('opmerking'));
-                        if ($request->request->get('dag') == 'za') {
-                            $jurylid->setZaterdag(true);
-                            $jurylid->setZondag(false);
-                        } elseif ($request->request->get('dag') == 'zo') {
-                            $jurylid->setZaterdag(false);
-                            $jurylid->setZondag(true);
+                        if ($request->request->get('brevet')) {
+                            $validationJury['brevet'] = true;
+                            $classNames['brevet'] = 'brevet';
                         } else {
-                            $jurylid->setZaterdag(true);
-                            $jurylid->setZondag(true);
+                            $this->addFlash(
+                                'error',
+                                'geen brevet ingevoerd'
+                            );
+                            $classNames['brevet'] = 'error';
                         }
-                        $jurylid->setUser($this->getUser());
-                        $this->getUser()->addJurylid($jurylid);
-                        $this->addToDB($this->getUser());
-                        return $this->redirectToRoute('getContactpersoonIndexPage');
+
+                        if ($request->request->get('dag')) {
+                            $validationJury['dag'] = true;
+                            $classNames['dag'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'geen dag ingevoerd'
+                            );
+                            $classNames['dag'] = 'error';
+                        }
+                        if (!(in_array(false, $validationJury))) {
+                            $jurylid = new Jurylid();
+                            $jurylid->setVoornaam($request->request->get('voornaam'));
+                            $jurylid->setAchternaam($request->request->get('achternaam'));
+                            $jurylid->setEmail($request->request->get('email'));
+                            $jurylid->setBrevet($request->request->get('brevet'));
+                            $jurylid->setOpmerking($request->request->get('opmerking'));
+                            if ($request->request->get('dag') == 'za') {
+                                $jurylid->setZaterdag(true);
+                                $jurylid->setZondag(false);
+                            } elseif ($request->request->get('dag') == 'zo') {
+                                $jurylid->setZaterdag(false);
+                                $jurylid->setZondag(true);
+                            } else {
+                                $jurylid->setZaterdag(true);
+                                $jurylid->setZondag(true);
+                            }
+                            $jurylid->setUser($this->getUser());
+                            $this->getUser()->addJurylid($jurylid);
+                            $this->addToDB($this->getUser());
+                            return $this->redirectToRoute('getContactpersoonIndexPage');
+                        }
                     }
                 }
             }
+            return $this->render('contactpersoon/addJury.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+                'jury' => $jury,
+                'classNames' => $classNames,
+                'csrfToken' => $csrfToken,
+            ));
+        } else {
+            $this->addFlash(
+                'error',
+                'Not authorized!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
         }
-        return $this->render('contactpersoon/addJury.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'sponsors' => $this->sponsors,
-            'jury' => $jury,
-            'classNames' => $classNames,
-            'csrfToken' => $csrfToken,
-        ));
+    }
+
+    /**
+     * @Route("/contactpersoon/removeTurnster/", name="removeTurnster")
+     * @Method({"POST"})
+     */
+    public function removeTurnster(Request $request)
+    {
+        /** @var Turnster $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findOneBy(['id' => $request->request->get('turnsterId')]);
+        if (!$result) {
+            $this->addFlash(
+                'error',
+                'Turnster niet gevonden'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        }
+        if ($result->getUser() != $this->getUser()) {
+            $this->addFlash(
+                'error',
+                'Not authorized!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        } else {
+            if ($this->wijzigTurnsterToegestaan() || $result->getWachtlijst()) {
+                $this->removeFromDB($result);
+                $this->addFlash(
+                    'success',
+                    'Turnster succesvol afgemeld!'
+                );
+            } else {
+                $result->setAfgemeld(true);
+                $this->addToDB($result);
+            }
+            $this->addFlash(
+                'success',
+                'Turnster succesvol afgemeld!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        }
+    }
+
+    /**
+     * @Route("/contactpersoon/removeJury/", name="removeJury")
+     * @Method({"POST"})
+     */
+    public function removeJury(Request $request)
+    {
+        /** @var Jurylid $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->findOneBy(['id' => $request->request->get('juryId')]);
+        if (!$result) {
+            $this->addFlash(
+                'error',
+                'Jurylid niet gevonden'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        }
+        if ($result->getUser() != $this->getUser()) {
+            $this->addFlash(
+                'error',
+                'Not authorized!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        } else {
+            if ($this->wijzigJuryToegestaan()) {
+                $this->removeFromDB($result);
+                $this->addFlash(
+                    'success',
+                    'Jurylid succesvol afgemeld!'
+                );
+            } else {
+                $this->addFlash(
+                    'error',
+                    'Not authorized!'
+                );
+                return $this->redirectToRoute('getContactpersoonIndexPage');
+            }
+
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        }
     }
 }
