@@ -10,6 +10,7 @@ use AppBundle\Entity\Scores;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Vloermuziek;
 use AppBundle\Form\Type\EditSponsorType;
 use AppBundle\Form\Type\NieuwsberichtType;
 use AppBundle\Form\Type\OrganisatieType;
@@ -39,12 +40,13 @@ class ContactpersoonController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan(); //todo: deze functie nog schrijven
+        $uploadenVloermuziekToegestaan = true;//$this->uploadenVloermuziekToegestaan(); //todo: deze functie nog
+        // schrijven
         $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
         $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
         $wijzigJuryToegestaan = $this->wijzigJuryToegestaan();
         $verwijderJuryToegestaan = $this->wijzigJuryToegestaan();
-        $factuurBekijkenToegestaan = $this->factuurBekijkenToegestaan();
+        $factuurBekijkenToegestaan = $this->factuurBekijkenToegestaan(); //todo: deze functie schrijven
         $this->updateGereserveerdePlekken();
         $this->setBasicPageData();
         /** @var User $user */
@@ -63,8 +65,10 @@ class ContactpersoonController extends BaseController
         $turnsterObjecten = $user->getTurnster();
         foreach ($turnsterObjecten as $turnsterObject) {
             if ($turnsterObject->getVloermuziek()) {
-                $locatie = $turnsterObject->getVloermuziek()->getLocatie();
+                $vloermuziek = true;
+                $locatie = $turnsterObject->getVloermuziek()->getWebPath();
             } else {
+                $vloermuziek = false;
                 $locatie = '';
             }
             if ($turnsterObject->getAfgemeld()) {
@@ -85,7 +89,6 @@ class ContactpersoonController extends BaseController
                     'geboorteJaar' => $turnsterObject->getGeboortejaar(),
                     'categorie' => $this->getCategorie($turnsterObject->getGeboortejaar()),
                     'niveau' => $turnsterObject->getNiveau(),
-                    'vloermuziek' => $locatie,
                     'opmerking' => $turnsterObject->getOpmerking(),
                 ];
             } else {
@@ -97,9 +100,14 @@ class ContactpersoonController extends BaseController
                     'categorie' => $this->getCategorie($turnsterObject->getGeboortejaar()),
                     'niveau' => $turnsterObject->getNiveau(),
                     'wedstrijdnummer' => $turnsterObject->getScores()->getWedstrijdnummer(),
-                    'vloermuziek' => $locatie,
+                    'vloermuziek' => $vloermuziek,
                     'opmerking' => $turnsterObject->getOpmerking(),
                     'keuze' => $this->isKeuzeOefenstof($turnsterObject->getGeboortejaar()),
+                    'wedstrijddag' => $turnsterObject->getScores()->getWedstrijddag(),
+                    'baan' => $turnsterObject->getScores()->getBaan(),
+                    'wedstrijdronde' => $turnsterObject->getScores()->getWedstrijdronde(),
+                    'groep' => $turnsterObject->getScores()->getGroep(),
+                    'vloermuziekLocatie' => $locatie,
                 ];
             }
         }
@@ -617,11 +625,6 @@ class ContactpersoonController extends BaseController
         }
     }
 
-    private function getDagValue()
-    {
-
-    }
-
     /**
      * @Route("/contactpersoon/editJury/{juryId}/", name="editJury")
      * @Method({"GET", "POST"})
@@ -893,6 +896,72 @@ class ContactpersoonController extends BaseController
                 'menuItems' => $this->menuItems,
                 'sponsors' => $this->sponsors,
                 'csrfToken' => $csrfToken,
+            ));
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/contactpersoon/addVloermuziek/{turnsterId}/", name="addVloermuziek")
+     * @Method({"GET", "POST"})
+     */
+    public function addVloermuziekAction(Request $request, $turnsterId)
+    {
+        $this->setBasicPageData();
+        /** @var Turnster $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findOneBy(['id' => $turnsterId]);
+        if (!$result) {
+            $this->addFlash(
+                'error',
+                'Turnster niet gevonden'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        } elseif ($result->getUser() != $this->getUser()) {
+            $this->addFlash(
+                'error',
+                'Not authorized!'
+            );
+            return $this->redirectToRoute('getContactpersoonIndexPage');
+        } else {
+            $turnster = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vloermuziek' => $result->getVloermuziek(),
+            ];
+            $vloermuziek = new Vloermuziek();
+            $form = $this->createFormBuilder($vloermuziek)
+                ->add('file')
+                ->add('uploadBestand', 'submit')
+                ->getForm();
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $extensions = array('mp3', 'wma');
+                if (in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
+                    if ($oud = $result->getVloermuziek()) {
+                        $this->removeFromDB($oud);
+                    }
+                    $vloermuziek->setTurnster($result);
+                    $result->setVloermuziek($vloermuziek);
+                    $this->addToDB($result);
+                    $this->addFlash(
+                        'success',
+                        'Vloermuziek geupload!'
+                    );
+                    return $this->redirectToRoute('getContactpersoonIndexPage');
+                } else {
+                    $this->addFlash(
+                        'error',
+                        'Please upload a valid audio file: mp3 or wma!'
+                    );
+                }
+            }
+            return $this->render('contactpersoon/addVloermuziek.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+                'form' => $form->createView(),
+                'turnster' => $turnster,
             ));
         }
     }

@@ -37,7 +37,7 @@ class Vloermuziek
     private $file;
 
     /**
-     * @ORM\OneToOne(targetEntity="Turnster", mappedBy="vloermuziek")
+     * @ORM\OneToOne(targetEntity="Turnster", mappedBy="vloermuziek", cascade={"persist", "remove"})
      * @var Turnster
      */
     private $turnster;
@@ -68,7 +68,7 @@ class Vloermuziek
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__ . '/../../../httpdocs/' . $this->getUploadDir();
+        return __DIR__ . '/../../../web/' . $this->getUploadDir();
     }
 
     protected function getUploadDir()

@@ -29,6 +29,7 @@ class BaseController extends Controller
     const SLUITING_INSCHRIJVING_JURYLEDEN = 'Sluiting inschrijving juryleden';
     const SLUITING_UPLOADEN_VLOERMUZIEK = 'Sluiting uploaden vloermuziek';
     const FACTUUR_BEKIJKEN_TOEGESTAAN = 'Factuur publiceren';
+    const UITERLIJKE_BETAALDATUM_FACTUUR = 'Uiterlijke betaaldatum';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
 
     protected $sponsors = array();
@@ -44,6 +45,8 @@ class BaseController extends Controller
                 self::SLUITING_INSCHRIJVING_TURNSTERS,
                 self::SLUITING_INSCHRIJVING_JURYLEDEN,
                 self::SLUITING_UPLOADEN_VLOERMUZIEK,
+                self::FACTUUR_BEKIJKEN_TOEGESTAAN,
+                self::UITERLIJKE_BETAALDATUM_FACTUUR,
                 self::MAX_AANTAL_TURNSTERS,
             );
         } else {

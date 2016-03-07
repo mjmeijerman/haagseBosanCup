@@ -115,13 +115,21 @@
                 <td>
                     {% if uploadenVloermuziekToegestaan and turnster.keuze %}
                         {% if turnster.vloermuziek %}
-                            <img src="{{ asset('images/refresh.png') }}" height="18">
+                            <a href="{{ path('addVloermuziek', { 'turnsterId': turnster.id }) }}"
+                               style="text-decoration: none">
+                                <img src="{{ asset('images/refresh.png') }}" height="18">
+                            </a>
                         {% else %}
-                            <img src="{{ asset('images/upload.png') }}" height="18">
+                            <a href="{{ path('addVloermuziek', { 'turnsterId': turnster.id }) }}"
+                               style="text-decoration: none">
+                                <img src="{{ asset('images/upload.png') }}" height="18">
+                            </a>
                         {% endif %}
                     {% endif %}
                     {% if turnster.vloermuziek %}
-                        <img src="{{ asset('images/listen.png') }}" height="18">
+                        <a href="{{ asset(turnster.vloermuziekLocatie) }}" target="_blank">
+                            <img src="{{ asset('images/listen.png') }}" height="18">
+                        </a>
                     {% endif %}
                 </td>
                 <td>
@@ -409,14 +417,14 @@
     <script src="{{ asset('js/EditFieldByClicking.js') }}"></script>
     <script>
 
-        $('.edit').click(function() {
+        $('.edit').click(function () {
             var data = $(this).text();
             var fieldName = this.id;
             onClick(data, fieldName, 'text');
         });
 
-        $(document).on('blur keypress','.txt_edit', function(e){
-            if(e.type === 'keypress' && e.keyCode !== 13) return;
+        $(document).on('blur keypress', '.txt_edit', function (e) {
+            if (e.type === 'keypress' && e.keyCode !== 13) return;
             var data = $(this).val();
             var fieldName = this.id.replace('txt_', '');
             onChange(data, fieldName, 'editGegevens');
