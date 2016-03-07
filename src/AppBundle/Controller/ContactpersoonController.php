@@ -40,7 +40,7 @@ class ContactpersoonController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $uploadenVloermuziekToegestaan = true;//$this->uploadenVloermuziekToegestaan(); //todo: deze functie nog
+        $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan(); //todo: deze functie nog
         // schrijven
         $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
         $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
