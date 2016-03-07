@@ -1,6 +1,9 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block body %}
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
     {% if wijzigenTurnsterToegestaan %}
         <div id="inschrijven">
             <a href="{{ path('addTurnster') }}">Turnster toevoegen &#187;</a>
@@ -13,7 +16,8 @@
     {% endif %}
 
     <h1>Uw gegevens</h1>
-    {#<i>Wil je gegevens bewerken? Dat is heel simpel, je hoeft er alleen maar op te klikken!</i>#}
+    <br/>
+    <i>Wil je contactgegevens bewerken? Dat is heel simpel, je hoeft er alleen maar op te klikken!</i>
 
     <h4>&#187; Vereniging</h4>
     <table class="controle_tabel">
@@ -32,19 +36,19 @@
         </tr>
         <tr>
             <td>Voornaam:</td>
-            <td>{{ contactgegevens.voornaam }}</td>
+            <td><span id="voornaam" class="edit">{{ contactgegevens.voornaam }}</span></td>
         </tr>
         <tr>
             <td>Achternaam:</td>
-            <td>{{ contactgegevens.achternaam }}</td>
+            <td><span id="achternaam" class="edit">{{ contactgegevens.achternaam }}</span></td>
         </tr>
         <tr>
             <td>E-mailadres:</td>
-            <td>{{ contactgegevens.email }}</td>
+            <td><span id="email" class="edit">{{ contactgegevens.email }}</span></td>
         </tr>
         <tr>
             <td>Wachtwoord:</td>
-            <td>Wijzigen</td>
+            <td><a href="{{ path('editContactPassword') }}">Wijzigen</a></td>
         </tr>
     </table>
 
@@ -401,7 +405,22 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="application/javascript">
+    {{ parent() }}
+    <script src="{{ asset('js/EditFieldByClicking.js') }}"></script>
+    <script>
+
+        $('.edit').click(function() {
+            var data = $(this).text();
+            var fieldName = this.id;
+            onClick(data, fieldName, 'text');
+        });
+
+        $(document).on('blur keypress','.txt_edit', function(e){
+            if(e.type === 'keypress' && e.keyCode !== 13) return;
+            var data = $(this).val();
+            var fieldName = this.id.replace('txt_', '');
+            onChange(data, fieldName, 'editGegevens');
+        });
 
         function remove_turnster(id, voornaam, achternaam) {
             if (confirm("Weet je zeker dat je " + voornaam + " " + achternaam + " wilt afmelden?")) {

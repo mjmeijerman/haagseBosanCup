@@ -841,4 +841,59 @@ class ContactpersoonController extends BaseController
             return $this->redirectToRoute('getContactpersoonIndexPage');
         }
     }
+
+    /**
+     * @Route("/contactpersoon/editContactPassword/", name="editContactPassword")
+     * @Method({"GET", "POST"})
+     */
+    public function editContactPassword(Request $request)
+    {
+        if (true) {
+            $error = false;
+            if ($request->getMethod() == 'POST') {
+                if ($request->request->get('pass1') != $request->request->get('pass2')) {
+                    $this->addFlash(
+                        'error',
+                        'De wachtwoorden zijn niet gelijk'
+                    );
+                    $error = true;
+                }
+                if (strlen($request->request->get('pass1')) < 6) {
+                    $this->addFlash(
+                        'error',
+                        'Het wachtwoord moet minimaal 6 karakters bevatten'
+                    );
+                    $error = true;
+                }
+                if (strlen($request->request->get('pass1')) > 20) {
+                    $this->addFlash(
+                        'error',
+                        'Het wachtwoord mag maximaal 20 karakters bevatten'
+                    );
+                    $error = true;
+                }
+                if (!($error)) {
+                    $userObject = $this->getUser();
+                    $password = $request->request->get('pass1');
+                    $encoder = $this->container
+                        ->get('security.encoder_factory')
+                        ->getEncoder($userObject);
+                    $userObject->setPassword($encoder->encodePassword($password, $userObject->getSalt()));
+                    $this->addToDB($userObject);
+                    $this->addFlash(
+                        'success',
+                        'Het wachtwoord is succesvol gewijzigd'
+                    );
+                    return $this->redirectToRoute('getContactpersoonIndexPage');
+                }
+            }
+            $csrfToken = $this->getToken();
+            $this->setBasicPageData();
+            return $this->render('contactpersoon/editPassword.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'sponsors' => $this->sponsors,
+                'csrfToken' => $csrfToken,
+            ));
+        }
+    }
 }
