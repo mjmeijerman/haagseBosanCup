@@ -456,10 +456,6 @@ class ContactpersoonController extends BaseController
         } else {
             if ($this->wijzigTurnsterToegestaan() || $result->getWachtlijst()) {
                 $this->removeFromDB($result);
-                $this->addFlash(
-                    'success',
-                    'Turnster succesvol afgemeld!'
-                );
             } else {
                 $result->setAfgemeld(true);
                 $this->addToDB($result);
