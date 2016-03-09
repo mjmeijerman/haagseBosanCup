@@ -31,19 +31,24 @@ class BaseController extends Controller
     const FACTUUR_BEKIJKEN_TOEGESTAAN = 'Factuur publiceren';
     const UITERLIJKE_BETAALDATUM_FACTUUR = 'Uiterlijke betaaldatum';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
+    const EMPTY_RESULT = 'Klik om te wijzigen';
 
     protected $sponsors = array();
     protected $menuItems = array();
 
+    /**
+     * @param bool|false $fieldname
+     * @return array
+     */
     protected function getOrganisatieInstellingen($fieldname = false)
     {
         $instellingen = array();
         if (!$fieldname) {
             $instellingKeys = array(
                 self::OPENING_INSCHRIJVING,
-                self::OPENING_UPLOADEN_VLOERMUZIEK,
                 self::SLUITING_INSCHRIJVING_TURNSTERS,
                 self::SLUITING_INSCHRIJVING_JURYLEDEN,
+                self::OPENING_UPLOADEN_VLOERMUZIEK,
                 self::SLUITING_UPLOADEN_VLOERMUZIEK,
                 self::FACTUUR_BEKIJKEN_TOEGESTAAN,
                 self::UITERLIJKE_BETAALDATUM_FACTUUR,
@@ -64,9 +69,9 @@ class BaseController extends Controller
                 $result = $result[0];
             }
             if ($key == self::MAX_AANTAL_TURNSTERS) {
-                $instellingen[$key] = ($result) ? $result->getAantal() : "Klik om te wijzigen";
+                $instellingen[$key] = ($result) ? $result->getAantal() : self::EMPTY_RESULT;
             } else {
-                $instellingen[$key] = ($result) ? $result->getDatum() : "Klik om te wijzigen";
+                $instellingen[$key] = ($result) ? $result->getDatum() : self::EMPTY_RESULT;
                 if ($result) {
                     $instellingen[$key] = $instellingen[$key]->format('d-m-Y H:i');
                 }
@@ -140,14 +145,6 @@ class BaseController extends Controller
                 $this->addToDB($wachtlijstPlek);
             }
         }
-        /** @var User[] $contactpersonen */
-//        $contactpersonen = $this->getDoctrine()->getRepository('AppBundle:User')
-//            ->loadUsersByRole('ROLE_CONTACT');
-//        foreach ($contactpersonen as $contactpersoon) {
-//            if (count($contactpersoon->getTurnster()) == 0) {
-//                $this->removeFromDB($contactpersoon);
-//            }
-//        }
     }
 
     protected function getCategorie($geboorteJaar)
@@ -285,9 +282,8 @@ class BaseController extends Controller
     {
         $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_JURYLEDEN);
-        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
-            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN]))
-        ) {
+        if (time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
+            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN])) {
             return true;
         } else {
             return false;
@@ -296,14 +292,28 @@ class BaseController extends Controller
 
     protected function uploadenVloermuziekToegestaan()
     {
-        return false;
-        //todo: deze functie schrijven
+        $openingUploadenVloermuziek = $this->getOrganisatieInstellingen(self::OPENING_UPLOADEN_VLOERMUZIEK);
+        $sluitingUploadenVloermuziek = $this->getOrganisatieInstellingen(self::SLUITING_UPLOADEN_VLOERMUZIEK);
+        if ($openingUploadenVloermuziek[self::OPENING_UPLOADEN_VLOERMUZIEK] == self::EMPTY_RESULT) {
+            return false;
+        } elseif (time() > strtotime($openingUploadenVloermuziek[self::OPENING_UPLOADEN_VLOERMUZIEK]) && time() <
+            strtotime($sluitingUploadenVloermuziek[self::SLUITING_UPLOADEN_VLOERMUZIEK])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected function factuurBekijkenToegestaan()
     {
-        return false;
-        //todo: deze functie schrijven
+        $factuurBekijkenToegestaan = $this->getOrganisatieInstellingen(self::FACTUUR_BEKIJKEN_TOEGESTAAN);
+        if ($factuurBekijkenToegestaan[self::FACTUUR_BEKIJKEN_TOEGESTAAN] == self::EMPTY_RESULT) {
+            return false;
+        } elseif (time() > strtotime($factuurBekijkenToegestaan[self::FACTUUR_BEKIJKEN_TOEGESTAAN])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function setSponsors()

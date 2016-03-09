@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Betaling;
 use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Jurylid;
@@ -40,13 +41,12 @@ class ContactpersoonController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan(); //todo: deze functie nog
-        // schrijven
+        $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan();
         $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
         $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
         $wijzigJuryToegestaan = $this->wijzigJuryToegestaan();
         $verwijderJuryToegestaan = $this->wijzigJuryToegestaan();
-        $factuurBekijkenToegestaan = $this->factuurBekijkenToegestaan(); //todo: deze functie schrijven
+        $factuurBekijkenToegestaan = $this->factuurBekijkenToegestaan();
         $this->updateGereserveerdePlekken();
         $this->setBasicPageData();
         /** @var User $user */
@@ -124,6 +124,25 @@ class ContactpersoonController extends BaseController
                 'dag' => $this->getBeschikbareDag($juryObject),
             ];
         }
+        $teLeverenJuryleden = ceil(count($turnsters)/10);
+        if (($juryBoete = $teLeverenJuryleden - count($juryleden)) < 0) {
+            $juryBoete = 0;
+        }
+        $teBetalenBedrag = (count($turnsters) + count($afgemeld)) * 15 + $juryBoete * 35;
+        /** @var Betaling[] $betalingen */
+        $betalingen = $user->getBetaling();
+        $betaaldBedrag = 0;
+        if (count($betalingen) == 0) {
+            $factuurId = 'factuur';
+        } else {
+            foreach ($betalingen as $betaling) {
+                $betaaldBedrag += $betaling->getBedrag();
+            } if ($betaaldBedrag < $teBetalenBedrag) {
+                $factuurId = 'factuur_deel';
+            } else {
+                $factuurId = 'factuur_voldaan';
+            }
+        }
         return $this->render('contactpersoon/contactpersoonIndex.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' => $this->sponsors,
@@ -138,6 +157,7 @@ class ContactpersoonController extends BaseController
             'verwijderJuryToegestaan' => $verwijderJuryToegestaan,
             'uploadenVloermuziekToegestaan' => $uploadenVloermuziekToegestaan,
             'factuurBekijkenToegestaan' => $factuurBekijkenToegestaan,
+            'factuurId' => $factuurId,
         ));
     }
 

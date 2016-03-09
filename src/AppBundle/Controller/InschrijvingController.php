@@ -171,6 +171,7 @@ class InschrijvingController extends BaseController
             'aantalJury' => $aantalJury,
             'opgeslagenJuryleden' => $opgeslagenJuryleden,
             'optegevenJury' => $optegevenJury,
+            'vrijePlekken' => $session->get('vrijePlekken'),
         ));
     }
 
@@ -467,6 +468,7 @@ class InschrijvingController extends BaseController
                                 $turnster->setUser($contactpersoon);
                                 $contactpersoon->addTurnster($turnster);
                             }
+                            $session->set('vrijePlekken', $this->getVrijePlekken());
                             $this->addToDB($contactpersoon);
                             $subject = 'Inloggegevens Haagse Bosan Cup';
                             $to = $contactpersoon->getEmail();

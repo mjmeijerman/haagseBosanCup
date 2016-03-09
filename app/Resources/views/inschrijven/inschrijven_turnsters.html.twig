@@ -12,7 +12,21 @@
     <i>Bij problemen en paniek kun je bellen met: 06-55726426</i>
     <div id="inschrijven_deelnemers">
         <h4>&#187; Details deelnemers</h4>
-        Er zijn {{ turnsterFields|length }} plekken gereserveerd! Het kan zijn dat dit plekken op de wachtlijst zijn.
+        {% if turnsterFields|length == 1 %}
+            Er is 1 plek gereserveerd!
+        {% else %}
+            Er zijn {{ turnsterFields|length }} plekken gereserveerd!
+        {% endif %}
+        {% if vrijePlekken == 0 %}
+            {% if turnsterFields|length == 1 %}
+                <b> Dit is helaas wel een plek op de wachtlijst!</b>
+            {% else %}
+                <b> Dit zijn helaas wel plekken op de wachtlijst!</b>
+            {% endif %}
+        {% elseif vrijePlekken < turnsterFields|length %}
+            <b> Helaas is een deel van deze plekken op de wachtlijst!</b>
+        {% endif %}
+        <br/><br/>
         Nu kun je in alle rust de details van je turnsters invoeren. Je hebt
         tot {{ tijdTot }} voor de niet-ingevulde plekken worden vrijgegeven. <br/><br/>
         <b>Let op: Turnsters in rood zullen op de wachtlijst geplaatst worden!</b><br><br/>
