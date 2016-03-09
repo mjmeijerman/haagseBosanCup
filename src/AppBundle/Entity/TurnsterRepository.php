@@ -28,6 +28,31 @@ class TurnsterRepository extends EntityRepository
         return $bezettePlekken;
     }
 
+    public function getAantalAfgemeldeTurnsters($user)
+    {
+        $afgemeldeTurnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 1')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $afgemeldeTurnsters;
+    }
+
+    public function getIngeschrevenTurnsters($user)
+    {
+        $ingeschrevenTurnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 0')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $ingeschrevenTurnsters;
+    }
+
     public function getGereserveerdePlekken()
     {
         $gereserveerdePlekken = $this->createQueryBuilder('u')
