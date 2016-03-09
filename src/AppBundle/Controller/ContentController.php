@@ -230,7 +230,7 @@ class ContentController extends BaseController
     }
 
     //FOOTER
-    private function factuurFooter(AlphaPDFController $pdf)
+    private function factuurFooter(AlphaPDFController $pdf, User $user)
     {
         $pdf->SetX(3);
         $pdf->SetAlpha(0.6);
@@ -239,7 +239,7 @@ class ContentController extends BaseController
 
         //REKENINGNUMMER DETAILS
         $pdf->Text(3,290,'Haagse Bosan Cup - 4 & 5 juni 2016, Sporthal Overbosch');
-        $pdf->Text(3,294,'NL81 INGB 000 007 81 99 - T.n.v. Penningmeester Donar o.v.v. HBC2016-26');
+        $pdf->Text(3,294,'NL81 INGB 000 007 81 99 - T.n.v. Gymnastiekvereniging Donar o.v.v. HBC2016-' . $user->getId());
 
         //LOGO DONAR
         $pdf->Image('images/logodonarPNG.png',188,268);
@@ -316,208 +316,202 @@ class ContentController extends BaseController
     }
 
     /**
-     * @Route("/pdf/test/", name="testPdf")
+     * @Route("/contactpersoon/factuur/", name="pdfFactuur")
      * @Method("GET")
      */
     public function testPDFCreation($userId = null)
     {
-        if ($this->getUser()->getRole() == 'ROLE_ORGANISATIE' || $this->getUser()->getRole() == 'ROLE_CONTACT') {
-            if ($this->getUser()->getRole() != 'ROLE_ORGANISATIE') {
-                $user = $this->getUser();
-            } else {
-                $user = $this->getDoctrine()
-                    ->getRepository('AppBundle:User')
-                    ->findOneBy(['id' => $userId]);
+        if ($this->factuurBekijkenToegestaan()) {
+            if (!$this->getUser()) {
+                return $this->redirectToRoute('getIndexPage');
             }
-            $juryledenAantal = $this->getDoctrine()
-                ->getRepository('AppBundle:Jurylid')
-                ->getIngeschrevenJuryleden($user);
-            $turnstersAantal = $this->getDoctrine()
-                ->getRepository('AppBundle:Turnster')
-                ->getIngeschrevenTurnsters($user);
-            $turnstersAfgemeldAantal = $this->getDoctrine()
-                ->getRepository('AppBundle:Turnster')
-                ->getAantalAfgemeldeTurnsters($user);
-
-            $teLeverenJuryleden = ceil($turnstersAantal/10);
-            if (($juryTekort = $teLeverenJuryleden - $juryledenAantal) < 0) {
-                $juryTekort = 0;
-            }
-            $teBetalenBedrag = ($turnstersAantal + $turnstersAfgemeldAantal) * 15 + $juryTekort * 35;
-            /** @var Betaling[] $betalingen */
-            $betalingen = $user->getBetaling();
-            $betaaldBedrag = 0;
-            if (count($betalingen) == 0) {
-                $factuurId = 'factuur';
-            } else {
-                foreach ($betalingen as $betaling) {
-                    $betaaldBedrag += $betaling->getBedrag();
-                } if ($betaaldBedrag < $teBetalenBedrag) {
-                    $factuurId = 'factuur_deel';
+            if ($this->getUser()->getRole() == 'ROLE_ORGANISATIE' || $this->getUser()->getRole() == 'ROLE_CONTACT') {
+                if ($this->getUser()->getRole() != 'ROLE_ORGANISATIE') {
+                    $user = $this->getUser();
                 } else {
-                    $factuurId = 'factuur_voldaan';
+                    $user = $this->getDoctrine()
+                        ->getRepository('AppBundle:User')
+                        ->findOneBy(['id' => $userId]);
                 }
-            }
-            /** @var User $user */
-            //START OF PDF
-            $pdf = new AlphaPDFController();
-            $pdf->SetMargins(0,0);
-            $pdf->AddFont('Gotham','','Gotham-Light.php');
-            $pdf->AddFont('Franklin','','Frabk.php');
-            $pdf->AddPage();
+                $juryledenAantal = $this->getDoctrine()
+                    ->getRepository('AppBundle:Jurylid')
+                    ->getIngeschrevenJuryleden($user);
+                $turnstersAantal = $this->getDoctrine()
+                    ->getRepository('AppBundle:Turnster')
+                    ->getIngeschrevenTurnsters($user);
+                $turnstersAfgemeldAantal = $this->getDoctrine()
+                    ->getRepository('AppBundle:Turnster')
+                    ->getAantalAfgemeldeTurnsters($user);
 
-            $pdf = $this->factuurHeader($pdf, $user);
-            $pdf = $this->factuurFooter($pdf);
+                $teLeverenJuryleden = ceil($turnstersAantal/10);
+                if (($juryTekort = $teLeverenJuryleden - $juryledenAantal) < 0) {
+                    $juryTekort = 0;
+                }
+                $teBetalenBedrag = ($turnstersAantal + $turnstersAfgemeldAantal) * 15 + $juryTekort * 35;
 
-            //CONTACTPERSOON EN VERENIGING
-            $pdf->SetFont('Franklin','',16);
-            $pdf->SetTextColor(0);
-            $pdf->SetFillColor(0);
-            $pdf->Rect(5,43,0.5,13,'F');
-            $pdf->Text(7,48,$user->getVoornaam() . ' ' . $user->getAchternaam());
-            $pdf->Text(7,54,$user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats());
+                /** @var User $user */
+                //START OF PDF
+                $pdf = new AlphaPDFController();
+                $pdf->SetMargins(0,0);
+                $pdf->AddFont('Gotham','','Gotham-Light.php');
+                $pdf->AddFont('Franklin','','Frabk.php');
+                $pdf->AddPage();
 
-            //HR LINE
-            $pdf->Rect(0,63,210,0.3,'F');
+                $pdf = $this->factuurHeader($pdf, $user);
+                $pdf = $this->factuurFooter($pdf, $user);
 
-            //LINE BREAK
-            $pdf->Ln(45);
+                //CONTACTPERSOON EN VERENIGING
+                $pdf->SetFont('Franklin','',16);
+                $pdf->SetTextColor(0);
+                $pdf->SetFillColor(0);
+                $pdf->Rect(5,43,0.5,13,'F');
+                $pdf->Text(7,48,$user->getVoornaam() . ' ' . $user->getAchternaam());
+                $pdf->Text(7,54,$user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats());
 
-            //FACTUURTABEL
-            //EERSTE RIJ - HEADERS
-            $pdf->Cell(20,0);		//Blank space
-            $pdf->SetFont('Gotham','',16);
-            $pdf->Cell(97,0,' OMSCHRIJVING'); //De spatie voor OMSCHRIJVING hoort daar!
-            $pdf->Cell(26,0,'AANTAL');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,'BEDRAG');
-            $pdf->Ln(8);
-            //EURO-TEKENS
-            $pdf->SetFont('Courier','',14);
-            $pdf->Text(161,89.9,EURO);
-            $pdf->Text(161,96.9,EURO);
-            $pdf->Text(161,103.9,'');
-            $pdf->Text(161,110.9,'');
-            $pdf->SetFont('Gotham','',12);
-            //TWEEDE RIJ - TURNSTERS
-            $pdf->Cell(22,0);		//Blank space
-            $pdf->Cell(95,0,'Deelnemende turnsters');
-            $pdf->Cell(26,0,$turnstersAantal,0,0,'C');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,($turnstersAantal * 15),0,0,'R');
-            $pdf->Ln(7);
-            //DERDE RIJ - AFGEMELDE TURNSTERS
-            $pdf->Cell(22,0);		//Blank space
-            $pdf->Cell(95,0,'Afgemelde turnsters (na sluiting inschrijving)');
-            $pdf->Cell(26,0,$turnstersAfgemeldAantal,0,0,'C');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,($turnstersAfgemeldAantal * 15),0,0,'R');
-            $pdf->Ln(7);
-            //VIERDE RIJ - JURYLEDEN TEKORT
-            $pdf->Cell(22,0);		//Blank space
-            $pdf->Cell(95,0,'Tekort aan juryleden');
-            $pdf->Cell(26,0,$juryTekort,0,0,'C');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,($juryTekort * 35),0,0,'R');
-            $pdf->Ln(7);
-            //VIJFDE RIJ - ARRANGEMENT ZATERDAG
-            $pdf->Cell(22,0);		//Blank space
-            $pdf->Cell(95,0,'');
-            $pdf->Cell(26,0,'',0,0,'C');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,'',0,0,'R');
-            $pdf->Ln(7);
-            //TOTAALBEDRAG HR LINE
-            $pdf->Rect(115,116,72,0.2,'F');
-            $pdf->Ln(6);
-            //ZESDE RIJ - TOTAALBEDRAG
-            $pdf->SetAlpha(0.6);
-            $pdf->SetFillColor(255,255,0);
-            $pdf = $this->RoundedRect(115,118.5,72,8,2,'F',1234, $pdf);
-            $pdf->SetAlpha(1);
-            $pdf->SetFontSize(14);
-            $pdf->Cell(22,0);		//Blank space
-            $pdf->Cell(95,0);		//Blank space
-            $pdf->Cell(26,0,'TOTAAL','R');
-            $pdf->Cell(17,0);		//Blank space
-            $pdf->Cell(25,0,$teBetalenBedrag,0,0,'R');
-            $pdf->Ln(7);
-            //TOTAAL EURO-TEKEN
-            $pdf->SetFont('Courier','',16);
-            $pdf->Text(161,123.9,EURO);
-            $pdf->SetFont('Gotham','',12);
+                //HR LINE
+                $pdf->Rect(0,63,210,0.3,'F');
 
-            //FILL COLOR BACK TO BLACK
-            $pdf->SetFillColor(0);
+                //LINE BREAK
+                $pdf->Ln(45);
 
-            //HR LINE
-            $pdf->Rect(0,139,210,0.3,'F');
+                //FACTUURTABEL
+                //EERSTE RIJ - HEADERS
+                $pdf->Cell(20,0);		//Blank space
+                $pdf->SetFont('Gotham','',16);
+                $pdf->Cell(97,0,' OMSCHRIJVING'); //De spatie voor OMSCHRIJVING hoort daar!
+                $pdf->Cell(26,0,'AANTAL');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,'BEDRAG');
+                $pdf->Ln(8);
+                //EURO-TEKENS
+                $pdf->SetFont('Courier','',14);
+                $pdf->Text(161,89.9,EURO);
+                $pdf->Text(161,96.9,EURO);
+                $pdf->Text(161,103.9,EURO);
+                $pdf->Text(161,110.9,'');
+                $pdf->SetFont('Gotham','',12);
+                //TWEEDE RIJ - TURNSTERS
+                $pdf->Cell(22,0);		//Blank space
+                $pdf->Cell(95,0,'Deelnemende turnsters');
+                $pdf->Cell(26,0,$turnstersAantal,0,0,'C');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,($turnstersAantal * 15),0,0,'R');
+                $pdf->Ln(7);
+                //DERDE RIJ - AFGEMELDE TURNSTERS
+                $pdf->Cell(22,0);		//Blank space
+                $pdf->Cell(95,0,'Afgemelde turnsters (na sluiting inschrijving)');
+                $pdf->Cell(26,0,$turnstersAfgemeldAantal,0,0,'C');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,($turnstersAfgemeldAantal * 15),0,0,'R');
+                $pdf->Ln(7);
+                //VIERDE RIJ - JURYLEDEN TEKORT
+                $pdf->Cell(22,0);		//Blank space
+                $pdf->Cell(95,0,'Tekort aan juryleden');
+                $pdf->Cell(26,0,$juryTekort,0,0,'C');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,($juryTekort * 35),0,0,'R');
+                $pdf->Ln(7);
+                //VIJFDE RIJ - ARRANGEMENT ZATERDAG
+                $pdf->Cell(22,0);		//Blank space
+                $pdf->Cell(95,0,'');
+                $pdf->Cell(26,0,'',0,0,'C');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,'',0,0,'R');
+                $pdf->Ln(7);
+                //TOTAALBEDRAG HR LINE
+                $pdf->Rect(115,116,72,0.2,'F');
+                $pdf->Ln(6);
+                //ZESDE RIJ - TOTAALBEDRAG
+                $pdf->SetAlpha(0.6);
+                $pdf->SetFillColor(255,255,0);
+                $pdf = $this->RoundedRect(115,118.5,72,8,2,'F',1234, $pdf);
+                $pdf->SetAlpha(1);
+                $pdf->SetFontSize(14);
+                $pdf->Cell(22,0);		//Blank space
+                $pdf->Cell(95,0);		//Blank space
+                $pdf->Cell(26,0,'TOTAAL');
+                $pdf->Cell(17,0);		//Blank space
+                $pdf->Cell(25,0,$teBetalenBedrag,0,0,'R');
+                $pdf->Ln(7);
+                //TOTAAL EURO-TEKEN
+                $pdf->SetFont('Courier','',16);
+                $pdf->Text(161,123.9,EURO);
+                $pdf->SetFont('Gotham','',12);
 
-            //LINE BREAK
-            $pdf->Ln(16);
+                //FILL COLOR BACK TO BLACK
+                $pdf->SetFillColor(0);
 
-            //BETAALDETAILS
-            $pdf->Cell(3,35);
-            $pdf->SetFontSize(12);
-            $pdf->MultiCell(53,5,"Over te maken bedrag: \n Uiterste betaaldatum: \n \n Rekeningnummer: \n Ten name van: \n\n Factuurnummer:",0,'R');
+                //HR LINE
+                $pdf->Rect(0,139,210,0.3,'F');
 
-            //EURO-TEKEN
-            $pdf->SetFont('Courier','',13);
-            $pdf->Text(57,149.5,EURO);
-            $pdf->SetFont('Gotham','',10);
+                //LINE BREAK
+                $pdf->Ln(16);
 
-            //BEDRAG
-            $pdf->Text(61,149.5,$teBetalenBedrag);
+                //BETAALDETAILS
+                $pdf->Cell(3,35);
+                $pdf->SetFontSize(12);
+                $pdf->MultiCell(53,5,"Over te maken bedrag: \n Uiterste betaaldatum: \n \n Rekeningnummer: \n Ten name van: \n\n Factuurnummer:",0,'R');
 
-            //BETAALDATUM
-            $uitersteBetaalDatum = $this->getOrganisatieInstellingen(self::UITERLIJKE_BETAALDATUM_FACTUUR);
-            $pdf->Text(57,154.5, date('d-m-Y', strtotime
+                //EURO-TEKEN
+                $pdf->SetFont('Courier','',13);
+                $pdf->Text(57,149.5,EURO);
+                $pdf->SetFont('Gotham','',10);
+
+                //BEDRAG
+                $pdf->Text(61,149.5,$teBetalenBedrag);
+
+                //BETAALDATUM
+                $uitersteBetaalDatum = $this->getOrganisatieInstellingen(self::UITERLIJKE_BETAALDATUM_FACTUUR);
+                $pdf->Text(57,154.5, date('d-m-Y', strtotime
                 ($uitersteBetaalDatum[self::UITERLIJKE_BETAALDATUM_FACTUUR])));
 
-            //REKENINGNUMMER
-            $pdf->Text(57,164.5,'NL81 INGB 000 007 81 99');
+                //REKENINGNUMMER
+                $pdf->Text(57,164.5,'NL81 INGB 000 007 81 99');
 
-            //TNV
-            $pdf->Text(57,169.5,'Penningmeester Donar');
+                //TNV
+                $pdf->Text(57,169.5,'Gymnastiekver. Donar');
 
-            //FACTUURNUMMER
-            $pdf->Text(57,179.5,'HBC2016-' . $user->getId());
+                //FACTUURNUMMER
+                $pdf->Text(57,179.5,'HBC2016-' . $user->getId());
 
-            //BETAALINSTRUCTIES
-            //$pdf->SetFillColor(0,148,255); BLAUWE ACHTERGROND
-            //ANDERE OPTIES: GELE ACHTERGROND
+                //BETAALINSTRUCTIES
+                //$pdf->SetFillColor(0,148,255); BLAUWE ACHTERGROND
+                //ANDERE OPTIES: GELE ACHTERGROND
 
-            $pdf->SetFillColor(0);
-            $pdf->SetAlpha(0.5);
-            $pdf = $this->RoundedRect(105.5,144,100,38,2,'F',1234, $pdf);
-            $pdf->SetAlpha(1);
+                $pdf->SetFillColor(0);
+                $pdf->SetAlpha(0.5);
+                $pdf = $this->RoundedRect(105.5,144,100,38,2,'F',1234, $pdf);
+                $pdf->SetAlpha(1);
 
-            $pdf->SetFontSize(14);
-            $pdf->SetTextColor(255,255,0);
-            $pdf->Text(130.5,151,'BETAALINSTRUCTIES');
+                $pdf->SetFontSize(14);
+                $pdf->SetTextColor(255,255,0);
+                $pdf->Text(130.5,151,'BETAALINSTRUCTIES');
 
-            $pdf->SetTextColor(255);
-            $pdf->SetFontSize(12);
-            $pdf->Text(120,158,'Wij verzoeken u vriendelijk om het');
-            $pdf->Text(116,163,'verschuldigde bedrag voor de uiterste');
-            $pdf->Text(118,168,'betaaldatum over te maken naar het');
-            $pdf->Text(109,173,'genoemde rekeningnummer. Vermeld bij het');
-            $pdf->Text(116,178,'opmerkingenveld uw factuurnummer.');
+                $pdf->SetTextColor(255);
+                $pdf->SetFontSize(12);
+                $pdf->Text(120,158,'Wij verzoeken u vriendelijk om het');
+                $pdf->Text(116,163,'verschuldigde bedrag voor de uiterste');
+                $pdf->Text(118,168,'betaaldatum over te maken naar het');
+                $pdf->Text(109,173,'genoemde rekeningnummer. Vermeld bij het');
+                $pdf->Text(116,178,'opmerkingenveld uw factuurnummer.');
 
-            //DEFINITIEF NA BETALING
-            $pdf->SetDrawColor(0);
-            $pdf->SetTextColor(0);
-            $pdf->Rect(4,199,202,7,'D');
-            $pdf->Text(31,204,'Let op! Uw inschrijving is pas definitief zodra uw betaling is ontvangen.');
+                //DEFINITIEF NA BETALING
+                $pdf->SetDrawColor(0);
+                $pdf->SetTextColor(0);
+                $pdf->Rect(4,199,202,7,'D');
+                $pdf->Text(31,204,'Let op! Uw inschrijving is pas definitief zodra uw betaling is ontvangen.');
 
-            //CONTACT BIJ PROBLEMEN
-            $pdf->SetAlpha(0.6);
-            $pdf->SetFontSize(8);
-            $pdf->Text(34,209,'Mochten er zich problemen voordoen, neemt u dan alstublieft contact op via info@haagsebosancup.nl');
-            return new Response($pdf->Output(), 200, array(
-                'Content-Type' => 'application/pdf'));
-        } else {
-            return $this->redirectToRoute('getContent');
+                //CONTACT BIJ PROBLEMEN
+                $pdf->SetAlpha(0.6);
+                $pdf->SetFontSize(8);
+                $pdf->Text(34,209,'Mochten er zich problemen voordoen, neemt u dan alstublieft contact op via info@haagsebosancup.nl');
+                return new Response($pdf->Output(), 200, array(
+                    'Content-Type' => 'application/pdf'));
+            } else {
+                return $this->redirectToRoute('getIndexPage');
+            }
+        }  else {
+            return $this->redirectToRoute('getIndexPage');
         }
     }
 }

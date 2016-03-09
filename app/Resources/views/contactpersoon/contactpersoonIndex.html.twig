@@ -53,7 +53,7 @@
     </table>
 
     {% if factuurBekijkenToegestaan %}
-        <a href="#" id="{{ factuurId }}">&#187; Factuur downloaden</a>
+        <a href="{{ path('pdfFactuur') }}" id="{{ factuurId }}" target="_blank">&#187; Factuur downloaden</a>
     {% endif %}
     {#<a href="#" id="indeling">&#187; Wedstrijdindeling downloaden</a>#}
 
