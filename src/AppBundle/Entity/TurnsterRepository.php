@@ -51,6 +51,40 @@ class TurnsterRepository extends EntityRepository
         return $afgemeldeTurnsters;
     }
 
+    public function getAantalTurnstersPerNiveau($geboortejaar, $niveau)
+    {
+        $turnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 0')
+            ->andWhere('u.geboortejaar = :geboortejaar')
+            ->andWhere('u.niveau = :niveau')
+            ->setParameters([
+                'geboortejaar' => $geboortejaar,
+                'niveau' => $niveau,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $turnsters;
+    }
+
+    public function getAantalTurnstersWachtlijstPerNiveau($geboortejaar, $niveau)
+    {
+        $turnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 1')
+            ->andWhere('u.geboortejaar = :geboortejaar')
+            ->andWhere('u.niveau = :niveau')
+            ->setParameters([
+                'geboortejaar' => $geboortejaar,
+                'niveau' => $niveau,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $turnsters;
+    }
+
     public function getIngeschrevenTurnsters($user)
     {
         $ingeschrevenTurnsters = $this->createQueryBuilder('u')

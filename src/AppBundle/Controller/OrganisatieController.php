@@ -365,8 +365,44 @@ class OrganisatieController extends BaseController
         return $contactpersonen;
     }
 
+    private function getAantallenPerNiveau($groepen)
+    {
+        $aantallenPerNiveau = [];
+        $aantallenPerNiveau['geplaatst'] = [];
+        $aantallenPerNiveau['wachtlijst'] = [];
+        foreach ($groepen as $categorie => $niveaus) {
+            $aantallenPerNiveau['geplaatst'][$categorie] = [];
+            $aantallenPerNiveau['wachtlijst'][$categorie] = [];
+            foreach ($niveaus as $niveau) {
+                $geboortejaren = $this->getGeboortejaarFromCategorie($categorie);
+                if (is_array($geboortejaren)) {
+                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau] = 0;
+                    $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] = 0;
+                    foreach ($geboortejaren as $geboortejaar) {
+                        $aantallenPerNiveau['geplaatst'][$categorie][$niveau] += $this->getDoctrine()->getRepository
+                        ('AppBundle:Turnster')
+                            ->getAantalTurnstersPerNiveau($geboortejaar, $niveau);
+                        $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] += $this->getDoctrine()->getRepository
+                        ('AppBundle:Turnster')
+                            ->getAantalTurnstersWachtlijstPerNiveau($geboortejaar, $niveau);
+                    }
+                } else {
+                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau] = $this->getDoctrine()->getRepository
+                    ('AppBundle:Turnster')
+                        ->getAantalTurnstersPerNiveau($geboortejaren, $niveau);
+                    $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] = $this->getDoctrine()->getRepository
+                    ('AppBundle:Turnster')
+                        ->getAantalTurnstersWachtlijstPerNiveau($geboortejaren, $niveau);
+                }
+            }
+        }
+        return $aantallenPerNiveau;
+    }
+
     private function getOrganisatieInschrijvingenPage()
     {
+        $groepen = $this->getGroepen();
+        $aantallenPerNiveau = $this->getAantallenPerNiveau($groepen);
         $contactpersonen = $this->getContactpersonen();
         return $this->render('organisatie/organisatieInschrijvingen.html.twig', array(
             'menuItems' => $this->menuItems,
@@ -375,6 +411,8 @@ class OrganisatieController extends BaseController
             'totaalAantalTurnsters' => $this->aantalTurnsters,
             'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
             'totaalAantalJuryleden' => $this->aantalJury,
+            'groepen' => $groepen,
+            'aantallenPerNiveau' => $aantallenPerNiveau,
         ));
     }
 

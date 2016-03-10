@@ -152,6 +152,20 @@ class BaseController extends Controller
         }
     }
 
+    protected function getGroepen()
+    {
+        return [
+            'Voorinstap' => ['N2', 'D1', 'D2'],
+            'Instap' => ['N2', 'D1', 'D2'],
+            'Pupil 1' => ['N3', 'D1', 'D2'],
+            'Pupil 2' => ['N3', 'D1', 'D2'],
+            'Jeugd 1' => ['N4', 'D1', 'D2'],
+            'Jeugd 2' => ['Div. 3', 'Div. 4', 'Div. 5'],
+            'Junior' => ['Div. 3', 'Div. 4', 'Div. 5'],
+            'Senior' => ['Div. 3', 'Div. 4', 'Div. 5'],
+        ];
+    }
+
     protected function getCategorie($geboorteJaar)
     {
         $leeftijd = (date('Y', time())-$geboorteJaar);
@@ -173,6 +187,25 @@ class BaseController extends Controller
             return 'Junior';
         } else {
             return 'Senior';
+        }
+    }
+
+    protected function getGeboortejaarFromCategorie($categorie)
+    {
+        switch ($categorie) {
+            case 'Voorinstap': return date('Y', time()) - 8;
+            case 'Instap': return date('Y', time()) - 9;
+            case 'Pupil 1': return date('Y', time()) - 10;
+            case 'Pupil 2': return date('Y', time()) - 11;
+            case 'Jeugd 1': return date('Y', time()) - 12;
+            case 'Jeugd 2': return date('Y', time()) - 13;
+            case 'Junior': return [date('Y', time()) - 14, date('Y', time()) - 15];
+            case 'Senior':
+                $geboortejaren = [];
+                for ($i = 16; $i < 60; $i++) {
+                    $geboortejaren[] = date('Y', time()) - $i;
+                }
+                return $geboortejaren;
         }
     }
 
