@@ -352,7 +352,11 @@ class BaseController extends Controller
         foreach ($results as $result) {
             if ($result->getRole() == 'ROLE_CONTACT') {
                 if (!in_array($result->getVereniging()->getId(), $verenigingIds)) {
-                    $verenigingIds[] = $result->getVereniging()->getId();
+                    if ($turnstersAantal = $this->getDoctrine()
+                        ->getRepository('AppBundle:Turnster')
+                        ->getIngeschrevenTurnsters($result) > 0) {
+                        $verenigingIds[] = $result->getVereniging()->getId();
+                    }
                 }
             }
         }
