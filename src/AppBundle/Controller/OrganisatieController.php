@@ -28,7 +28,7 @@ class OrganisatieController extends BaseController
 {
 
     /**
-     * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Home"})
+     * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Mijn gegevens"})
      * @Method("GET")
      */
     public function getOrganisatiePage($page)
@@ -81,6 +81,10 @@ class OrganisatieController extends BaseController
             return $this->render('organisatie/removeContactpersoon.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'contactpersoon' => $contactpersoon,
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
             ));
         }
         return $this->redirectToRoute('organisatieGetContent', ['page' => 'Inschrijvingen']);
@@ -114,6 +118,10 @@ class OrganisatieController extends BaseController
             return $this->render('organisatie/reglementen.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'form' => $form->createView(),
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
             ));
         }
     }
@@ -130,6 +138,10 @@ class OrganisatieController extends BaseController
         return $this->render('organisatie/organisatieGegevens.html.twig', array(
             'menuItems' => $this->menuItems,
             'gegevens' => $gegevens,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
         ));
     }
 
@@ -192,6 +204,10 @@ class OrganisatieController extends BaseController
             $this->setBasicPageData('Organisatie');
             return $this->render('organisatie/genereerVoorinschrijving.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
             ));
         }
     }
@@ -298,6 +314,10 @@ class OrganisatieController extends BaseController
             'voorinschrijvingen' => $voorinschrijvingen,
             'reglementen' => $reglementen,
             'successMessage' => $successMessage,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
         ));
     }
 
@@ -305,6 +325,10 @@ class OrganisatieController extends BaseController
     {
         return $this->render('organisatie/organisatieIndex.html.twig', array(
             'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
         ));
     }
 
@@ -347,6 +371,10 @@ class OrganisatieController extends BaseController
         return $this->render('organisatie/organisatieInschrijvingen.html.twig', array(
             'menuItems' => $this->menuItems,
             'contactpersonen' => $contactpersonen,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
         ));
     }
 
@@ -400,6 +428,10 @@ class OrganisatieController extends BaseController
             $this->setBasicPageData();
             return $this->render('organisatie/editPassword.html.twig', array(
                 'menuItems' => $this->menuItems,
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
             ));
         }
     }

@@ -6,6 +6,7 @@ use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\SendMail;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Vereniging;
 use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +34,12 @@ class BaseController extends Controller
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
     const EMPTY_RESULT = 'Klik om te wijzigen';
 
-    protected $sponsors = array();
-    protected $menuItems = array();
+    protected $sponsors = [];
+    protected $menuItems = [];
+    protected $aantalVerenigingen;
+    protected $aantalTurnsters;
+    protected $aantalWachtlijst;
+    protected $aantalJury;
 
     /**
      * @param bool|false $fieldname
@@ -337,6 +342,32 @@ class BaseController extends Controller
         }
     }
 
+    private function setStatistieken()
+    {
+        $verenigingIds = [];
+        /** @var User[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findAll();
+        foreach ($results as $result) {
+            if ($result->getRole() == 'ROLE_CONTACT') {
+                if (!in_array($result->getVereniging()->getId(), $verenigingIds)) {
+                    $verenigingIds[] = $result->getVereniging()->getId();
+                }
+            }
+        }
+        $this->aantalVerenigingen = count($verenigingIds);
+        $this->aantalTurnsters = $this->getDoctrine()
+            ->getRepository('AppBundle:Turnster')
+            ->getBezettePlekken();
+        $this->aantalWachtlijst = $this->getDoctrine()
+            ->getRepository('AppBundle:Turnster')
+            ->getAantalWachtlijstPlekken();
+        $this->aantalJury = $this->getDoctrine()
+            ->getRepository('AppBundle:Jurylid')
+            ->getTotaalAantalIngeschrevenJuryleden();
+    }
+
     protected function checkIfPageExists($page)
     {
         if (in_array($page, ['Inschrijvingsinformatie'])) return true;
@@ -426,6 +457,9 @@ class BaseController extends Controller
     {
         $this->setMenuItems($type);
         $this->setSponsors();
+        if ($type == 'Organisatie') {
+            $this->setStatistieken();
+        }
     }
 
     /**

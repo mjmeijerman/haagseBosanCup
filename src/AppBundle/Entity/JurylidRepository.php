@@ -17,6 +17,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class JurylidRepository extends EntityRepository
 {
+    public function getTotaalAantalIngeschrevenJuryleden()
+    {
+        $ingeschrevenJuryleden = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $ingeschrevenJuryleden;
+    }
+
     public function getIngeschrevenJuryleden($user)
     {
         $ingeschrevenJuryleden = $this->createQueryBuilder('u')
