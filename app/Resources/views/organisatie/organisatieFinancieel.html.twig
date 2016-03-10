@@ -7,7 +7,6 @@
     <h2>Overzicht facturen</h2>
 </div>
 <div class="bericht">
-    Mogelijkheid tot sorteren op vereniging/totaal/status/openstaand
     <table class="facturen">
         <tr>
             <th>Vereniging</th>
@@ -30,7 +29,8 @@
                 <td>{{ factuur.aantalTurnsters }}</td>
                 <td>{{ factuur.aantalAfgemeld }}</td>
                 <td>{{ factuur.juryTekort }}</td>
-                <td><a href="#">Inzien</a></td>
+                <td><a href="{{ path('organisatieGetFacturen', { 'userId': factuur.userId }) }}"
+                target="_blank">Inzien</a></td>
             </tr>
         {% endfor %}
     </table>

@@ -459,6 +459,7 @@ class OrganisatieController extends BaseController
                 'aantalTurnsters' => $turnstersAantal,
                 'aantalAfgemeld' => $turnstersAfgemeldAantal,
                 'juryTekort' => $juryTekort,
+                'userId' => $result->getId(),
             ];
         }
         return $this->render('organisatie/organisatieFinancieel.html.twig', array(
@@ -469,6 +470,15 @@ class OrganisatieController extends BaseController
             'totaalAantalJuryleden' => $this->aantalJury,
             'factuurInformatie' => $factuurInformatie,
         ));
+    }
+
+    /**
+     * @Route("/organisatie/organisatieGetFacturen/{userId}/", name="organisatieGetFacturen")
+     * @Method("GET")
+     */
+    public function organisatieGetFacturen($userId)
+    {
+        return $this->pdfFactuur($userId);
     }
 
     private function getOrganisatieInschrijvingenPage()
