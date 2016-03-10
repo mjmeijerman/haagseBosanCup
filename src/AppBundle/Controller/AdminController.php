@@ -87,7 +87,7 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $password = $this->generatePassword();
+            $password = $this->container->getParameter('standaard_wachtwoord');
             $encoder = $this->container
                 ->get('security.encoder_factory')
                 ->getEncoder($organisatieLid);
