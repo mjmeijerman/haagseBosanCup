@@ -93,6 +93,7 @@ class AdminController extends BaseController
                 ->getEncoder($organisatieLid);
             $organisatieLid->setRole('ROLE_ORGANISATIE')
                 ->setIsActive(true)
+                ->setCreatedAt(new \DateTime('now'))
                 ->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
             $this->addToDB($organisatieLid);
 
@@ -104,7 +105,8 @@ class AdminController extends BaseController
                 'username' => $organisatieLid->getUsername(),
                 'password' => $password
             );
-            $this->sendEmail($subject, $to, $view, $mailParameters);
+            $from = 'webmaster@haagsebosancup.nl';
+            $this->sendEmail($subject, $to, $view, $mailParameters, $from);
 
             return $this->redirectToRoute('getAdminIndexPage');
         }
