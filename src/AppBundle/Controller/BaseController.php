@@ -21,9 +21,11 @@ use Symfony\Component\HttpKernel\Exception;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use Symfony\Component\Validator\Constraints\NotBlank as EmptyConstraint;
 
+define('EURO', chr(128));
 
 class BaseController extends Controller
 {
+
     const OPENING_INSCHRIJVING = 'Opening inschrijving';
     const OPENING_UPLOADEN_VLOERMUZIEK = 'Opening uploaden vloermuziek';
     const SLUITING_INSCHRIJVING_TURNSTERS = 'Sluiting inschrijving turnsters';
@@ -369,7 +371,7 @@ class BaseController extends Controller
     {
         $results = $this->getDoctrine()
             ->getRepository('AppBundle:' . $type . 'menuItem')
-            ->findAll();
+            ->findBy([], ['positie' => 'ASC']);
         foreach ($results as $result) {
             $this->menuItems[] = $result->getAll();
         }

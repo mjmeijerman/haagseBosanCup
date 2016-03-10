@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception;
 use AppBundle\Controller\BaseController;
 
-define('EURO', chr(128));
 
 class ContentController extends BaseController
 {

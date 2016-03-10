@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Betaling;
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\Reglementen;
 use AppBundle\Entity\Turnster;
@@ -39,18 +40,20 @@ class OrganisatieController extends BaseController
             case 'Home':
                 return $this->getOrganisatieHomePage();
             case 'To-do lijst':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieGegevensPage();
             case 'Instellingen':
                 return $this->getOrganisatieInstellingenPage();
             case 'Mails':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieGegevensPage();
             case 'Inschrijvingen':
                 return $this->getOrganisatieInschrijvingenPage();
             case 'Juryzaken':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieGegevensPage();
             case 'Financieel':
-                return $this->getOrganisatieHomePage();
+                return $this->getOrganisatieFacturenPage();
             case 'Mijn gegevens':
+                return $this->getOrganisatieGegevensPage();
+            case 'Vloermuziek':
                 return $this->getOrganisatieGegevensPage();
         }
     }
@@ -397,6 +400,75 @@ class OrganisatieController extends BaseController
             }
         }
         return $aantallenPerNiveau;
+    }
+
+    private function getOrganisatieFacturenPage()
+    {
+        /** @var User[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUsersByRole('ROLE_CONTACT');
+        $factuurInformatie = [];
+        foreach ($results as $result) {
+            $factuurNummer = 'HBC' . date('Y', time()) . '-' . $result->getId();
+            $bedragPerTurnster = 15; //todo: bedrag per turnster toevoegen aan instellingen
+            $juryBoeteBedrag = 35; //todo: boete bedrag jury tekort toevoegen aan instellingen
+            $jurylidPerAantalTurnsters = 10; //todo: toevoegen als instelling
+            $juryledenAantal = $this->getDoctrine()
+                ->getRepository('AppBundle:Jurylid')
+                ->getIngeschrevenJuryleden($result);
+            $turnstersAantal = $this->getDoctrine()
+                ->getRepository('AppBundle:Turnster')
+                ->getIngeschrevenTurnsters($result);
+            $turnstersAfgemeldAantal = $this->getDoctrine()
+                ->getRepository('AppBundle:Turnster')
+                ->getAantalAfgemeldeTurnsters($result);
+
+            $teLeverenJuryleden = ceil($turnstersAantal / $jurylidPerAantalTurnsters);
+            if (($juryTekort = $teLeverenJuryleden - $juryledenAantal) < 0) {
+                $juryTekort = 0;
+            }
+            $teBetalenBedrag = ($turnstersAantal + $turnstersAfgemeldAantal) * $bedragPerTurnster + $juryTekort *
+                $juryBoeteBedrag;
+
+            /** @var Betaling[] $betalingen */
+            $betalingen = $result->getBetaling();
+            $betaaldBedrag = 0;
+            if (count($betalingen) == 0) {
+                $voldaanClass = 'niet_voldaan';
+                $status = 'Niet voldaan';
+            } else {
+                foreach ($betalingen as $betaling) {
+                    $betaaldBedrag += $betaling->getBedrag();
+                } if ($betaaldBedrag < $teBetalenBedrag) {
+                    $voldaanClass = 'bijna_voldaan';
+                    $status = 'Gedeeltelijk voldaan';
+                } else {
+                    $voldaanClass = 'voldaan';
+                    $status = 'Voldaan';
+                }
+            }
+
+            $factuurInformatie[] = [
+                'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+                'factuurNr' => $factuurNummer,
+                'bedrag' => $teBetalenBedrag,
+                'status' => $status,
+                'voldaanClass' => $voldaanClass,
+                'openstaandBedrag' => $teBetalenBedrag - $betaaldBedrag,
+                'aantalTurnsters' => $turnstersAantal,
+                'aantalAfgemeld' => $turnstersAfgemeldAantal,
+                'juryTekort' => $juryTekort,
+            ];
+        }
+        return $this->render('organisatie/organisatieFinancieel.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'factuurInformatie' => $factuurInformatie,
+        ));
     }
 
     private function getOrganisatieInschrijvingenPage()
