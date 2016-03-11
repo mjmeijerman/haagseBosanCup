@@ -356,6 +356,18 @@ class BaseController extends Controller
         }
     }
 
+    protected function luisterenVloermuziekToegestaan()
+    {
+        $openingUploadenVloermuziek = $this->getOrganisatieInstellingen(self::OPENING_UPLOADEN_VLOERMUZIEK);
+        if ($openingUploadenVloermuziek[self::OPENING_UPLOADEN_VLOERMUZIEK] == self::EMPTY_RESULT) {
+            return false;
+        } elseif (time() > strtotime($openingUploadenVloermuziek[self::OPENING_UPLOADEN_VLOERMUZIEK])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     protected function factuurBekijkenToegestaan()
     {
         $factuurBekijkenToegestaan = $this->getOrganisatieInstellingen(self::FACTUUR_BEKIJKEN_TOEGESTAAN);
