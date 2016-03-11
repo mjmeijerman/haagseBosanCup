@@ -277,6 +277,7 @@ class ContactpersoonController extends BaseController
                             $turnster->setVoornaam($request->request->get('voornaam'));
                             $turnster->setAchternaam($request->request->get('achternaam'));
                             $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
+                            $turnster->setCategorie($this->getCategorie($request->request->get('geboorteJaar')));
                             $turnster->setNiveau($request->request->get('niveau'));
                             $turnster->setOpmerking($request->request->get('opmerking'));
                             $this->getUser()->addTurnster($turnster);
@@ -416,6 +417,7 @@ class ContactpersoonController extends BaseController
                                 $turnster->setVoornaam($request->request->get('voornaam'));
                                 $turnster->setAchternaam($request->request->get('achternaam'));
                                 $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
+                                $turnster->setCategorie($this->getCategorie($request->request->get('geboorteJaar')));
                                 $turnster->setNiveau($request->request->get('niveau'));
                                 $turnster->setOpmerking($request->request->get('opmerking'));
                                 $this->addToDB($turnster);

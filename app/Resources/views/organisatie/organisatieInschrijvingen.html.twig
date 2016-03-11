@@ -15,9 +15,12 @@
 								{% set geplaatstCounter = 0 %}
 								{% set wachtlijstCounter = 0 %}
 									{% for waarde in waardes %}
-										<td class="niv">{{ waarde }} ({{ aantallenPerNiveau
+										<td class="niv">
+										<a href="{{ path('bekijkInschrijvingenPerNiveau', { 'page': app.request.get
+										('page'), 'categorie': groep, 'niveau': waarde }) }}">
+										{{ waarde }} ({{ aantallenPerNiveau
 										.geplaatst[groep][waarde] }}/{{ aantallenPerNiveau
-										.wachtlijst[groep][waarde] }})</td>
+										.wachtlijst[groep][waarde] }})</a></td>
 										{% set geplaatstCounter = geplaatstCounter + aantallenPerNiveau
 										.geplaatst[groep][waarde] %}
 										{% set wachtlijstCounter = wachtlijstCounter + aantallenPerNiveau

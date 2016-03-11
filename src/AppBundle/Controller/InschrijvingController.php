@@ -44,6 +44,8 @@ class InschrijvingController extends BaseController
                                     $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
                                     $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
                                     $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
+                                    $turnster->setCategorie($this->getCategorie($request->request->get
+                                    ('geboorteJaar_' . trim($id))));
                                     $turnster->setExpirationDate(null);
                                     $turnster->setIngevuld(true);
                                     $this->addToDB($turnster);

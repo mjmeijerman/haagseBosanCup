@@ -1,0 +1,100 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <h1><a href="{{ path('organisatieGetContent', { 'page': app.request.get('page') }) }}">
+            <img src="{{ asset('images/back_arrow.png') }}"></a>
+            Inschrijvingen {{ categorie }} {{ niveau }} inzien
+    </h1>
+<p>
+    <div class="titel">
+        <h2>
+            Deelnemers {{ categorie }} {{ niveau }} ({{ turnsters|length }})
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Vereniging</th>
+				<th>Opmerking</th>
+				<th>Naar wachtlijst</th>
+				<th>Verwijderen</th>
+			</tr>
+			{% for turnster in turnsters %}
+				<tr>
+					<td>{{ turnster.id }}</td>
+					<td>{{ turnster.naam }}</td>
+					<td>{{ turnster.vereniging }}</td>
+					<td>{{ turnster.opmerking }}</td>
+					<td><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
+					<td><form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
+                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
+                              style="display: inline;">
+						<div onclick="remove_turnster('{{ turnster.id }}',
+								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+						</div>
+					</form></td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+<p>
+    <div class="titel">
+        <h2>
+            Wachtlijst {{ categorie }} {{ niveau }} ({{ wachtlijst|length }})
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Vereniging</th>
+				<th>Opmerking</th>
+				<th>Van wachtlijst</th>
+				<th>Verwijderen</th>
+			</tr>
+			{% for turnster in wachtlijst %}
+				<tr>
+					<td>{{ turnster.id }}</td>
+					<td>{{ turnster.naam }}</td>
+					<td>{{ turnster.vereniging }}</td>
+					<td>{{ turnster.opmerking }}</td>
+					<td><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
+
+					<td><form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
+                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
+                              style="display: inline;">
+						<div onclick="remove_turnster('{{ turnster.id }}',
+								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+						</div>
+					</form></td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function remove_turnster(id, naam, vereniging) {
+            if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
+                document.forms["remove_turnster_" + id].submit();
+            }
+        }
+
+    </script>
+{% endblock %}

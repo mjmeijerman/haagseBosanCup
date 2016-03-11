@@ -41,6 +41,12 @@ class Turnster
     private $niveau = "leeg";
 
     /**
+     * @var string
+     * @ORM\Column(name="categorie", type="string", length=12)
+     */
+    private $categorie = "leeg";
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="turnster")
      */
     private $user;
@@ -401,5 +407,28 @@ class Turnster
     public function getIngevuld()
     {
         return $this->ingevuld;
+    }
+
+    /**
+     * Set categorie
+     *
+     * @param string $categorie
+     * @return Turnster
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * Get categorie
+     *
+     * @return string 
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
     }
 }

@@ -98,6 +98,40 @@ class TurnsterRepository extends EntityRepository
         return $ingeschrevenTurnsters;
     }
 
+    public function getIngeschrevenTurnstersCatNiveau($categorie, $niveau)
+    {
+        $ingeschrevenTurnsters = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 0')
+            ->andWhere('u.categorie = :categorie')
+            ->andWhere('u.niveau = :niveau')
+            ->orderBy('u.user')
+            ->setParameters([
+                'niveau' => $niveau,
+                'categorie' => $categorie,
+            ])
+            ->getQuery()
+            ->getResult();
+        return $ingeschrevenTurnsters;
+    }
+
+    public function getWachtlijstTurnstersCatNiveau($categorie, $niveau)
+    {
+        $ingeschrevenTurnsters = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 1')
+            ->andWhere('u.categorie = :categorie')
+            ->andWhere('u.niveau = :niveau')
+            ->orderBy('u.user')
+            ->setParameters([
+                'niveau' => $niveau,
+                'categorie' => $categorie,
+            ])
+            ->getQuery()
+            ->getResult();
+        return $ingeschrevenTurnsters;
+    }
+
     public function getGereserveerdePlekken()
     {
         $gereserveerdePlekken = $this->createQueryBuilder('u')

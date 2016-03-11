@@ -410,10 +410,10 @@ class OrganisatieController extends BaseController
             ->loadUsersByRole('ROLE_CONTACT');
         $factuurInformatie = [];
         foreach ($results as $result) {
-            $factuurNummer = 'HBC' . date('Y', time()) . '-' . $result->getId();
-            $bedragPerTurnster = 15; //todo: bedrag per turnster toevoegen aan instellingen
-            $juryBoeteBedrag = 35; //todo: boete bedrag jury tekort toevoegen aan instellingen
-            $jurylidPerAantalTurnsters = 10; //todo: toevoegen als instelling
+            $factuurNummer = $this->getFactuurNummer($result);
+            $bedragPerTurnster = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
+            $juryBoeteBedrag = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
+            $jurylidPerAantalTurnsters = self::AANTAL_TURNSTERS_PER_JURY; //todo: toevoegen als instelling
             $juryledenAantal = $this->getDoctrine()
                 ->getRepository('AppBundle:Jurylid')
                 ->getIngeschrevenJuryleden($result);
@@ -434,7 +434,11 @@ class OrganisatieController extends BaseController
             /** @var Betaling[] $betalingen */
             $betalingen = $result->getBetaling();
             $betaaldBedrag = 0;
-            if (count($betalingen) == 0) {
+            if ($teBetalenBedrag == 0) {
+                $voldaanClass = 'voldaan';
+                $status = 'Voldaan';
+            }
+            elseif (count($betalingen) == 0) {
                 $voldaanClass = 'niet_voldaan';
                 $status = 'Niet voldaan';
             } else {
@@ -473,12 +477,186 @@ class OrganisatieController extends BaseController
     }
 
     /**
-     * @Route("/organisatie/organisatieGetFacturen/{userId}/", name="organisatieGetFacturen")
+     * @Route("/organisatie/{page}/betalingInzien/{userId}/", name="betalingInzien")
+     * @Method("GET")
+     */
+    public function betalingInzien($page, $userId)
+    {
+        $this->setBasicPageData('Organisatie');
+        /** @var User[] $results */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findOneBy(['id' => $userId]);
+        $factuurNummer = $this->getFactuurNummer($result);
+        $bedragPerTurnster = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
+        $juryBoeteBedrag = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
+        $jurylidPerAantalTurnsters = self::AANTAL_TURNSTERS_PER_JURY; //todo: toevoegen als instelling
+        $juryledenAantal = $this->getDoctrine()
+            ->getRepository('AppBundle:Jurylid')
+            ->getIngeschrevenJuryleden($result);
+        $turnstersAantal = $this->getDoctrine()
+            ->getRepository('AppBundle:Turnster')
+            ->getIngeschrevenTurnsters($result);
+        $turnstersAfgemeldAantal = $this->getDoctrine()
+            ->getRepository('AppBundle:Turnster')
+            ->getAantalAfgemeldeTurnsters($result);
+
+        $teLeverenJuryleden = ceil($turnstersAantal / $jurylidPerAantalTurnsters);
+        if (($juryTekort = $teLeverenJuryleden - $juryledenAantal) < 0) {
+            $juryTekort = 0;
+        }
+        $teBetalenBedrag = ($turnstersAantal + $turnstersAfgemeldAantal) * $bedragPerTurnster + $juryTekort *
+            $juryBoeteBedrag;
+
+        /** @var Betaling[] $betalingen */
+        $betalingenObjecten = $result->getBetaling();
+        $betaaldBedrag = 0;
+        $betalingen = [];
+        if (count($betalingenObjecten) == 0) {
+            $voldaanClass = 'niet_voldaan';
+            $status = 'Niet voldaan';
+        } else {
+            /** @var Betaling $betaling */
+            foreach ($betalingenObjecten as $betaling) {
+                $betaaldBedrag += $betaling->getBedrag();
+                $betalingen[] = [
+                    'id' => $betaling->getId(),
+                    'datum' => $betaling->getDatumBetaald()->format('d-m-Y'),
+                    'bedrag' => $betaling->getBedrag(),
+                ];
+            } if ($betaaldBedrag < $teBetalenBedrag) {
+                $voldaanClass = 'bijna_voldaan';
+                $status = 'Gedeeltelijk voldaan';
+            } else {
+                $voldaanClass = 'voldaan';
+                $status = 'Voldaan';
+            }
+        }
+
+        $factuurInformatie = [
+            'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+            'factuurNr' => $factuurNummer,
+            'bedrag' => $teBetalenBedrag,
+            'status' => $status,
+            'voldaanClass' => $voldaanClass,
+            'openstaandBedrag' => $teBetalenBedrag - $betaaldBedrag,
+            'betaaldBedrag' => $betaaldBedrag,
+            'aantalTurnsters' => $turnstersAantal,
+            'aantalAfgemeld' => $turnstersAfgemeldAantal,
+            'juryTekort' => $juryTekort,
+            'userId' => $result->getId(),
+            'contactpersoonNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+            'contactpersoonEmail' => $result->getEmail(),
+            'contactpersoonTel' => $result->getTelefoonnummer(),
+        ];
+        return $this->render('organisatie/betalingInzien.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'factuurInformatie' => $factuurInformatie,
+            'betalingen' => $betalingen,
+        ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/organisatieGetFacturen/{userId}/", name="organisatieGetFacturen")
      * @Method("GET")
      */
     public function organisatieGetFacturen($userId)
     {
         return $this->pdfFactuur($userId);
+    }
+
+    /**
+     * @Route("/organisatie/{page}/removeBetaling/{userId}/", name="removeBetaling")
+     * @Method({"POST"})
+     */
+    public function removeBetaling(Request $request, $page, $userId)
+    {
+        /** @var Betaling $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Betaling')
+            ->findOneBy(['id' => $request->request->get('betaling')]);
+        if (!$result) {
+            $this->addFlash(
+                'error',
+                'Betaling niet gevonden'
+            );
+            return $this->redirectToRoute('betalingInzien', [
+                'page' => $page,
+                'userId' => $userId,
+            ]);
+        }
+        $this->removeFromDB($result);
+        $this->addFlash(
+            'success',
+            'Betaling succesvol verwijderd!'
+        );
+        return $this->redirectToRoute('betalingInzien', [
+            'page' => $page,
+            'userId' => $userId,
+        ]);
+    }
+
+    /**
+     * @Route("/organisatie/{page}/addBetaling/{userId}/", name="addBetaling")
+     * @Method({"GET", "POST"})
+     */
+    public function addBetaling(Request $request, $page, $userId)
+    {
+        /** @var User $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findOneBy(['id' => $userId]);
+        if ($request->getMethod() == "POST") {
+            $turnster = [
+                'voornaam' => $request->request->get('voornaam'),
+                'achternaam' => $request->request->get('achternaam'),
+                'geboortejaar' => $request->request->get('geboorteJaar'),
+                'niveau' => $request->request->get('niveau'),
+                'opmerking' => $request->request->get('opmerking'),
+            ];
+            $postedToken = $request->request->get('csrfToken');
+            if (!empty($postedToken)) {
+                if ($this->isTokenValid($postedToken)) {
+                    $betaling = new Betaling();
+                    $betaling->setBedrag(str_replace(',', '.', $request->request->get('bedrag')));
+                    $betaling->setDatumBetaald(new \DateTime($request->request->get('datum')));
+                    $betaling->setUser($result);
+                    $result->addBetaling($betaling);
+                    $this->addToDB($result);
+                    $this->addFlash(
+                        'success',
+                        'Betaling succesvol toegevoegd!'
+                    );
+                    return $this->redirectToRoute('betalingInzien', [
+                        'page' => $page,
+                        'userId' => $userId,
+                    ]);
+                }
+            }
+        }
+        $this->setBasicPageData('Organisatie');
+        $factuurNr = $this->getFactuurNummer($result);
+        $contactpersoon = [
+            'id' => $result->getId(),
+            'contactpersoonNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+            'contactpersoonEmail' => $result->getEmail(),
+            'contactpersoonTel' => $result->getTelefoonnummer(),
+            'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+        ];
+        $csrfToken = $this->getToken();
+        return $this->render('organisatie/addBetaling.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'factuurNr' => $factuurNr,
+            'contactpersoon' => $contactpersoon,
+            'csrfToken' => $csrfToken,
+        ));
     }
 
     private function getOrganisatieInschrijvingenPage()
@@ -495,6 +673,87 @@ class OrganisatieController extends BaseController
             'totaalAantalJuryleden' => $this->aantalJury,
             'groepen' => $groepen,
             'aantallenPerNiveau' => $aantallenPerNiveau,
+        ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/bekijkInschrijvingenPerNiveau/{categorie}/{niveau}/removeOrganisatieTurnster",
+     * name="removeOrganisatieTurnster")
+     * @Method("POST")
+     */
+    public function removeOrganisatieTurnster(Request $request, $page, $categorie, $niveau)
+    {
+        //todo: hier ajax call van maken!
+        $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findOneBy(['id' => $request->request->get('turnsterId')]);
+        if ($result) {
+            $this->removeFromDB($result);
+            $this->addFlash(
+                'success',
+                'De turnster is succesvol verwijderd!'
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                'De turnster kon niet worden gevonden!'
+            );
+        }
+        return $this->redirectToRoute('bekijkInschrijvingenPerNiveau', array(
+            'page' => $page,
+            'categorie' => $categorie,
+            'niveau' => $niveau,
+        ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/bekijkInschrijvingenPerNiveau/{categorie}/{niveau}/", name="bekijkInschrijvingenPerNiveau")
+     * @Method("GET")
+     */
+    public function bekijkInschrijvingenPerNiveau($page, $categorie, $niveau)
+    {
+        /* todo:
+         * todo: Naar wachtlijst:
+         * todo: Javascript functie
+         * todo: Doe ajax call, bij success: getElementById, remove element en add element to wachtlijst
+         * todo: Idem van wachtlijst af
+         * todo: Verwijderen ook via ajax call en remove element (get element by id)
+         */
+        /** @var Turnster[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getIngeschrevenTurnstersCatNiveau($categorie, $niveau);
+        $turnsters = [];
+        foreach ($results as $result) {
+            $turnsters[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
+                        ->getVereniging()->getPlaats(),
+                'opmerking' => $result->getOpmerking(),
+            ];
+        }
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getWachtlijstTurnstersCatNiveau($categorie, $niveau);
+        $wachtlijst = [];
+        foreach ($results as $result) {
+            $wachtlijst[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
+                        ->getVereniging()->getPlaats(),
+                'opmerking' => $result->getOpmerking(),
+            ];
+        }
+        $this->setBasicPageData('Organisatie');
+        return $this->render('organisatie/bekijkInschrijvingenPerNiveau.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'categorie' => $categorie,
+            'niveau' => $niveau,
+            'turnsters' => $turnsters,
+            'wachtlijst' => $wachtlijst,
         ));
     }
 
@@ -545,7 +804,7 @@ class OrganisatieController extends BaseController
                     ));
                 }
             }
-            $this->setBasicPageData();
+            $this->setBasicPageData('Organisatie');
             return $this->render('organisatie/editPassword.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'totaalAantalVerenigingen' => $this->aantalVerenigingen,

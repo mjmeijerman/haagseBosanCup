@@ -29,8 +29,8 @@
                 <td>{{ factuur.aantalTurnsters }}</td>
                 <td>{{ factuur.aantalAfgemeld }}</td>
                 <td>{{ factuur.juryTekort }}</td>
-                <td><a href="{{ path('organisatieGetFacturen', { 'userId': factuur.userId }) }}"
-                target="_blank">Inzien</a></td>
+                <td>{#<a href="{{ path('organisatieGetFacturen', { 'userId': factuur.userId }) }}"#}
+                <a href="{{ path('betalingInzien', { 'userId': factuur.userId, 'page': app.request.get('page') }) }}">Inzien</a></td>
             </tr>
         {% endfor %}
     </table>

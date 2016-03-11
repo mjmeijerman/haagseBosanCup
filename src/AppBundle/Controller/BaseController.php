@@ -35,6 +35,13 @@ class BaseController extends Controller
     const UITERLIJKE_BETAALDATUM_FACTUUR = 'Uiterlijke betaaldatum';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
     const EMPTY_RESULT = 'Klik om te wijzigen';
+    const BEDRAG_PER_TURNSTER = 15;
+    const JURY_BOETE_BEDRAG = 35;
+    const AANTAL_TURNSTERS_PER_JURY = 10;
+    const DATUM_HBC = '4 & 5 juni 2016';
+    const LOCATIE_HBC = 'Sporthal Overbosch';
+    const REKENINGNUMMER = 'NL81 INGB 000 007 81 99';
+    const REKENING_TNV = 'Gymnastiekver. Donar';
 
     protected $sponsors = [];
     protected $menuItems = [];
@@ -42,6 +49,28 @@ class BaseController extends Controller
     protected $aantalTurnsters;
     protected $aantalWachtlijst;
     protected $aantalJury;
+
+
+    //todo: remove this function als database geupdate is!!!
+    /**
+     * @Route("/addCategorieToDb/", name="addCategorieToDb")
+     * @Method({"GET"})
+     */
+    public function addCategorieToDb()
+    {
+        /** @var Turnster[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findAll();
+        foreach ($results as $result) {
+            $result->setCategorie($this->getCategorie($result->getGeboortejaar()));
+            $this->addToDB($result);
+        }
+    }
+
+    protected function getFactuurNummer($user)
+    {
+        return ('HBC' . date('Y', time()) . '-' . $user->getId());
+    }
 
     /**
      * @param bool|false $fieldname
@@ -832,14 +861,14 @@ class BaseController extends Controller
                         ->getRepository('AppBundle:User')
                         ->findOneBy(['id' => $userId]);
                 }
-                $factuurNummer = 'HBC' . date('Y', time()) . '-' . $user->getId();
-                $bedragPerTurnster = 15; //todo: bedrag per turnster toevoegen aan instellingen
-                $juryBoeteBedrag = 35; //todo: boete bedrag jury tekort toevoegen aan instellingen
-                $datumHBC = '4 & 5 juni 2016'; // todo: datum toernooi toevoegen aan instellingen
-                $locatieHBC = 'Sporthal Overbosch'; //todo: locatie toernooi toevoegen aan instellingen
-                $rekeningNummer = 'NL81 INGB 000 007 81 99'; // todo: rekeningnummer toevoegen aan instellingen
-                $rekeningTNV = 'Gymnastiekver. Donar'; // todo: TNV toevoegen aan instellingen
-                $jurylidPerAantalTurnsters = 10; //todo: toevoegen als instelling
+                $factuurNummer = $this->getFactuurNummer($user);
+                $bedragPerTurnster = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
+                $juryBoeteBedrag = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
+                $datumHBC = self::DATUM_HBC; // todo: datum toernooi toevoegen aan instellingen
+                $locatieHBC = self::LOCATIE_HBC; //todo: locatie toernooi toevoegen aan instellingen
+                $rekeningNummer = self::REKENINGNUMMER; // todo: rekeningnummer toevoegen aan instellingen
+                $rekeningTNV = self::REKENING_TNV; // todo: TNV toevoegen aan instellingen
+                $jurylidPerAantalTurnsters = self::AANTAL_TURNSTERS_PER_JURY; //todo: toevoegen als instelling
                 $juryledenAantal = $this->getDoctrine()
                     ->getRepository('AppBundle:Jurylid')
                     ->getIngeschrevenJuryleden($user);
