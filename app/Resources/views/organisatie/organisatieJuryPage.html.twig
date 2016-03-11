@@ -52,6 +52,7 @@
 							<th>Dag</th>
 							<th>Opmerking</th>
 							<th>Email</th>
+							<th></th>
 						</tr>
 						{% for jurylid in juryledenNiet %}
                             <tr>
@@ -61,6 +62,7 @@
                                 <td>{{ jurylid.dag }}</td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
+                                <td><img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;"></td>
                             </tr>
                         {% endfor %}
 					</table>
