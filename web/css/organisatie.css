@@ -319,27 +319,55 @@ article .inschrijvingen .vrij {
     color: rgba(0, 220, 0, 1);
 }
 
+article .inschrijvingen_status a:link, article .inschrijvingen_status a:visited {
+	display: block;
+	color: #FFFF00;
+	text-decoration: none;
+}
+
+article .inschrijvingen_status a:hover, article .inschrijvingen_status a:active {
+	color: #FFF;
+}
+
 /* FACTUREN */
 
 article .facturen {
-    border-collapse: collapse;
+	border-collapse: collapse;
+	font-size: .8em;
+	width: 100%;
 }
 
-article .facturen td, article .facturen th {
-    padding: .2em;
+article .facturen th {
+	padding: .5em;
+}
+
+article .facturen td {
+	padding: .5em;
+}
+
+article .facturen tr {
+	-o-transition: .3s;
+	-ms-transition: .3s;
+	-moz-transition: .3s;
+	-webkit-transition: .3s;
+	transition: .3s;
+}
+
+article .facturen tr:hover {
+	background: #F5F5A7 !important;
 }
 
 article .niet_voldaan {
-    background: rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.3) !important;
     color: #FF0000;
 }
 
 article .bijna_voldaan {
-    background: rgba(255, 140, 0, 0.3);
+    background: rgba(255, 140, 0, 0.3) !important;
 }
 
 article .voldaan {
-    background: rgba(0, 255, 0, 0.3);
+    background: rgba(0, 255, 0, 0.3) !important;
     color: #000;
 }
 
@@ -420,6 +448,10 @@ article .overzicht {
 	width: 100%;
 }
 
+article .overzicht .img {
+	text-align: center;
+}
+
 article .overzicht th {
 	padding: .5em 1em;
 }
@@ -442,6 +474,89 @@ article .overzicht tr {
 }
 
 article .overzicht tr:hover {
+	background: #F5F5A7;
+}
+
+article .overzicht a:link, article .overzicht a:visited {
+	text-decoration: none;
+	color: #0094FF;
+}
+
+/* OVERZICHT FACTUUR */
+
+article .overzicht_factuur {
+	border-collapse: collapse;
+	font-size: 1em;
+	min-width: 50%;
+}
+
+article .overzicht_factuur .img {
+	text-align: center;
+}
+
+article .overzicht_factuur th {
+	padding: .3em .5em;
+	width: 12em;
+	font-weight: bold;
+}
+
+article .overzicht_factuur td {
+	padding: .5em;
+}	
+
+article .overzicht_factuur tr:nth-child(odd) {
+	background: #F5F5F5;
+	padding: .5em;
+}
+
+article .overzicht_factuur tr {
+	-o-transition: .3s;
+	-ms-transition: .3s;
+	-moz-transition: .3s;
+	-webkit-transition: .3s;
+	transition: .3s;
+}
+
+article .overzicht_factuur tr:hover {
+	background: #F5F5A7;
+}
+
+/* OVERZICHT BETALINGEN */
+
+article .overzicht_betalingen {
+	border-collapse: collapse;
+	font-size: 1em;
+	min-width: 50%;
+}
+
+article .overzicht_betalingen .img {
+	text-align: center;
+}
+
+article .overzicht_betalingen th {
+	padding: .3em .5em;
+	width: 12em;
+	font-weight: bold;
+}
+
+article .overzicht_betalingen td {
+	padding: .5em;
+}	
+
+article .overzicht_betalingen tr:nth-child(odd) {
+	background: #F5F5F5;
+	padding: .5em;
+}
+
+article .overzicht_betalingen tr {
+	-o-transition: .3s;
+	-ms-transition: .3s;
+	-moz-transition: .3s;
+	-webkit-transition: .3s;
+	transition: .3s;
+}
+
+article .overzicht_betalingen tr:hover {
 	background: #F5F5A7;
 }
 

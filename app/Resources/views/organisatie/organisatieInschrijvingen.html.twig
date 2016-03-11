@@ -8,7 +8,7 @@
 					<h2>Status (geplaatst/wachtlijst)</h2>
 				</div>
 				<div class="bericht">
-					<table>
+					<table class="inschrijvingen_status">
 						{% for groep, waardes in groepen %}
 							<tr>
 								<td class="cat">{{ groep }}</td>
@@ -17,8 +17,7 @@
 									{% for waarde in waardes %}
 										<td class="niv">
 										<a href="{{ path('bekijkInschrijvingenPerNiveau', { 'page': app.request.get
-										('page'), 'categorie': groep, 'niveau': waarde }) }}" style="text-decoration:
-										 none">
+										('page'), 'categorie': groep, 'niveau': waarde }) }}">
 										{{ waarde }} ({{ aantallenPerNiveau
 										.geplaatst[groep][waarde] }}/{{ aantallenPerNiveau
 										.wachtlijst[groep][waarde] }})</a></td>
@@ -43,14 +42,14 @@
 						<tr>
 							<th>Naam</th>
 							<th>Vereniging</th>
-							<th>Turnsters geplaatst</th>
-							<th>wachtlijst</th>
-							<th>juryleden</th>
+							<th>Geplaatst</th>
+							<th>Wachtlijst</th>
+							<th>Juryleden</th>
 							<th></th>
 						</tr>
 						{% for contactpersoon in contactpersonen %}
 						<tr>
-							<td>{{ contactpersoon.naam }}</td>
+							<td><a href="#">{{ contactpersoon.naam }}</a></td>
 							<td>{{ contactpersoon.vereniging }}</td>
 							<td>{{ contactpersoon.turnstersGeplaatst }}</td>
 							<td>{{ contactpersoon.turnstersWachtlijst }}</td>

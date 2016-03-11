@@ -27,8 +27,8 @@
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.vereniging }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
-					<td><form method="post" name="remove_turnster_{{ turnster.id }}"
+					<td class="img"><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
+					<td class="img"><form method="post" name="remove_turnster_{{ turnster.id }}"
                               action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
                               'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
                               style="display: inline;">
@@ -66,9 +66,9 @@
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.vereniging }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
+					<td class="img"><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
 
-					<td><form method="post" name="remove_turnster_{{ turnster.id }}"
+					<td class="img"><form method="post" name="remove_turnster_{{ turnster.id }}"
                               action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
                               'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
                               style="display: inline;">

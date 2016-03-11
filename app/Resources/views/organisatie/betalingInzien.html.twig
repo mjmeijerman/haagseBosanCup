@@ -12,17 +12,17 @@
         </h2>
     </div>
     <div class="bericht">
-        <table>
+        <table class="overzicht_factuur">
             <tr>
-                <td>Contactpersoon</td>
+                <th>Contactpersoon</th>
                 <td>{{ factuurInformatie.contactpersoonNaam }}</td>
             </tr>
             <tr>
-                <td>Emailadres</td>
+                <th>Emailadres</th>
                 <td>{{ factuurInformatie.contactpersoonEmail }}</td>
             </tr>
             <tr>
-                <td>Telefoonnummer</td>
+                <th>Telefoonnummer</th>
                 <td>{{ factuurInformatie.contactpersoonTel }}</td>
             </tr>
         </table>
@@ -35,41 +35,41 @@
         </h2>
     </div>
     <div class="bericht">
-        <table>
+        <table class="overzicht_factuur">
             <tr>
-                <td>Factuur nummer</td>
+                <th>Factuur nummer</th>
                 <td>{{ factuurInformatie.factuurNr}}</td>
             </tr>
             <tr>
-                <td>Status</td>
+                <th>Status</th>
                 <td>{{ factuurInformatie.status }}</td>
             </tr>
             <tr>
-                <td>Te betalen bedrag</td>
+                <th>Te betalen bedrag</th>
                 <td>&#8364;{{ factuurInformatie.bedrag }}</td>
             </tr>
             <tr>
-                <td>Betaald bedrag</td>
+                <th>Betaald bedrag</th>
                 <td>&#8364;{{ factuurInformatie.betaaldBedrag }}</td>
             </tr>
             <tr>
-                <td>Openstaand bedrag</td>
+                <th>Openstaand bedrag</th>
                 <td>&#8364;{{ factuurInformatie.openstaandBedrag }}</td>
             </tr>
             <tr>
-                <td>Aantal turnsters</td>
+                <th>Aantal turnsters</th>
                 <td>{{ factuurInformatie.aantalTurnsters }}</td>
             </tr>
             <tr>
-                <td>Aantal afgemelde turnsters</td>
+                <th>Aantal afgemelde turnsters</th>
                 <td>{{ factuurInformatie.aantalAfgemeld }}</td>
             </tr>
             <tr>
-                <td>Aantal juryleden tekort</td>
+                <th>Aantal juryleden tekort</th>
                 <td>{{ factuurInformatie.juryTekort }}</td>
             </tr>
             <tr>
-                <td>Factuur</td>
+                <th>Factuur</th>
                 <td><a href="{{ path('organisatieGetFacturen', { 'userId': factuurInformatie.userId, 'page': app
                 .request.get('page') }) }}"
                     target="_blank">Inzien</a></td>
@@ -87,7 +87,7 @@
         </h2>
     </div>
     <div class="bericht">
-        <table border="1">
+        <table class="overzicht">
             <tr>
                 <th>Datum</th>
                 <th>Bedrag</th>
@@ -97,7 +97,7 @@
                 <tr>
                     <td>{{ betaling.datum }}</td>
                     <td>&#8364;{{ betaling.bedrag }}</td>
-                    <td>
+                    <td class="img">
                         <form method="post" name="remove_betaling_{{ betaling.id }}"
                               action="{{ path('removeBetaling', { 'userId': factuurInformatie.userId, 'page': app.request.get
                               ('page') }) }}"
