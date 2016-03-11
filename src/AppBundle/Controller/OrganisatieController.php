@@ -195,56 +195,53 @@ class OrganisatieController extends BaseController
     private function getOrganisatieVloermuziekPage()
     {
         $vloermuziek = [];
-        if ($this->luisterenVloermuziekToegestaan()) {
-            $categorien = ['Jeugd 2', 'Junior', 'Senior'];
-            $niveaus = ['Div. 3', 'Div. 4', 'Div. 5'];
-            foreach ($categorien as $categorie) {
-                foreach ($niveaus as $niveau) {
-                    /** @var Turnster[] $results */
-                    $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-                        ->getIngeschrevenTurnstersCatNiveau($categorie, $niveau);
-                    foreach ($results as $result) {
-                        if (!$result->getVloermuziek()){
-                            $vloermuziek[$categorie][$niveau]['niet'][$result->getUser()->getId()][] = [
-                                'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
-                                'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
-                                    $result->getUser()->getVereniging()->getPlaats(),
-                                'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
-                                'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
-                                'baan' => $result->getScores()->getBaan(),
-                                'groep' => $result->getScores()->getGroep(),
-                                'contactPersoon' => $result->getUser()->getVoornaam() . ' ' . $result->getUser()
-                                        ->getAchternaam(),
-                                'mail' => $result->getUser()->getEmail(),
-                                'telNr' => $result->getUser()->getTelefoonnummer(),
-                            ];
-                        } else {
-                            $vloermuziek[$categorie][$niveau]['wel'][$result->getUser()->getId()][] = [
-                                'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
-                                'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
-                                    $result->getUser()->getVereniging()->getPlaats(),
-                                'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
-                                'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
-                                'baan' => $result->getScores()->getBaan(),
-                                'groep' => $result->getScores()->getGroep(),
-                                'locatie' => $result->getVloermuziek()->getWebPath(),
-                            ];
-                        }
+        $categorien = ['Jeugd 2', 'Junior', 'Senior'];
+        $niveaus = ['Div. 3', 'Div. 4', 'Div. 5'];
+        foreach ($categorien as $categorie) {
+            foreach ($niveaus as $niveau) {
+                /** @var Turnster[] $results */
+                $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+                    ->getIngeschrevenTurnstersCatNiveau($categorie, $niveau);
+                foreach ($results as $result) {
+                    if (!$result->getVloermuziek()){
+                        $vloermuziek[$categorie][$niveau]['niet'][$result->getUser()->getId()][] = [
+                            'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
+                            'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                            'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
+                                $result->getUser()->getVereniging()->getPlaats(),
+                            'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
+                            'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
+                            'baan' => $result->getScores()->getBaan(),
+                            'groep' => $result->getScores()->getGroep(),
+                            'contactPersoon' => $result->getUser()->getVoornaam() . ' ' . $result->getUser()
+                                    ->getAchternaam(),
+                            'mail' => $result->getUser()->getEmail(),
+                            'telNr' => $result->getUser()->getTelefoonnummer(),
+                        ];
+                    } else {
+                        $vloermuziek[$categorie][$niveau]['wel'][$result->getUser()->getId()][] = [
+                            'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
+                            'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                            'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
+                                $result->getUser()->getVereniging()->getPlaats(),
+                            'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
+                            'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
+                            'baan' => $result->getScores()->getBaan(),
+                            'groep' => $result->getScores()->getGroep(),
+                            'locatie' => $result->getVloermuziek()->getWebPath(),
+                        ];
                     }
                 }
             }
-            return $this->render('organisatie/vloermuziek.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-                'vloermuziek' => $vloermuziek,
-            ));
         }
-        return $this->redirectToRoute('organisatieGetContent', ['page' => 'Mijn gegevens']);
+        return $this->render('organisatie/vloermuziek.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'vloermuziek' => $vloermuziek,
+        ));
     }
 
     /**
