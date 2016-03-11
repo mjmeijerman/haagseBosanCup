@@ -1,7 +1,9 @@
 {% extends 'organisatie/base.html.twig' %}
 
 {% block body %}
-    <h1>Gegevens {{ contactpersoon.naam }}
+    <h1><a href="{{ path('organisatieGetContent', { 'page': app.request.get('page') }) }}">
+            <img src="{{ asset('images/back_arrow.png') }}"></a>
+            Gegevens {{ contactpersoon.naam }}
     </h1>
 <p>
 <div class="titel">
