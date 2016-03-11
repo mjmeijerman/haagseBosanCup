@@ -17,7 +17,8 @@
 									{% for waarde in waardes %}
 										<td class="niv">
 										<a href="{{ path('bekijkInschrijvingenPerNiveau', { 'page': app.request.get
-										('page'), 'categorie': groep, 'niveau': waarde }) }}">
+										('page'), 'categorie': groep, 'niveau': waarde }) }}" style="text-decoration:
+										 none">
 										{{ waarde }} ({{ aantallenPerNiveau
 										.geplaatst[groep][waarde] }}/{{ aantallenPerNiveau
 										.wachtlijst[groep][waarde] }})</a></td>
