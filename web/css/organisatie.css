@@ -567,21 +567,6 @@ article .overzicht_betalingen tr:hover {
 
 /* INPUT */
 
-article .row {
-	display: block;
-	padding: 6px 9px;
-	-o-transition: .5s;
-	-ms-transition: .5s;
-	-moz-transition: .5s;
-	-webkit-transition: .5s;
-	transition: .5s;
-}
-
-article label {
-	display: inline-block;
-	width: 80px;
-}
-
 article .text {
 	display: inline-block;
 	padding: .4em .5em;
