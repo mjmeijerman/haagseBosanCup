@@ -49,24 +49,7 @@ class BaseController extends Controller
     protected $aantalTurnsters;
     protected $aantalWachtlijst;
     protected $aantalJury;
-
-
-    //todo: remove this function als database geupdate is!!!
-    /**
-     * @Route("/addCategorieToDb/", name="addCategorieToDb")
-     * @Method({"GET"})
-     */
-    public function addCategorieToDb()
-    {
-        /** @var Turnster[] $results */
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-            ->findAll();
-        foreach ($results as $result) {
-            $result->setCategorie($this->getCategorie($result->getGeboortejaar()));
-            $this->addToDB($result);
-        }
-    }
-
+    
     protected function getFactuurNummer($user)
     {
         return ('HBC' . date('Y', time()) . '-' . $user->getId());
