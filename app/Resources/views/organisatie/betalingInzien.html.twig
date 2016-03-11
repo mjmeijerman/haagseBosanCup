@@ -79,10 +79,10 @@
 </p>
 <p>
     <div class="titel">
-        <h2>
+        <h2 class="betaling">
             Betalingen <a href="{{ path('addBetaling', { 'userId': factuurInformatie.userId, 'page': app.request.get
                               ('page') }) }}">
-                <img src="{{ asset('images/add.png') }}" width="20" />
+                <img src="{{ asset('images/add.png') }}" width="20" style="opacity:0;"/>
             </a>
         </h2>
     </div>
