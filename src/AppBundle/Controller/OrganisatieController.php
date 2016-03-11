@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Betaling;
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -48,7 +49,7 @@ class OrganisatieController extends BaseController
             case 'Inschrijvingen':
                 return $this->getOrganisatieInschrijvingenPage();
             case 'Juryzaken':
-                return $this->getOrganisatieGegevensPage();
+                return $this->getJuryPage();
             case 'Financieel':
                 return $this->getOrganisatieFacturenPage();
             case 'Mijn gegevens':
@@ -133,6 +134,49 @@ class OrganisatieController extends BaseController
     {
         $userObject = $this->getUser();
         return $userObject->getAll();
+    }
+
+    private function getJuryPage()
+    {
+        /** @var Jurylid[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->getAllJuryleden();
+        $juryleden = [];
+        $juryledenNiet = [];
+        foreach ($results as $result) {
+
+            if ($this->getDoctrine()->getRepository('AppBundle:Turnster')->getIngeschrevenTurnsters($result->getUser
+            ()) > 0) {
+                $juryleden[] = [
+                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
+                            ->getVereniging()->getPlaats(),
+                    'brevet' => $result->getBrevet(),
+                    'dag' => $this->getBeschikbareDag($result),
+                    'opmerking' => $result->getOpmerking(),
+                    'email' => $result->getEmail(),
+                ];
+            } else {
+                $juryledenNiet[] = [
+                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
+                            ->getVereniging()->getPlaats(),
+                    'brevet' => $result->getBrevet(),
+                    'dag' => $this->getBeschikbareDag($result),
+                    'opmerking' => $result->getOpmerking(),
+                    'email' => $result->getEmail(),
+                ];
+            }
+        }
+        return $this->render('organisatie/organisatieJuryPage.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'juryleden' => $juryleden,
+            'juryledenNiet' => $juryledenNiet,
+        ));
     }
 
     private function getOrganisatieGegevensPage()
@@ -418,6 +462,7 @@ class OrganisatieController extends BaseController
                 'turnstersGeplaatst' => count($turnstersGeplaatst),
                 'turnstersWachtlijst' => count($turnstersWachtlijst),
                 'aantalJuryleden' => count($juryleden),
+                'email' => $result->getEmail(),
             ];
         }
         return $contactpersonen;

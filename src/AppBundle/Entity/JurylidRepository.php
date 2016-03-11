@@ -26,14 +26,26 @@ class JurylidRepository extends EntityRepository
         return $ingeschrevenJuryleden;
     }
 
-    public function getIngeschrevenJuryleden($user)
+    public function getIngeschrevenJuryleden($user, $orderBy = 'brevet')
     {
         $ingeschrevenJuryleden = $this->createQueryBuilder('u')
             ->select('count(u.id)')
-            ->andWhere('u.user = :user')
-            ->setParameter('user', $user)
+            ->Where('u.user = :user')
+            ->orderBy('u.' . $orderBy)
+            ->setParameters([
+                'user' => $user,
+            ])
             ->getQuery()
             ->getSingleScalarResult();
         return $ingeschrevenJuryleden;
+    }
+
+    public function getAllJuryleden($orderBy = 'brevet')
+    {
+        $results = $this->createQueryBuilder('u')
+            ->orderBy('u.' . $orderBy)
+            ->getQuery()
+            ->getResult();
+        return $results;
     }
 }

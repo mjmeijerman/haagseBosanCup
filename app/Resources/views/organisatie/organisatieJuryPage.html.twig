@@ -1,0 +1,79 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <h1>Juryzaken</h1>
+			<p>
+				<div class="titel">
+					<h2>Juryleden (geleverd door verenigingen met geplaatste turnsters)</h2>
+				</div>
+				<div class="bericht">
+					<table>
+						<tr>
+							<th>Naam</th>
+							<th>Vereniging</th>
+							<th>Brevet</th>
+							<th>Dag</th>
+							<th>Opmerking</th>
+							<th>Email</th>
+						</tr>
+						{% for jurylid in juryleden %}
+                            <tr>
+                                <td>{{ jurylid.naam }}</td>
+                                <td>{{ jurylid.vereniging }}</td>
+                                <td>{{ jurylid.brevet }}</td>
+                                <td>{{ jurylid.dag }}</td>
+                                <td>{{ jurylid.opmerking }}</td>
+                                <td>{{ jurylid.email }}</td>
+                            </tr>
+                        {% endfor %}
+					</table>
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Emailadressen (van juryleden geleverd door verenigingen met geplaatste turnsters)</h2>
+				</div>
+				<div class="bericht">
+					<textarea cols="50" rows="15">{% for jurylid in juryleden %}{{ jurylid.email}};{% endfor %}</textarea>
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Juryleden (geleverd door verenigingen zonder geplaatste turnsters)</h2>
+				</div>
+				<div class="bericht">
+					<table>
+						<tr>
+							<th>Naam</th>
+							<th>Vereniging</th>
+							<th>Brevet</th>
+							<th>Dag</th>
+							<th>Opmerking</th>
+							<th>Email</th>
+						</tr>
+						{% for jurylid in juryledenNiet %}
+                            <tr>
+                                <td>{{ jurylid.naam }}</td>
+                                <td>{{ jurylid.vereniging }}</td>
+                                <td>{{ jurylid.brevet }}</td>
+                                <td>{{ jurylid.dag }}</td>
+                                <td>{{ jurylid.opmerking }}</td>
+                                <td>{{ jurylid.email }}</td>
+                            </tr>
+                        {% endfor %}
+					</table>
+				</div>
+			</p>
+
+			<p>
+				<div class="titel">
+					<h2>Emailadressen (van juryleden geleverd door verenigingen zonder geplaatste turnsters)</h2>
+				</div>
+				<div class="bericht">
+					<textarea cols="50" rows="15">{% for jurylid in juryledenNiet %}{{ jurylid.email}};{% endfor %}</textarea>
+				</div>
+			</p>
+
+{% endblock %}

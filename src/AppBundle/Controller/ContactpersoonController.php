@@ -161,18 +161,6 @@ class ContactpersoonController extends BaseController
         ));
     }
 
-    private function getBeschikbareDag($juryObject)
-    {
-        /** @var Jurylid $juryObject */
-        if ($juryObject->getZaterdag() && $juryObject->getZondag()) {
-            return 'Beide';
-        } elseif ($juryObject->getZaterdag()) {
-            return 'Za';
-        } else {
-            return 'Zo';
-        }
-    }
-
     /**
      * @Route("/contactpersoon/addTurnster/", name="addTurnster")
      * @Method({"GET", "POST"})

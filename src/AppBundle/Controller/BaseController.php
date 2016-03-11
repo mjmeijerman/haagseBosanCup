@@ -166,6 +166,18 @@ class BaseController extends Controller
         }
     }
 
+    protected function getBeschikbareDag($juryObject)
+    {
+        /** @var Jurylid $juryObject */
+        if ($juryObject->getZaterdag() && $juryObject->getZondag()) {
+            return 'Beide';
+        } elseif ($juryObject->getZaterdag()) {
+            return 'Za';
+        } else {
+            return 'Zo';
+        }
+    }
+
     protected function getGroepen()
     {
         return [

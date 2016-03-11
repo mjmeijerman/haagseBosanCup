@@ -68,5 +68,21 @@
 				</div>
 			</p>
 
+			<p>
+				<div class="titel">
+					<h2>Email adressen (verenigingen met geplaatste turntsters)</h2>
+				</div>
+				<div class="bericht">
+					<textarea cols="50" rows="15">{% for contactpersoon in contactpersonen %}{% if contactpersoon.turnstersGeplaatst > 0 %}{{ contactpersoon.email}};{% endif %}{% endfor %}</textarea>
+				</div>
+			</p>
 
+			<p>
+				<div class="titel">
+					<h2>Email adressen (verenigingen zonder geplaatste turntsters)</h2>
+				</div>
+				<div class="bericht">
+					<textarea cols="50" rows="15">{% for contactpersoon in contactpersonen %}{% if contactpersoon.turnstersGeplaatst == 0 %}{{ contactpersoon.email}};{% endif %}{% endfor %}</textarea>
+				</div>
+			</p>
 {% endblock %}
