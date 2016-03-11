@@ -718,6 +718,31 @@ class BaseController extends Controller
                     }
                 }
                 break;
+            case 'telefoonnummer':
+                $returnData['data'] = $userObject->getTelefoonnummer();
+                $errors = $this->get('validator')->validate(
+                    $data,
+                    $emptyConstraint
+                );
+                if (count($errors) == 0) {
+                    $re = '/^([0-9]+)$/';
+                    if (preg_match($re, $data) && strlen($data) == 10) {
+                        try {
+                            $userObject->setTelefoonnummer($data);
+                            $this->addToDB($userObject);
+                            $returnData['data'] = $userObject->getTelefoonnummer();
+                        } catch (\Exception $e) {
+                            $returnData['error'] = $e->getMessage();
+                        }
+                    } else {
+                        $returnData['error'] .= 'Het telefoonnummer moet uit precies 10 cijfers bestaan! ';
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $returnData['error'] .= $error->getMessage() . ' ';
+                    }
+                }
+                break;
             case 'verantwoordelijkheid':
                 $returnData['data'] = $userObject->getVerantwoordelijkheid();
                 try {

@@ -57,6 +57,7 @@ class ContactpersoonController extends BaseController
             'voornaam' => $user->getVoornaam(),
             'achternaam' => $user->getAchternaam(),
             'email' => $user->getEmail(),
+            'telNr' => $user->getTelefoonnummer(),
         ];
         $turnsters = [];
         $wachtlijst = [];

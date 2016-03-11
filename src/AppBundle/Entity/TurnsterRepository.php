@@ -98,6 +98,66 @@ class TurnsterRepository extends EntityRepository
         return $ingeschrevenTurnsters;
     }
 
+    public function getWachtlijstTurnsters($user)
+    {
+        $ingeschrevenTurnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 1')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $ingeschrevenTurnsters;
+    }
+
+    public function getAfgemeldeTurnsters($user)
+    {
+        $ingeschrevenTurnsters = $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->where('u.afgemeld = 1')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $ingeschrevenTurnsters;
+    }
+
+    public function getIngeschrevenTurnstersForUser($user)
+    {
+        $results = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 0')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getWachtlijstTurnstersForUser($user)
+    {
+        $results = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 0')
+            ->andWhere('u.wachtlijst = 1')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getAfgemeldTurnstersForUser($user)
+    {
+        $results = $this->createQueryBuilder('u')
+            ->where('u.afgemeld = 1')
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
     public function getIngeschrevenTurnstersCatNiveau($categorie, $niveau)
     {
         $ingeschrevenTurnsters = $this->createQueryBuilder('u')

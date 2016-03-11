@@ -1,0 +1,222 @@
+{% extends 'organisatie/base.html.twig' %}
+
+{% block body %}
+    <h1>Gegevens {{ contactpersoon.naam }}
+    </h1>
+<p>
+<div class="titel">
+        <h2>
+            Contactgegevens
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+			    <td>Id: </td>
+			    <td>{{ contactpersoon.id }}</td>
+            </tr>
+            <tr>
+				<td>Gebruikersnaam: </td>
+				<td>{{ contactpersoon.gebruikersnaam }}</td>
+            </tr>
+            <tr>
+				<td>Naam: </td>
+				<td>{{ contactpersoon.naam }}</td>
+            </tr>
+            <tr>
+				<td>Vereniging: </td>
+				<td>{{ contactpersoon.vereniging }}</td>
+            </tr>
+            <tr>
+				<td>Email: </td>
+				<td>{{ contactpersoon.email }}</td>
+            </tr>
+            <tr>
+				<td>Telefoonnummer: </td>
+				<td>{{ contactpersoon.telNr }}</td>
+            </tr>
+		</table>
+    </div>
+</p>
+
+<p>
+    <div class="titel">
+        <h2>
+            Turnsters geplaatst
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Geboortejaar</th>
+				<th>Categorie</th>
+				<th>Niveau</th>
+				<th>Opmerking</th>
+				<th></th>
+				<th>Naar wachtlijst</th>
+				<th>Verwijderen</th>
+			</tr>
+			{% for turnster in turnsters %}
+				<tr>
+					<td>{{ turnster.id }}</td>
+					<td>{{ turnster.naam }}</td>
+					<td>{{ turnster.geboortejaar }}</td>
+					<td>{{ turnster.categorie }}</td>
+					<td>{{ turnster.niveau }}</td>
+					<td>{{ turnster.opmerking }}</td>
+					<td>
+					    {% if turnster.vloermuziek %}
+                            <a href="{{ asset(turnster.vloermuziekLocatie) }}" target="_blank">
+                                <img src="{{ asset('images/listen.png') }}" height="18">
+                            </a>
+                        {% endif %}
+					</td>
+					<td class="img"><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
+					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
+                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
+                              style="display: inline;">#}
+						<div onclick="remove_turnster('{{ turnster.id }}',
+								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+						</div>
+					{#</form>#}</td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+
+<p>
+    <div class="titel">
+        <h2>
+            Turnsters wachtlijst
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Geboortejaar</th>
+				<th>Categorie</th>
+				<th>Niveau</th>
+				<th>Opmerking</th>
+				<th>Naar wachtlijst</th>
+				<th>Verwijderen</th>
+			</tr>
+			{% for turnster in wachtlijst %}
+				<tr>
+					<td>{{ turnster.id }}</td>
+					<td>{{ turnster.naam }}</td>
+					<td>{{ turnster.geboortejaar }}</td>
+					<td>{{ turnster.categorie }}</td>
+					<td>{{ turnster.niveau }}</td>
+					<td>{{ turnster.opmerking }}</td>
+					<td class="img"><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
+					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
+                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
+                              style="display: inline;">#}
+						<div onclick="remove_turnster('{{ turnster.id }}',
+								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+						</div>
+					{#</form>#}</td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+
+<p>
+    <div class="titel">
+        <h2>
+            Turnsters afgemeld
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Geboortejaar</th>
+				<th>Categorie</th>
+				<th>Niveau</th>
+				<th>Opmerking</th>
+				<th>Verwijderen</th>
+			</tr>
+			{% for turnster in afgemeld %}
+				<tr>
+					<td>{{ turnster.id }}</td>
+					<td>{{ turnster.naam }}</td>
+					<td>{{ turnster.geboortejaar }}</td>
+					<td>{{ turnster.categorie }}</td>
+					<td>{{ turnster.niveau }}</td>
+					<td>{{ turnster.opmerking }}</td>
+					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
+                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
+                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
+                              style="display: inline;">#}
+						<div onclick="remove_turnster('{{ turnster.id }}',
+								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
+						</div>
+					{#</form>#}</td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+
+<p>
+    <div class="titel">
+        <h2>
+            Juryleden
+        </h2>
+    </div>
+    <div class="bericht">
+		<table class="overzicht">
+			<tr>
+				<th>ID</th>
+				<th>Naam</th>
+				<th>Opmerking</th>
+				<th>Brevet</th>
+				<th>Dag</th>
+				<th></th>
+			</tr>
+			{% for jurylid in juryleden %}
+				<tr>
+					<td>{{ jurylid.id }}</td>
+					<td>{{ jurylid.naam }}</td>
+					<td>{{ jurylid.opmerking }}</td>
+					<td>{{ jurylid.brevet }}</td>
+					<td>{{ jurylid.dag }}</td>
+					<td><img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;"></td>
+				</tr>
+			{% endfor %}
+		</table>
+    </div>
+</p>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function remove_turnster(id, naam, vereniging) {
+            if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
+                document.forms["remove_turnster_" + id].submit();
+            }
+        }
+
+    </script>
+{% endblock %}

@@ -117,8 +117,7 @@ class OrganisatieController extends BaseController
             $file->setCreatedAt(new \DateTime('now'));
             $this->addToDB($file);
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
-        }
-        else {
+        } else {
             return $this->render('organisatie/reglementen.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'form' => $form->createView(),
@@ -146,7 +145,8 @@ class OrganisatieController extends BaseController
         foreach ($results as $result) {
 
             if ($this->getDoctrine()->getRepository('AppBundle:Turnster')->getIngeschrevenTurnsters($result->getUser
-            ()) > 0) {
+                ()) > 0
+            ) {
                 $juryleden[] = [
                     'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                     'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
@@ -203,7 +203,7 @@ class OrganisatieController extends BaseController
                 $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
                     ->getIngeschrevenTurnstersCatNiveau($categorie, $niveau);
                 foreach ($results as $result) {
-                    if (!$result->getVloermuziek()){
+                    if (!$result->getVloermuziek()) {
                         $vloermuziek[$categorie][$niveau]['niet'][$result->getUser()->getId()][] = [
                             'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
                             'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
@@ -444,7 +444,9 @@ class OrganisatieController extends BaseController
             $turnstersGeplaatst = [];
             $turnstersWachtlijst = [];
             foreach ($turnsters as $turnster) {
-                if ($turnster->getAfgemeld()) continue;
+                if ($turnster->getAfgemeld()) {
+                    continue;
+                }
                 if ($turnster->getWachtlijst()) {
                     $turnstersWachtlijst[] = $turnster;
                 } else {
@@ -534,14 +536,14 @@ class OrganisatieController extends BaseController
             if ($teBetalenBedrag == 0) {
                 $voldaanClass = 'voldaan';
                 $status = 'Voldaan';
-            }
-            elseif (count($betalingen) == 0) {
+            } elseif (count($betalingen) == 0) {
                 $voldaanClass = 'niet_voldaan';
                 $status = 'Niet voldaan';
             } else {
                 foreach ($betalingen as $betaling) {
                     $betaaldBedrag += $betaling->getBedrag();
-                } if ($betaaldBedrag < $teBetalenBedrag) {
+                }
+                if ($betaaldBedrag < $teBetalenBedrag) {
                     $voldaanClass = 'bijna_voldaan';
                     $status = 'Gedeeltelijk voldaan';
                 } else {
@@ -621,7 +623,8 @@ class OrganisatieController extends BaseController
                     'datum' => $betaling->getDatumBetaald()->format('d-m-Y'),
                     'bedrag' => $betaling->getBedrag(),
                 ];
-            } if ($betaaldBedrag < $teBetalenBedrag) {
+            }
+            if ($betaaldBedrag < $teBetalenBedrag) {
                 $voldaanClass = 'bijna_voldaan';
                 $status = 'Gedeeltelijk voldaan';
             } else {
@@ -851,6 +854,110 @@ class OrganisatieController extends BaseController
             'niveau' => $niveau,
             'turnsters' => $turnsters,
             'wachtlijst' => $wachtlijst,
+        ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/bekijkInschrijvingenPerContactpersoon/{userId}/",
+     * name="bekijkInschrijvingenPerContactpersoon")
+     * @Method("GET")
+     */
+    public function bekijkInschrijvingenPerContactpersoon($page, $userId)
+    {
+        /* todo:
+         * todo: Naar wachtlijst:
+         * todo: Javascript functie
+         * todo: Doe ajax call, bij success: getElementById, remove element en add element to wachtlijst
+         * todo: Idem van wachtlijst af
+         * todo: Verwijderen ook via ajax call en remove element (get element by id)
+         */
+        $this->setBasicPageData('Organisatie');
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository("AppBundle:User")
+            ->findOneBy(['id' => $userId]);
+        $contactpersoon = [
+            'id' => $user->getId(),
+            'vereniging' => $user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats(),
+            'gebruikersnaam' => $user->getUsername(),
+            'naam' => $user->getVoornaam() . ' ' . $user->getAchternaam(),
+            'email' => $user->getEmail(),
+            'telNr' => $user->getTelefoonnummer(),
+
+        ];
+        /** @var Turnster[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getIngeschrevenTurnstersForUser($user);
+        $turnsters = [];
+        foreach ($results as $result) {
+            if ($result->getVloermuziek()) {
+                $vloermuziek = true;
+                $locatie = $result->getVloermuziek()->getWebPath();
+            } else {
+                $vloermuziek = false;
+                $locatie = '';
+            }
+            $turnsters[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'geboortejaar' => $result->getGeboortejaar(),
+                'categorie' => $result->getCategorie(),
+                'niveau' => $result->getNiveau(),
+                'opmerking' => $result->getOpmerking(),
+                'vloermuziek' => $vloermuziek,
+                'vloermuziekLocatie' => $locatie,
+
+            ];
+        }
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getWachtlijstTurnstersForUser($user);
+        $wachtlijst = [];
+        foreach ($results as $result) {
+            $wachtlijst[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'geboortejaar' => $result->getGeboortejaar(),
+                'categorie' => $result->getCategorie(),
+                'niveau' => $result->getNiveau(),
+                'opmerking' => $result->getOpmerking(),
+            ];
+        }
+        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->getAfgemeldTurnstersForUser($user);
+        $afgemeld = [];
+        foreach ($results as $result) {
+            $afgemeld[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'geboortejaar' => $result->getGeboortejaar(),
+                'categorie' => $result->getCategorie(),
+                'niveau' => $result->getNiveau(),
+                'opmerking' => $result->getOpmerking(),
+            ];
+        }
+        /** @var Jurylid[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->getIngeschrevenJuryledenPerUser($user);
+        $juryleden = [];
+        foreach ($results as $result) {
+            $juryleden[] = [
+                'id' => $result->getId(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'brevet' => $result->getBrevet(),
+                'dag' => $this->getBeschikbareDag($result),
+                'opmerking' => $result->getOpmerking(),
+            ];
+        }
+        return $this->render('organisatie/bekijkInschrijvingenPerContactpersoon.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'turnsters' => $turnsters,
+            'wachtlijst' => $wachtlijst,
+            'afgemeld' => $afgemeld,
+            'juryleden' => $juryleden,
+            'contactpersoon' => $contactpersoon,
         ));
     }
 
