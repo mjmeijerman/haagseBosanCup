@@ -122,7 +122,7 @@ class TurnsterRepository extends EntityRepository
             ->andWhere('u.wachtlijst = 1')
             ->andWhere('u.categorie = :categorie')
             ->andWhere('u.niveau = :niveau')
-            ->orderBy('u.user')
+            ->orderBy('u.id')
             ->setParameters([
                 'niveau' => $niveau,
                 'categorie' => $categorie,
