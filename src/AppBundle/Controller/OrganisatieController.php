@@ -777,32 +777,52 @@ class OrganisatieController extends BaseController
     }
 
     /**
-     * @Route("/organisatie/{page}/bekijkInschrijvingenPerNiveau/{categorie}/{niveau}/removeOrganisatieTurnster",
-     * name="removeOrganisatieTurnster")
-     * @Method("POST")
+     * @Route("/organisatie/bekijkInschrijvingenPerNiveau/removeOrganisatieTurnster/{id}",
+     * name="removeOrganisatieTurnsterAjaxCall", options={"expose"=true})
+     * @Method("GET")
      */
-    public function removeOrganisatieTurnster(Request $request, $page, $categorie, $niveau)
+    public function removeOrganisatieTurnsterAjaxCall($id)
     {
-        //todo: hier ajax call van maken!
         $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-            ->findOneBy(['id' => $request->request->get('turnsterId')]);
+            ->findOneBy(['id' => $id]);
         if ($result) {
             $this->removeFromDB($result);
-            $this->addFlash(
-                'success',
-                'De turnster is succesvol verwijderd!'
-            );
-        } else {
-            $this->addFlash(
-                'error',
-                'De turnster kon niet worden gevonden!'
-            );
         }
-        return $this->redirectToRoute('bekijkInschrijvingenPerNiveau', array(
-            'page' => $page,
-            'categorie' => $categorie,
-            'niveau' => $niveau,
-        ));
+        return new Response('true');
+    }
+
+    /**
+     * @Route("/organisatie/bekijkInschrijvingenPerNiveau/moveTurnsterToWachtlijst/{id}",
+     * name="moveTurnsterToWachtlijst", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function moveTurnsterToWachtlijst($id)
+    {
+        /** @var Turnster $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $result->setWachtlijst(true);
+            $this->addToDB($result);
+        }
+        return new Response('true');
+    }
+
+    /**
+     * @Route("/organisatie/bekijkInschrijvingenPerNiveau/moveTurnsterFromWachtlijst/{id}",
+     * name="moveTurnsterFromWachtlijst", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function moveTurnsterFromWachtlijst($id)
+    {
+        /** @var Turnster $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $result->setWachtlijst(false);
+            $this->addToDB($result);
+        }
+        return new Response('true');
     }
 
     /**

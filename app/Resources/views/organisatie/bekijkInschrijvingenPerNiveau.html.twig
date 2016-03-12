@@ -8,11 +8,11 @@
 <p>
     <div class="titel">
         <h2>
-            Deelnemers {{ categorie }} {{ niveau }} ({{ turnsters|length }})
+            Deelnemers {{ categorie }} {{ niveau }} (<span id="turnsters_aantal">{{ turnsters|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="turnster_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -22,23 +22,24 @@
 				<th>Verwijderen</th>
 			</tr>
 			{% for turnster in turnsters %}
-				<tr>
+				<tr id="turnster_row_{{ turnster.id }}">
 					<td>{{ turnster.id }}</td>
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.vereniging }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td class="img"><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
-					<td class="img"><form method="post" name="remove_turnster_{{ turnster.id }}"
-                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
-                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
-                              style="display: inline;">
+					<td class="img">
+					    <div onclick="naar_wachtlijst('{{ turnster.id }}')"
+							 style="display: inline">
+    					    <img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;">
+                        </div>
+                    </td>
+					<td class="img">
 						<div onclick="remove_turnster('{{ turnster.id }}',
 								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
-							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
 						</div>
-					</form></td>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -47,11 +48,11 @@
 <p>
     <div class="titel">
         <h2>
-            Wachtlijst {{ categorie }} {{ niveau }} ({{ wachtlijst|length }})
+            Wachtlijst {{ categorie }} {{ niveau }} (<span id="wachtlijst_aantal">{{ wachtlijst|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="wachtlijst_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -61,24 +62,24 @@
 				<th>Verwijderen</th>
 			</tr>
 			{% for turnster in wachtlijst %}
-				<tr>
+				<tr id="turnster_row_{{ turnster.id }}">
 					<td>{{ turnster.id }}</td>
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.vereniging }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td class="img"><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
-
-					<td class="img"><form method="post" name="remove_turnster_{{ turnster.id }}"
-                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
-                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
-                              style="display: inline;">
-						<div onclick="remove_turnster('{{ turnster.id }}',
+					<td class="img" id="turnster_up">
+					    <div onclick="van_wachtlijst('{{ turnster.id }}')"
+							 style="display: inline">
+    					    <img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;">
+                        </div>
+                    </td>
+					<td class="img">
+						<div onclick="remove_turnster_wachtlijst('{{ turnster.id }}',
 								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
-							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
 						</div>
-					</form></td>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -92,8 +93,62 @@
     <script>
         function remove_turnster(id, naam, vereniging) {
             if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
-                document.forms["remove_turnster_" + id].submit();
+                var row = document.getElementById('turnster_row_' + id);
+                var aantal_deelnemers = document.getElementById('turnsters_aantal');
+                aantal_deelnemers.innerHTML = (parseInt(aantal_deelnemers.innerHTML) - 1);
+                row.innerHTML = '';
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('removeOrganisatieTurnsterAjaxCall', {id: id})
+                });
             }
+        }
+
+        function remove_turnster_wachtlijst(id, naam, vereniging) {
+            if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
+                var row = document.getElementById('turnster_row_' + id);
+                var aantal_deelnemers = document.getElementById('wachtlijst_aantal');
+                aantal_deelnemers.innerHTML = (parseInt(aantal_deelnemers.innerHTML) - 1);
+                row.innerHTML = '';
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('removeOrganisatieTurnsterAjaxCall', {id: id})
+                });
+            }
+        }
+
+        function naar_wachtlijst(id)
+        {
+            var table = document.getElementById("wachtlijst_table");
+            var new_row = table.insertRow(-1);
+            var old_row = document.getElementById('turnster_row_' + id);
+            var aantal_deelnemers = document.getElementById('turnsters_aantal');
+            aantal_deelnemers.innerHTML = (parseInt(aantal_deelnemers.innerHTML) - 1);
+            var aantal_deelnemers_wachtlijst = document.getElementById('wachtlijst_aantal');
+            aantal_deelnemers_wachtlijst.innerHTML = (parseInt(aantal_deelnemers_wachtlijst.innerHTML) + 1);
+            new_row.innerHTML = old_row.innerHTML;
+            old_row.innerHTML = '';
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('moveTurnsterToWachtlijst', {id: id})
+            });
+        }
+
+        function van_wachtlijst(id)
+        {
+            var table = document.getElementById("turnster_table");
+            var new_row = table.insertRow(-1);
+            var old_row = document.getElementById('turnster_row_' + id);
+            var aantal_deelnemers = document.getElementById('turnsters_aantal');
+            aantal_deelnemers.innerHTML = (parseInt(aantal_deelnemers.innerHTML) + 1);
+            var aantal_deelnemers_wachtlijst = document.getElementById('wachtlijst_aantal');
+            aantal_deelnemers_wachtlijst.innerHTML = (parseInt(aantal_deelnemers_wachtlijst.innerHTML) - 1);
+            new_row.innerHTML = old_row.innerHTML;
+            old_row.innerHTML = '';
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('moveTurnsterFromWachtlijst', {id: id})
+            });
         }
 
     </script>
