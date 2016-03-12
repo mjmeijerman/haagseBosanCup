@@ -934,6 +934,7 @@ class BaseController extends Controller
                 $pdf->SetFont('Franklin', '', 16);
                 $pdf->SetTextColor(0);
                 $pdf->SetFillColor(0);
+				$pdf->SetAlpha(1.0);
                 $pdf->Rect(5, 43, 0.5, 13, 'F');
                 $pdf->Text(7, 48, $user->getVoornaam() . ' ' . $user->getAchternaam());
                 $pdf->Text(7, 54, $user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats());
