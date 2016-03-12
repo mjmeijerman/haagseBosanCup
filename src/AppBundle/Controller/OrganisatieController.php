@@ -148,6 +148,7 @@ class OrganisatieController extends BaseController
                 ()) > 0
             ) {
                 $juryleden[] = [
+                    'id' => $result->getId(),
                     'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                     'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                             ->getVereniging()->getPlaats(),
@@ -158,6 +159,7 @@ class OrganisatieController extends BaseController
                 ];
             } else {
                 $juryledenNiet[] = [
+                    'id' => $result->getId(),
                     'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                     'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                             ->getVereniging()->getPlaats(),

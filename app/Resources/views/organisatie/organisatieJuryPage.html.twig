@@ -4,7 +4,8 @@
     <h1>Juryzaken</h1>
 			<p>
 				<div class="titel">
-					<h2>Juryleden (geleverd door verenigingen met geplaatste turnsters)</h2>
+					<h2>Juryleden geleverd door verenigingen met geplaatste turnsters (<span
+					id="juryleden_aantal">{{ juryleden|length }}</span>)</h2>
 				</div>
 				<div class="bericht">
 					<table class="overzicht" style="font-size:8pt">
@@ -18,15 +19,20 @@
 							<th></th>
 						</tr>
 						{% for jurylid in juryleden %}
-                            <tr>
+                            <tr id="jurylid_row_{{ jurylid.id }}">
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
                                 <td>{{ jurylid.dag }}</td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
-                                <td><img src="{{ asset('images/remove.png') }}" width="15" style="cursor: pointer;
-                                "></td>
+                                <td>
+                                    <div onclick="remove_jurylid('{{ jurylid.id }}',
+                                        '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
+                                         style="display: inline">
+                                        <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+		            				</div>
+                                </td>
                             </tr>
                         {% endfor %}
 					</table>
@@ -44,7 +50,8 @@
 
 			<p>
 				<div class="titel">
-					<h2>Juryleden (geleverd door verenigingen zonder geplaatste turnsters)</h2>
+					<h2>Juryleden geleverd door verenigingen zonder geplaatste turnsters (<span
+					id="juryleden_aantal_niet">{{ juryledenNiet|length }}</span>)</h2>
 				</div>
 				<div class="bericht">
 					<table class="overzicht" style="font-size:8pt">
@@ -58,15 +65,20 @@
 							<th></th>
 						</tr>
 						{% for jurylid in juryledenNiet %}
-                            <tr>
+                            <tr id="jurylid_row_{{ jurylid.id }}">
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
                                 <td>{{ jurylid.dag }}</td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
-                                <td><img src="{{ asset('images/remove.png') }}" width="15" style="cursor: pointer;
-                                "></td>
+                                <td>
+                                    <div onclick="remove_jurylid_niet('{{ jurylid.id }}',
+                                        '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
+                                         style="display: inline">
+                                        <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+		            				</div>
+                                </td>
                             </tr>
                         {% endfor %}
 					</table>
@@ -82,4 +94,9 @@
 				</div>
 			</p>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/wachtlijst_remove_etc.js') }}"></script>
 {% endblock %}
