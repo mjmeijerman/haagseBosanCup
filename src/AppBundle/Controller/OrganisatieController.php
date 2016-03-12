@@ -792,6 +792,21 @@ class OrganisatieController extends BaseController
     }
 
     /**
+     * @Route("/organisatie/bekijkInschrijvingenPerNiveau/removeOrganisatieJury/{id}",
+     * name="removeOrganisatieJuryAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function removeOrganisatieJuryAjaxCall($id)
+    {
+        $result = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $this->removeFromDB($result);
+        }
+        return new Response('true');
+    }
+
+    /**
      * @Route("/organisatie/bekijkInschrijvingenPerNiveau/moveTurnsterToWachtlijst/{id}",
      * name="moveTurnsterToWachtlijst", options={"expose"=true})
      * @Method("GET")

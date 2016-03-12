@@ -35,6 +35,7 @@ plekken!
                         {{ vereniging.naam }}, {{ vereniging.plaats }}</option>
                 {% endfor %}
             </select>
+        </form>
     </div>
     <br/>
     <input type="checkbox" id="verenigingstaaternietbijikbenzozielig"
@@ -181,8 +182,9 @@ plekken!
         <input type="hidden" name="aantalTurnsters" id="post_aantalturnsters"/>
         <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
     </form>
-    {% endblock %}
+</div>
+{% endblock %}
 
-    {% block javascript %}
-        {{ parent() }}
-    {% endblock %}
+{% block javascript %}
+{{ parent() }}
+{% endblock %}

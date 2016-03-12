@@ -44,11 +44,11 @@
 <p>
     <div class="titel">
         <h2>
-            Turnsters geplaatst ({{ turnsters|length }})
+            Turnsters geplaatst (<span id="turnsters_aantal">{{ turnsters|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="turnster_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -61,7 +61,7 @@
 				<th>Verwijderen</th>
 			</tr>
 			{% for turnster in turnsters %}
-				<tr>
+				<tr id="turnster_row_{{ turnster.id }}">
 					<td>{{ turnster.id }}</td>
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.geboortejaar }}</td>
@@ -75,18 +75,19 @@
                             </a>
                         {% endif %}
 					</td>
-					<td class="img"><img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;"></td>
-					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
-                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
-                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
-                              style="display: inline;">#}
+					<td class="img">
+						<div onclick="naar_wachtlijst('{{ turnster.id }}')"
+							 style="display: inline">
+    					    <img src="{{ asset('images/down.png') }}" width="20" style="cursor: pointer;">
+                        </div>
+					</td>
+					<td class="img">
 						<div onclick="remove_turnster('{{ turnster.id }}',
 								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
-							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
 						</div>
-					{#</form>#}</td>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -96,11 +97,11 @@
 <p>
     <div class="titel">
         <h2>
-            Turnsters wachtlijst ({{ wachtlijst|length }})
+            Turnsters wachtlijst (<span id="wachtlijst_aantal">{{ wachtlijst|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="wachtlijst_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -108,29 +109,32 @@
 				<th>Categorie</th>
 				<th>Niveau</th>
 				<th>Opmerking</th>
+				<th></th>
 				<th>Naar wachtlijst</th>
 				<th>Verwijderen</th>
 			</tr>
 			{% for turnster in wachtlijst %}
-				<tr>
+				<tr id="turnster_row_{{ turnster.id }}">
 					<td>{{ turnster.id }}</td>
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.geboortejaar }}</td>
 					<td>{{ turnster.categorie }}</td>
 					<td>{{ turnster.niveau }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td class="img"><img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;"></td>
-					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
-                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
-                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
-                              style="display: inline;">#}
-						<div onclick="remove_turnster('{{ turnster.id }}',
+					<td></td>
+					<td class="img">
+					    <div onclick="van_wachtlijst('{{ turnster.id }}')"
+							 style="display: inline">
+    					    <img src="{{ asset('images/up.png') }}" width="20" style="cursor: pointer;">
+                        </div>
+                    </td>
+					<td class="img">
+						<div onclick="remove_turnster_wachtlijst('{{ turnster.id }}',
 								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
-							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
 						</div>
-					{#</form>#}</td>
+				    </td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -140,11 +144,11 @@
 <p>
     <div class="titel">
         <h2>
-            Turnsters afgemeld ({{ afgemeld|length }})
+            Turnsters afgemeld (<span id="afgemeld_aantal">{{ afgemeld|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="afgemeld_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -155,24 +159,20 @@
 				<th>Verwijderen</th>
 			</tr>
 			{% for turnster in afgemeld %}
-				<tr>
+				<tr id="turnster_row_{{ turnster.id }}">
 					<td>{{ turnster.id }}</td>
 					<td>{{ turnster.naam }}</td>
 					<td>{{ turnster.geboortejaar }}</td>
 					<td>{{ turnster.categorie }}</td>
 					<td>{{ turnster.niveau }}</td>
 					<td>{{ turnster.opmerking }}</td>
-					<td class="img">{#<form method="post" name="remove_turnster_{{ turnster.id }}"
-                              action="{{ path('removeOrganisatieTurnster', { 'page':app.request.get('page'),
-                              'categorie':app.request.get('categorie'), 'niveau':app.request.get('niveau') }) }}"
-                              style="display: inline;">#}
-						<div onclick="remove_turnster('{{ turnster.id }}',
+					<td class="img">
+					    <div onclick="remove_turnster_afgemeld('{{ turnster.id }}',
 								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
-							<input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
 						</div>
-					{#</form>#}</td>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -182,11 +182,11 @@
 <p>
     <div class="titel">
         <h2>
-            Juryleden ({{ juryleden|length }})
+            Juryleden (<span id="juryleden_aantal">{{ juryleden|length }}</span>)
         </h2>
     </div>
     <div class="bericht">
-		<table class="overzicht">
+		<table class="overzicht" id="jury_table">
 			<tr>
 				<th>ID</th>
 				<th>Naam</th>
@@ -196,13 +196,19 @@
 				<th></th>
 			</tr>
 			{% for jurylid in juryleden %}
-				<tr>
+				<tr id="jurylid_row_{{ jurylid.id }}">
 					<td>{{ jurylid.id }}</td>
 					<td>{{ jurylid.naam }}</td>
 					<td>{{ jurylid.opmerking }}</td>
 					<td>{{ jurylid.brevet }}</td>
 					<td>{{ jurylid.dag }}</td>
-					<td><img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;"></td>
+					<td>
+					    <div onclick="remove_jurylid('{{ jurylid.id }}',
+								'{{ jurylid.naam }}', '{{ contactpersoon.vereniging }}')"
+							 style="display: inline">
+							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+						</div>
+                    </td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -213,12 +219,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        function remove_turnster(id, naam, vereniging) {
-            if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
-                document.forms["remove_turnster_" + id].submit();
-            }
-        }
-
-    </script>
+    <script src="{{ asset('js/wachtlijst_remove_etc.js') }}"></script>
 {% endblock %}
