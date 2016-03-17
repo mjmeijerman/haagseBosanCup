@@ -6,6 +6,7 @@ use AppBundle\Entity\Betaling;
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
+use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Voorinschrijving;
@@ -409,6 +410,7 @@ class OrganisatieController extends BaseController
         $instellingen = $this->getOrganisatieInstellingen();
         $voorinschrijvingen = $this->getVoorinschrijvingen();
         $reglementen = $this->getReglementen();
+        $toegestaneNiveaus = $this->getToegestaneNiveaus();
         return $this->render('organisatie/organisatieInstellingen.html.twig', array(
             'menuItems' => $this->menuItems,
             'instellingen' => $instellingen,
@@ -419,6 +421,7 @@ class OrganisatieController extends BaseController
             'totaalAantalTurnsters' => $this->aantalTurnsters,
             'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
             'totaalAantalJuryleden' => $this->aantalJury,
+            'toegestaneNiveaus' => $toegestaneNiveaus,
         ));
     }
 
@@ -575,6 +578,49 @@ class OrganisatieController extends BaseController
             'totaalAantalJuryleden' => $this->aantalJury,
             'factuurInformatie' => $factuurInformatie,
         ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/niveauToevoegen/", name="niveauToevoegen")
+     * @Method({"GET", "POST"})
+     */
+    public function niveauToevoegen(Request $request, $page)
+    {
+        if ($request->getMethod() == "POST") {
+            if ($request->request->get('categorie') && $request->request->get('niveau')) {
+                $niveau = new ToegestaneNiveaus();
+                $niveau->setCategorie($request->request->get('categorie'));
+                $niveau->setNiveau($request->request->get('niveau'));
+                $this->addToDB($niveau);
+                return $this->redirectToRoute('organisatieGetContent', array(
+                    'page' => $page,
+                ));
+            }
+        }
+        $this->setBasicPageData('Organisatie');
+        return $this->render('organisatie/niveauToevoegen.html.twig', [
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+            'categorien' => $this->getCategorien(),
+        ]);
+    }
+
+    /**
+     * @Route("/organisatie/{page}/niveauVerwijderen/{id}/",
+     * name="niveauVerwijderenAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function niveauVerwijderenAjaxCall($id, $page)
+    {
+        $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $this->removeFromDB($result);
+        }
+        return new Response('true');
     }
 
     /**

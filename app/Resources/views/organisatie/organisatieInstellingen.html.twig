@@ -29,6 +29,39 @@
 
     <p>
     <div class="titel">
+        <h2>Toegestane niveaus</h2>
+    </div>
+    <div class="bericht">
+        <a href="{{ path('niveauToevoegen', { 'page': app.request.get('page') }) }}">
+            <img src="{{ asset('images/add.png') }}" width="20" /> Niveau toevoegen
+        </a>
+        <table class="instellingen_overzicht">
+            <tr>
+                <th width="30%">Categorie</th>
+                <th width="30%">Niveau</th>
+                <th width="5%"></th>
+            </tr>
+            {% for categorie, niveaus in toegestaneNiveaus %}
+                {% for id, niveau in niveaus %}
+                    <tr id="niveau_row_{{ id }}">
+                        <td>{{ categorie }}</td>
+                        <td>{{ niveau }}</td>
+                        <td>
+                            <div onclick="remove_niveau('{{ id }}',
+                                    '{{ categorie }}', '{{ niveau }}')"
+                                 style="display: inline">
+                                <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
+    </p>
+
+    <p>
+    <div class="titel">
         <h2>Voorinschrijvingen</h2>
     </div>
     <div class="bericht">
@@ -135,5 +168,5 @@
             onChange(data, fieldName, 'editInstellingen');
         });
     </script>
-
+        <script src="{{ asset('js/wachtlijst_remove_etc.js') }}"></script>
 {% endblock %}

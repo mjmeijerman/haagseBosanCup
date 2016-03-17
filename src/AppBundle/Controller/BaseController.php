@@ -178,6 +178,34 @@ class BaseController extends Controller
         }
     }
 
+    protected function getToegestaneNiveaus()
+    {
+        $toegestaneNiveaus = [];
+        $categorien = $this->getCategorien();
+        foreach ($categorien as $categorie) {
+            $results = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
+                ->findBy(['categorie' => $categorie]);
+            foreach ($results as $result) {
+                $toegestaneNiveaus[$categorie][$result->getId()] = $result->getNiveau();
+            }
+        }
+        return $toegestaneNiveaus;
+    }
+
+    protected function getCategorien()
+    {
+        return [
+            'Voorinstap',
+            'Instap',
+            'Pupil 1',
+            'Pupil 2',
+            'Jeugd 1',
+            'Jeugd 2',
+            'Junior',
+            'Senior',
+        ];
+    }
+
     protected function getGroepen()
     {
         return [
