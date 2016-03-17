@@ -28,6 +28,11 @@ class ToegestaneNiveaus
     private $niveau;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $uitslagGepubliceerd = 0;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -81,5 +86,28 @@ class ToegestaneNiveaus
     public function getNiveau()
     {
         return $this->niveau;
+    }
+
+    /**
+     * Set uitslagGepubliceerd
+     *
+     * @param integer $uitslagGepubliceerd
+     * @return ToegestaneNiveaus
+     */
+    public function setUitslagGepubliceerd($uitslagGepubliceerd)
+    {
+        $this->uitslagGepubliceerd = $uitslagGepubliceerd;
+
+        return $this;
+    }
+
+    /**
+     * Get uitslagGepubliceerd
+     *
+     * @return integer 
+     */
+    public function getUitslagGepubliceerd()
+    {
+        return $this->uitslagGepubliceerd;
     }
 }

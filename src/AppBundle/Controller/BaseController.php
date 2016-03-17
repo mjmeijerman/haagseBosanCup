@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\SendMail;
+use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vereniging;
@@ -183,10 +184,14 @@ class BaseController extends Controller
         $toegestaneNiveaus = [];
         $categorien = $this->getCategorien();
         foreach ($categorien as $categorie) {
+            /** @var ToegestaneNiveaus[] $results */
             $results = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
                 ->findBy(['categorie' => $categorie]);
             foreach ($results as $result) {
-                $toegestaneNiveaus[$categorie][$result->getId()] = $result->getNiveau();
+                $toegestaneNiveaus[$categorie][$result->getId()] = [
+                    'niveau' => $result->getNiveau(),
+                    'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
+                ];
             }
         }
         return $toegestaneNiveaus;
