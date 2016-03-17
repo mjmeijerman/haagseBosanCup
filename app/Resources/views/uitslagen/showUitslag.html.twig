@@ -11,7 +11,8 @@
             Uitslagen {{ app.request.get('categorie') }} {{ app.request.get('niveau') }} gesorteerd op {{ order }}.
             <br/>
             <hr>
-            <center><a href="#" target="blank">
+            <center><a href="{{ path('uitslagen', { 'categorie': app.request.get('categorie'), 'niveau': app.request
+                    .get('niveau'), 'prijswinnaars': 'true' }) }}" target="_blank">
                     Prijswinnaars
                 </a></center>
             <a href="{{ path('uitslagen') }}">
