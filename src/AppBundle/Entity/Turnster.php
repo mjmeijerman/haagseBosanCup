@@ -105,6 +105,54 @@ class Turnster
      *
      * @return integer 
      */
+
+    public function getUitslagenLijst()
+    {
+        $totaalBrug = (floatval($this->getScores()->getDBrug()) + floatval($this->getScores()->getEBrug()) -
+            floatval($this->getScores()->getNBrug()) > 0) ? floatval($this->getScores()->getDBrug()) +
+            floatval($this->getScores()->getEBrug()) - floatval($this->getScores()->getNBrug()) : 0;
+        $totaalBalk = (floatval($this->getScores()->getDBalk()) + floatval($this->getScores()->getEBalk()) -
+            floatval($this->getScores()->getNBalk()) > 0) ? floatval($this->getScores()->getDBalk()) +
+            floatval($this->getScores()->getEBalk()) - floatval($this->getScores()->getNBalk()) : 0;
+        $totaalVloer = (floatval($this->getScores()->getDVloer()) + floatval($this->getScores()->getEVloer()) -
+            floatval($this->getScores()->getNVloer()) > 0) ? floatval($this->getScores()->getDVloer()) +
+            floatval($this->getScores()->getEVloer()) - floatval($this->getScores()->getNVloer()) : 0;
+        $totaalSprong1 = (floatval($this->getScores()->getDSprong1()) + floatval($this->getScores()->getESprong1()) -
+            floatval($this->getScores()->getNSprong1()) > 0) ? floatval($this->getScores()->getDSprong1()) +
+            floatval($this->getScores()->getESprong1()) - floatval($this->getScores()->getNSprong1()) : 0;
+        $totaalSprong2 = (floatval($this->getScores()->getDSprong2()) + floatval($this->getScores()->getESprong2()) -
+            floatval($this->getScores()->getNSprong2()) > 0) ? floatval($this->getScores()->getDSprong2()) +
+            floatval($this->getScores()->getESprong2()) - floatval($this->getScores()->getNSprong2()) : 0;
+        $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
+        $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
+        return [
+            'id' => $this->getId(),
+            'wedstrijdnummer' => $this->getScores()->getWedstrijdnummer(),
+            'naam' => $this->voornaam . ' ' . $this->achternaam,
+            'vereniging' => $this->getUser()->getVereniging()->getNaam() . ' ' . $this->getUser()->getVereniging()
+                    ->getPlaats(),
+            'categorie' => $this->getCategorie(),
+            'niveau' => $this->getNiveau(),
+            'dBrug' => $this->getScores()->getDBrug(),
+            'nBrug' => $this->getScores()->getNBrug(),
+            'totaalBrug' => $totaalBrug,
+            'dBalk' => $this->getScores()->getDBalk(),
+            'nBalk' => $this->getScores()->getNBalk(),
+            'totaalBalk' => $totaalBalk,
+            'dVloer' => $this->getScores()->getDVloer(),
+            'nVloer' => $this->getScores()->getNVloer(),
+            'totaalVloer' => $totaalVloer,
+            'dSprong1' => $this->getScores()->getDSprong1(),
+            'nSprong1' => $this->getScores()->getNSprong1(),
+            'totaalSprong1' => $totaalSprong1,
+            'dSprong2' => $this->getScores()->getDSprong2(),
+            'nSprong2' => $this->getScores()->getNSprong2(),
+            'totaalSprong2' => $totaalSprong2,
+            'totaalSprong' => $totaalSprong,
+            'totaal' => $totaal,
+        ];
+    }
+
     public function getId()
     {
         return $this->id;
