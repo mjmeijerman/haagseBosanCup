@@ -88,7 +88,7 @@ class Scores
     private $nSprong2 = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondSprong = 0;
 
@@ -119,7 +119,7 @@ class Scores
     private $nBrug = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondBrug = 0;
 
@@ -150,7 +150,7 @@ class Scores
     private $nBalk = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondBalk = 0;
 
@@ -181,7 +181,7 @@ class Scores
     private $nVloer = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondVloer = 0;
 
