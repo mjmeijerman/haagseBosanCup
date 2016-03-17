@@ -66,7 +66,11 @@
                             <ul>
                                 {% for submenuItem in menuItem.submenuItems %}
                                     <li {% if loop.index == menuItem.submenuItems|length %}id="last"{% endif %}>
-                                        <a href="{{ path('getContent', { 'page': submenuItem.naam }) }}">{{ submenuItem.naam }}</a>
+                                        {% if submenuItem.naam == 'Uitslagen' %}
+                                            <a href="{{ path('uitslagen') }}" target="_blank">{{ submenuItem.naam }}</a>
+                                        {% else %}
+                                            <a href="{{ path('getContent', { 'page': submenuItem.naam }) }}">{{ submenuItem.naam }}</a>
+                                        {% endif %}
                                     </li>
                                 {% endfor %}
                             </ul>

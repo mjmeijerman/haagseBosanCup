@@ -188,13 +188,34 @@ class BaseController extends Controller
             $results = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
                 ->findBy(['categorie' => $categorie]);
             foreach ($results as $result) {
-                $toegestaneNiveaus[$categorie][$result->getId()] = [
-                    'niveau' => $result->getNiveau(),
-                    'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
-                ];
+                if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
+                $result->getUitslagGepubliceerd()) {
+                    $toegestaneNiveaus[$categorie][$result->getId()] = [
+                        'niveau' => $result->getNiveau(),
+                        'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
+                    ];
+                }
             }
         }
         return $toegestaneNiveaus;
+    }
+
+    protected function checkIfNiveauToegestaan($categorie, $niveau)
+    {
+        /** @var ToegestaneNiveaus $result */
+        $result = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
+            ->findOneBy([
+                'categorie' => $categorie,
+                'niveau' => $niveau,
+            ]);
+        if (!$result) {
+            return false;
+        }
+        if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
+            $result->getUitslagGepubliceerd()) {
+            return true;
+        }
+        return false;
     }
 
     protected function getCategorien()

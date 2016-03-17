@@ -107,6 +107,22 @@ class ContentController extends BaseController
         return new Response($this->getVrijePlekken());
     }
 
+    /**
+     * @Route("/uitslagen/", name="uitslagen")
+     * @Method("GET")
+     */
+    public function uitslagen(Request $request)
+    {
+        if ($request->query->get('categorie') && $request->query->get('niveau') && $this->checkIfNiveauToegestaan
+            ($request->query->get('categorie'), $request->query->get('niveau'))) {
+            die('hoi');
+        }
+        $niveaus = $this->getToegestaneNiveaus();
+        return $this->render('uitslagen/index.html.twig', array(
+            'toegestaneNiveaus' => $niveaus,
+        ));
+    }
+
     private function getNieuwsIndexPage()
     {
         $aantalPlekken = -1;
