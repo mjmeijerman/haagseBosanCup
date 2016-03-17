@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -105,6 +106,66 @@ class ContentController extends BaseController
     {
         $this->updateGereserveerdePlekken();
         return new Response($this->getVrijePlekken());
+    }
+
+    private function getRanking($scores, $order = '')
+    {
+        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
+        foreach ($toestellen as $toestel) {
+            usort($scores, function($a, $b) use ($toestel) {
+                if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
+                    return 0;
+                }
+                return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
+            });
+            for ($i = 1; $i <= count($scores); $i++ ) {
+                if ($i == 1) {
+                    $scores[($i-1)]['rank' . $toestel] = $i;
+                } elseif ($scores[($i-1)]['totaal' . $toestel] == $scores[($i-2)]['totaal' . $toestel]) {
+                    $scores[($i-1)]['rank' . $toestel] = $scores[($i-2)]['rank' . $toestel];
+                } else {
+                    $scores[($i-1)]['rank' . $toestel] = $i;
+                }
+            }
+        }
+        usort($scores, function($a, $b) use ($order) {
+            if ($a['totaal' . $order] == $b['totaal' . $order]) {
+                return 0;
+            }
+            return ($a['totaal' . $order] > $b['totaal' . $order]) ? -1 : 1;
+        });
+        return $scores;
+    }
+
+    /**
+     * @Route("/uitslagen/", name="uitslagen")
+     * @Method("GET")
+     */
+    public function uitslagen(Request $request)
+    {
+        if ($request->query->get('categorie') && $request->query->get('niveau') && $this->checkIfNiveauToegestaan
+            ($request->query->get('categorie'), $request->query->get('niveau'))) {
+            $order = 'totaal';
+            if ($request->query->get('order')) {
+                $order = $request->query->get('order');
+            }
+            /** @var Turnster[] $results */
+            $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
+                ->getIngeschrevenTurnstersCatNiveau($request->query->get('categorie'), $request->query->get('niveau'));
+            $turnsters = [];
+            foreach ($results as $result) {
+                $turnsters[] = $result->getUitslagenLijst();
+            }
+            $turnsters = $this->getRanking($turnsters, $request->query->get('order'));
+            return $this->render('uitslagen/showUitslag.html.twig', [
+                'order' => $order,
+                'turnsters' => $turnsters,
+            ]);
+        }
+        $niveaus = $this->getToegestaneNiveaus();
+        return $this->render('uitslagen/index.html.twig', array(
+            'toegestaneNiveaus' => $niveaus,
+        ));
     }
 
     private function getNieuwsIndexPage()

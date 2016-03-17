@@ -53,6 +53,11 @@ class Scores
     private $groep;
 
     /**
+     * @ORM\Column(type="string", length=55, nullable=true)
+     */
+    private $begintoestel;
+
+    /**
      * @ORM\Column(type="decimal", precision=5, scale=3)
      */
     private $dSprong1 = 0;
@@ -83,7 +88,7 @@ class Scores
     private $nSprong2 = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondSprong = 0;
 
@@ -114,7 +119,7 @@ class Scores
     private $nBrug = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondBrug = 0;
 
@@ -145,7 +150,7 @@ class Scores
     private $nBalk = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondBalk = 0;
 
@@ -176,7 +181,7 @@ class Scores
     private $nVloer = 0;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $getoondVloer = 0;
 
@@ -981,5 +986,28 @@ class Scores
     public function getUpdatedVloer()
     {
         return $this->updatedVloer;
+    }
+
+    /**
+     * Set begintoestel
+     *
+     * @param string $begintoestel
+     * @return Scores
+     */
+    public function setBegintoestel($begintoestel)
+    {
+        $this->begintoestel = $begintoestel;
+
+        return $this;
+    }
+
+    /**
+     * Get begintoestel
+     *
+     * @return string 
+     */
+    public function getBegintoestel()
+    {
+        return $this->begintoestel;
     }
 }

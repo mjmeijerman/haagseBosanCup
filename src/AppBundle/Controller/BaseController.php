@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\SendMail;
+use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vereniging;
@@ -176,6 +177,59 @@ class BaseController extends Controller
         } else {
             return 'Zo';
         }
+    }
+
+    protected function getToegestaneNiveaus()
+    {
+        $toegestaneNiveaus = [];
+        $categorien = $this->getCategorien();
+        foreach ($categorien as $categorie) {
+            /** @var ToegestaneNiveaus[] $results */
+            $results = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
+                ->findBy(['categorie' => $categorie]);
+            foreach ($results as $result) {
+                if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
+                $result->getUitslagGepubliceerd()) {
+                    $toegestaneNiveaus[$categorie][$result->getId()] = [
+                        'niveau' => $result->getNiveau(),
+                        'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
+                    ];
+                }
+            }
+        }
+        return $toegestaneNiveaus;
+    }
+
+    protected function checkIfNiveauToegestaan($categorie, $niveau)
+    {
+        /** @var ToegestaneNiveaus $result */
+        $result = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
+            ->findOneBy([
+                'categorie' => $categorie,
+                'niveau' => $niveau,
+            ]);
+        if (!$result) {
+            return false;
+        }
+        if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
+            $result->getUitslagGepubliceerd()) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function getCategorien()
+    {
+        return [
+            'Voorinstap',
+            'Instap',
+            'Pupil 1',
+            'Pupil 2',
+            'Jeugd 1',
+            'Jeugd 2',
+            'Junior',
+            'Senior',
+        ];
     }
 
     protected function getGroepen()

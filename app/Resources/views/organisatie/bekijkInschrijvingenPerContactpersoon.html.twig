@@ -204,7 +204,7 @@
 					<td>{{ jurylid.dag }}</td>
 					<td>
 					    <div onclick="remove_jurylid('{{ jurylid.id }}',
-								'{{ jurylid.naam }}', '{{ contactpersoon.vereniging }}')"
+								'{{ jurylid.naam }}', '{{ contactpersoon.vereniging }}', '{{ app.request.get('page') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>

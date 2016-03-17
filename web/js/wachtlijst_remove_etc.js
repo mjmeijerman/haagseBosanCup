@@ -37,6 +37,17 @@ function remove_turnster_afgemeld(id, naam, vereniging) {
     }
 }
 
+function remove_niveau(id, categorie, niveau, page) {
+	if (confirm("Weet je zeker dat je " + categorie + ": " + niveau + " wilt verwijderen?")) {
+		var row = document.getElementById('niveau_row_' + id);
+		row.innerHTML = '';
+		$.ajax({
+			type: 'get',
+			url: Routing.generate('niveauVerwijderenAjaxCall', {id: id, page: page})
+		});
+	}
+}
+
 function remove_jurylid(id, naam, vereniging) {
     if (confirm("Weet je zeker dat je " + naam + " van " + vereniging + " wilt verwijderen?")) {
         var row = document.getElementById('jurylid_row_' + id);
