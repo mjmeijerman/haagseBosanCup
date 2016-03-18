@@ -22,23 +22,23 @@ class UitslagenController extends BaseController
     {
         $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
         foreach ($toestellen as $toestel) {
-            usort($scores, function($a, $b) use ($toestel) {
+            usort($scores, function ($a, $b) use ($toestel) {
                 if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
                     return 0;
                 }
                 return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
             });
-            for ($i = 1; $i <= count($scores); $i++ ) {
+            for ($i = 1; $i <= count($scores); $i++) {
                 if ($i == 1) {
-                    $scores[($i-1)]['rank' . $toestel] = $i;
-                } elseif ($scores[($i-1)]['totaal' . $toestel] == $scores[($i-2)]['totaal' . $toestel]) {
-                    $scores[($i-1)]['rank' . $toestel] = $scores[($i-2)]['rank' . $toestel];
+                    $scores[($i - 1)]['rank' . $toestel] = $i;
+                } elseif ($scores[($i - 1)]['totaal' . $toestel] == $scores[($i - 2)]['totaal' . $toestel]) {
+                    $scores[($i - 1)]['rank' . $toestel] = $scores[($i - 2)]['rank' . $toestel];
                 } else {
-                    $scores[($i-1)]['rank' . $toestel] = $i;
+                    $scores[($i - 1)]['rank' . $toestel] = $i;
                 }
             }
         }
-        usort($scores, function($a, $b) use ($order) {
+        usort($scores, function ($a, $b) use ($order) {
             if ($a['totaal' . $order] == $b['totaal' . $order]) {
                 return 0;
             }
@@ -47,12 +47,13 @@ class UitslagenController extends BaseController
         return $scores;
     }
 
-    private function formatScores($turnsters)
+    private function formatScoresForPrijswinnaars($turnsters)
     {
         $waardes = [];
-        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];$count=0;
+        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
+        $count = 0;
         foreach ($toestellen as $toestel) {
-            usort($turnsters, function($a, $b) use ($toestel) {
+            usort($turnsters, function ($a, $b) use ($toestel) {
                 if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
                     return 0;
                 }
@@ -75,10 +76,26 @@ class UitslagenController extends BaseController
         return $waardes;
     }
 
+    private function uitslagenPdf(Request $request, $turnsters)
+    {
+        $pdf = new UitslagenPdfController('L', 'mm', 'A4');
+        $pdf->setCategorie($request->query->get('categorie'));
+        $pdf->setNiveau($request->query->get('niveau'));
+        $pdf->SetLeftMargin(7);
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->Table($turnsters);
+        return new Response($pdf->Output(
+            $request->query->get('categorie') . "_" . $request->query->get('niveau') . ".pdf", "I"
+        ), 200, [
+            'Content-Type' => 'application/pdf'
+        ]);
+    }
+
     private function prijswinnaarsPdf(Request $request, $turnsters)
     {
-        $waardes = $this->formatScores($turnsters);
-        $pdf = new PrijswinnaarsPdfController('L','mm','A4');
+        $waardes = $this->formatScoresForPrijswinnaars($turnsters);
+        $pdf = new PrijswinnaarsPdfController('L', 'mm', 'A4');
         $pdf->setCategorie($request->query->get('categorie'));
         $pdf->setNiveau($request->query->get('niveau'));
         $pdf->SetLeftMargin(7);
@@ -97,7 +114,8 @@ class UitslagenController extends BaseController
     public function uitslagen(Request $request)
     {
         if ($request->query->get('categorie') && $request->query->get('niveau') && $this->checkIfNiveauToegestaan
-            ($request->query->get('categorie'), $request->query->get('niveau'))) {
+            ($request->query->get('categorie'), $request->query->get('niveau'))
+        ) {
             $order = 'totaal';
             if ($request->query->get('order')) {
                 $order = $request->query->get('order');
@@ -112,6 +130,8 @@ class UitslagenController extends BaseController
             $turnsters = $this->getRanking($turnsters, $request->query->get('order'));
             if ($request->query->get('prijswinnaars')) {
                 return $this->prijswinnaarsPdf($request, $turnsters);
+            } elseif ($request->query->get('pdf')) {
+                return $this->uitslagenPdf($request, $turnsters);
             }
             return $this->render('uitslagen/showUitslag.html.twig', [
                 'order' => $order,
