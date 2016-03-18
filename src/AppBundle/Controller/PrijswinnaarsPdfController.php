@@ -19,15 +19,15 @@ class PrijswinnaarsPdfController extends AlphaPDFController
     function Header()
     {
         $this->SetFillColor(127);
-		$this->Rect(0,0,297,42,'F');
-		$this->Image('images/pdf_background_landscape.png', -10, -10);
-		$this->Image('images/HBCFactuurheader.png', 30, 4);
-        $this->Ln(43);
+		$this->Rect(0,0,297,32,'F');
+		$this->Image('images/pdf_background_landscape.png', 0, 0);
+		$this->Image('images/HBCFactuurheader.png', 30, -1);
+        $this->Ln(40);
         $this->SetTextColor(0, 0, 0);
-        $this->SetFont('Helvetica', 'B', 15);
+        $this->SetFont('Helvetica', 'B', 20);
         $this->Cell(277, 10, "Haagse Bosan Cup " . date('Y', time()) . ": Prijswinnaars " . $this->categorie . " " .
             $this->niveau, 0, 1, 'C');
-		$this->Ln(10);
+		$this->Ln(14);
     }
 
     function Footer()
