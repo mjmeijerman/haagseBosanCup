@@ -263,8 +263,8 @@ class ContactpersoonController extends BaseController
                             $turnster->setScores($scores);
                             $turnster->setUser($this->getUser());
                             $turnster->setIngevuld(true);
-                            $turnster->setVoornaam($request->request->get('voornaam'));
-                            $turnster->setAchternaam($request->request->get('achternaam'));
+                            $turnster->setVoornaam(trim($request->request->get('voornaam')));
+                            $turnster->setAchternaam(trim($request->request->get('achternaam')));
                             $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
                             $turnster->setCategorie($this->getCategorie($request->request->get('geboorteJaar')));
                             $turnster->setNiveau($request->request->get('niveau'));
@@ -403,8 +403,8 @@ class ContactpersoonController extends BaseController
                             }
                             if (!(in_array(false, $validationTurnster))) {
                                 $turnster = $result;
-                                $turnster->setVoornaam($request->request->get('voornaam'));
-                                $turnster->setAchternaam($request->request->get('achternaam'));
+                                $turnster->setVoornaam(trim($request->request->get('voornaam')));
+                                $turnster->setAchternaam(trim($request->request->get('achternaam')));
                                 $turnster->setGeboortejaar($request->request->get('geboorteJaar'));
                                 $turnster->setCategorie($this->getCategorie($request->request->get('geboorteJaar')));
                                 $turnster->setNiveau($request->request->get('niveau'));
@@ -593,8 +593,8 @@ class ContactpersoonController extends BaseController
                         }
                         if (!(in_array(false, $validationJury))) {
                             $jurylid = new Jurylid();
-                            $jurylid->setVoornaam($request->request->get('voornaam'));
-                            $jurylid->setAchternaam($request->request->get('achternaam'));
+                            $jurylid->setVoornaam(trim($request->request->get('voornaam')));
+                            $jurylid->setAchternaam(trim($request->request->get('achternaam')));
                             $jurylid->setEmail($request->request->get('email'));
                             $jurylid->setBrevet($request->request->get('brevet'));
                             $jurylid->setOpmerking($request->request->get('opmerking'));
@@ -771,8 +771,8 @@ class ContactpersoonController extends BaseController
                             }
                             if (!(in_array(false, $validationJury))) {
                                 $jurylid = $result;
-                                $jurylid->setVoornaam($request->request->get('voornaam'));
-                                $jurylid->setAchternaam($request->request->get('achternaam'));
+                                $jurylid->setVoornaam(trim($request->request->get('voornaam')));
+                                $jurylid->setAchternaam(trim($request->request->get('achternaam')));
                                 $jurylid->setEmail($request->request->get('email'));
                                 $jurylid->setBrevet($request->request->get('brevet'));
                                 $jurylid->setOpmerking($request->request->get('opmerking'));

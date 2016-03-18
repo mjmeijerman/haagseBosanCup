@@ -40,8 +40,8 @@ class InschrijvingController extends BaseController
                                 /** @var Turnster $turnster */
                                 if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
                                     ->findOneBy(['id' => trim($id)])) {
-                                    $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                                    $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                                    $turnster->setVoornaam(trim($request->request->get('voornaam_' . trim($id))));
+                                    $turnster->setAchternaam(trim($request->request->get('achternaam_' . trim($id))));
                                     $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
                                     $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
                                     $turnster->setCategorie($this->getCategorie($request->request->get
@@ -62,8 +62,8 @@ class InschrijvingController extends BaseController
                                     $turnster->setScores($scores);
                                     $turnster->setUser($user);
                                     $turnster->setIngevuld(true);
-                                    $turnster->setVoornaam($request->request->get('voornaam_' . trim($id)));
-                                    $turnster->setAchternaam($request->request->get('achternaam_' . trim($id)));
+                                    $turnster->setVoornaam(trim($request->request->get('voornaam_' . trim($id))));
+                                    $turnster->setAchternaam(trim($request->request->get('achternaam_' . trim($id))));
                                     $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
                                     $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
                                     $user->addTurnster($turnster);
@@ -76,8 +76,8 @@ class InschrijvingController extends BaseController
                                 && $request->request->get('jury_email_' . $i) && $request->request->get('jury_brevet_' . $i)
                                 && $request->request->get('jury_dag_'. $i)) {
                                 $jurylid = new Jurylid();
-                                $jurylid->setVoornaam($request->request->get('jury_voornaam_' . $i));
-                                $jurylid->setAchternaam($request->request->get('jury_achternaam_' . $i));
+                                $jurylid->setVoornaam(trim($request->request->get('jury_voornaam_' . $i)));
+                                $jurylid->setAchternaam(trim($request->request->get('jury_achternaam_' . $i)));
                                 $jurylid->setEmail($request->request->get('jury_email_' . $i));
                                 $jurylid->setBrevet($request->request->get('jury_brevet_' . $i));
                                 $jurylid->setOpmerking($request->request->get('jury_opmerking_' . $i));
@@ -269,7 +269,7 @@ class InschrijvingController extends BaseController
                             if (strlen($request->request->get('verenigingsnaam')) > 1) {
                                 $validationVereniging['verenigingsnaam'] = true;
                                 $classNames['verenigingsnaam'] = 'succesIngevuld';
-                                $vereniging->setNaam($request->request->get('verenigingsnaam'));
+                                $vereniging->setNaam(trim(strtoupper($request->request->get('verenigingsnaam'))));
                             } else {
                                 $this->addFlash(
                                     'error',
@@ -280,7 +280,7 @@ class InschrijvingController extends BaseController
                             if (strlen($request->request->get('verenigingsplaats')) > 1) {
                                 $validationVereniging['verenigingsplaats'] = true;
                                 $classNames['verenigingsplaats'] = 'succesIngevuld';
-                                $vereniging->setPlaats($request->request->get('verenigingsplaats'));
+                                $vereniging->setPlaats(trim(strtoupper($request->request->get('verenigingsplaats'))));
                             } else {
                                 $this->addFlash(
                                     'error',
@@ -444,8 +444,8 @@ class InschrijvingController extends BaseController
                             $contactpersoon->setUsername($request->request->get('username'));
                             $contactpersoon->setRole('ROLE_CONTACT');
                             $contactpersoon->setEmail($request->request->get('email'));
-                            $contactpersoon->setVoornaam($request->request->get('voornaam'));
-                            $contactpersoon->setAchternaam($request->request->get('achternaam'));
+                            $contactpersoon->setVoornaam(trim($request->request->get('voornaam')));
+                            $contactpersoon->setAchternaam(trim($request->request->get('achternaam')));
                             $password = $request->request->get('wachtwoord');
                             $encoder = $this->container
                                 ->get('security.encoder_factory')

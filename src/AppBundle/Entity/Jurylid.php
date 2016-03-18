@@ -107,7 +107,7 @@ class Jurylid
      */
     public function setVoornaam($voornaam)
     {
-        $this->voornaam = $voornaam;
+        $this->voornaam = trim($voornaam);
 
         return $this;
     }
@@ -130,7 +130,7 @@ class Jurylid
      */
     public function setAchternaam($achternaam)
     {
-        $this->achternaam = $achternaam;
+        $this->achternaam = trim($achternaam);
 
         return $this;
     }

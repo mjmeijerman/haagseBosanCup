@@ -67,7 +67,7 @@ class Vereniging
      */
     public function setNaam($naam)
     {
-        $this->naam = $naam;
+        $this->naam = trim(strtoupper($naam));
 
         return $this;
     }
@@ -90,7 +90,7 @@ class Vereniging
      */
     public function setPlaats($plaats)
     {
-        $this->plaats = $plaats;
+        $this->plaats = trim(strtoupper($plaats));
 
         return $this;
     }

@@ -234,7 +234,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        $this->username = trim($username);
 
         return $this;
     }
@@ -270,7 +270,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = trim($email);
 
         return $this;
     }
@@ -293,7 +293,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setVoornaam($voornaam)
     {
-        $this->voornaam = $voornaam;
+        $this->voornaam = trim($voornaam);
 
         return $this;
     }
@@ -316,7 +316,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setAchternaam($achternaam)
     {
-        $this->achternaam = $achternaam;
+        $this->achternaam = trim($achternaam);
 
         return $this;
     }

@@ -166,7 +166,7 @@ class Turnster
      */
     public function setVoornaam($voornaam)
     {
-        $this->voornaam = $voornaam;
+        $this->voornaam = trim($voornaam);
 
         return $this;
     }
@@ -189,7 +189,7 @@ class Turnster
      */
     public function setAchternaam($achternaam)
     {
-        $this->achternaam = $achternaam;
+        $this->achternaam = trim($achternaam);
 
         return $this;
     }
