@@ -78,7 +78,7 @@ class UitslagenController extends BaseController
     private function prijswinnaarsPdf(Request $request, $turnsters)
     {
         $waardes = $this->formatScores($turnsters);
-        $pdf = new UitslagenPdfController('L','mm','A4');
+        $pdf = new PrijswinnaarsPdfController('L','mm','A4');
         $pdf->setCategorie($request->query->get('categorie'));
         $pdf->setNiveau($request->query->get('niveau'));
         $pdf->SetLeftMargin(7);

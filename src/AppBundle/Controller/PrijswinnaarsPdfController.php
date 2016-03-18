@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Controller;
 
-class UitslagenPdfController extends AlphaPDFController
+class PrijswinnaarsPdfController extends AlphaPDFController
 {
     private $categorie;
     private $niveau;
