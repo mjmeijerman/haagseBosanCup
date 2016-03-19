@@ -143,4 +143,50 @@ class UitslagenController extends BaseController
             'toegestaneNiveaus' => $niveaus,
         ));
     }
+
+    /**
+     * @Route("/diplomaWedstrijdnummerPdf/", name="diplomaWedstrijdnummerPdf")
+     * @Method("GET")
+     */
+    public function diplomaWedstrijdnummerPdf()
+    {
+        /** @var Turnster[] $results */
+        $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
+            ->findBy([
+                'wachtlijst' => 0,
+                'afgemeld' => 0,
+            ]);
+        $turnsters = [];
+        foreach ($results as $result) {
+            $turnsters[] = [
+                'id'  => $result->getId(),
+                'categorie' => $result->getCategorie(),
+                'niveau' => $result->getNiveau(),
+                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .$result->getUser()
+                        ->getVereniging()->getPlaats(),
+                'wedstrijdnummer' => $result->getScores()->getWedstrijdnummer(),
+            ];
+        }
+        usort($turnsters, function ($a, $b) {
+            return ($a['wedstrijdnummer'] < $b['wedstrijdnummer']) ? -1 : 1;
+        });
+        $pdf = new DiplomaPdfController('L', 'mm', 'A5');
+        $pdf->SetMargins(0,0);
+        $pdf->AddFont('Gotham','','Gotham-Light.php');
+        $pdf->AddFont('Franklin','','Frabk.php');
+
+        foreach ($turnsters as $turnster) {
+            $pdf->AddPage();
+            $pdf->Wedstrijdnummer($turnster);
+            $pdf->AddPage();
+            $pdf->SetFont('Gotham','',18);
+            $pdf->HeaderDiploma();
+            $pdf->FooterDiploma(self::DATUM_HBC);
+            $pdf->ContentDiploma($turnster);
+        }
+        return new Response($pdf->Output(), 200, [
+            'Content-Type' => 'application/pdf'
+        ]);
+    }
 }

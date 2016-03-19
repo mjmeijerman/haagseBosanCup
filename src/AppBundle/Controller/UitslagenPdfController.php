@@ -91,7 +91,7 @@ class UitslagenPdfController extends AlphaPDFController
             } else {
                 $this->Cell(5,6,$turnster['rankBrug'],1,0);
             }
-            
+
             $this->Cell(8,6,$turnster['dBalk'],1,0);
             $this->Cell(8,6,$turnster['nBalk'],1,0);
             $this->Cell(11,6,$turnster['totaalBalk'],1,0);
