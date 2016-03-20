@@ -840,6 +840,40 @@ class OrganisatieController extends BaseController
     }
 
     /**
+     * @Route("/organisatie/Instellingen/publiceeerUitslag/{id}",
+     * name="publiceeerUitslagAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function publiceeerUitslagAjaxCall($id)
+    {
+        /** @var ToegestaneNiveaus $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $result->setUitslagGepubliceerd(1);
+            $this->addToDB($result);
+        }
+        return new Response('true');
+    }
+
+    /**
+     * @Route("/organisatie/Instellingen/annuleerPubliceren/{id}",
+     * name="annuleerPublicerenAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function annuleerPublicerenAjaxCall($id)
+    {
+        /** @var ToegestaneNiveaus $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $result->setUitslagGepubliceerd(0);
+            $this->addToDB($result);
+        }
+        return new Response('true');
+    }
+
+    /**
      * @Route("/organisatie/bekijkInschrijvingenPerNiveau/removeOrganisatieJury/{id}",
      * name="removeOrganisatieJuryAjaxCall", options={"expose"=true})
      * @Method("GET")

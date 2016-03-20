@@ -49,9 +49,13 @@
                         <td>{{ data.niveau }}</td>
                         <td>
                             {% if data.uitslagGepubliceerd %}
-                                Uitslag gepubliceerd (ongedaan maken)
+                                <span class="gepubliceerd" id="uitslag_{{ id }}" onclick="uitslag_publiceren
+                                ('{{ id }}')" style="cursor: pointer;">Uitslag gepubliceerd (ongedaan maken)
+                                </span>
                             {% else %}
-                                Uitslag publiceren
+                                <span class="niet_gepubliceerd" id="uitslag_{{ id }}" onclick="uitslag_publiceren('{{
+                                 id }}')"
+                                style="cursor: pointer;">Uitslag publiceren</span>
                             {% endif %}
                         </td>
                         <td>
@@ -175,6 +179,28 @@
             var fieldName = this.id.replace('txt_', '');
             onChange(data, fieldName, 'editInstellingen');
         });
+
+        function uitslag_publiceren(id)
+        {
+            var uitslag_span = document.getElementById('uitslag_' + id);
+            if (uitslag_span.className == "niet_gepubliceerd") {
+                uitslag_span.className = "gepubliceerd";
+                uitslag_span.innerHTML = "Uitslag gepubliceerd (ongedaan maken)";
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('publiceeerUitslagAjaxCall', {id: id})
+                });
+            } else {
+                uitslag_span.className = "niet_gepubliceerd";
+                uitslag_span.innerHTML = "Uitslag publiceren";
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('annuleerPublicerenAjaxCall', {id: id})
+                });
+            }
+        }
+
+
     </script>
         <script src="{{ asset('js/wachtlijst_remove_etc.js') }}"></script>
 {% endblock %}
