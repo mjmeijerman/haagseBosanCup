@@ -63,8 +63,8 @@ class UitslagenPdfController extends AlphaPDFController
             $this->SetFillColor(255,255,0);
             $this->SetFont('Helvetica','',7);
             $this->Cell(8,6,$turnster['wedstrijdnummer'],1,0);
-            $this->Cell(35,6,$turnster['naam'],1,0);
-            $this->Cell(55,6,$turnster['vereniging'],1,0);
+            $this->Cell(35,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),1,0);
+            $this->Cell(55,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),1,0);
 
             $this->Cell(8,6,$turnster['dSprong1'],1,0);
             $this->Cell(8,6,$turnster['nSprong1'],1,0);
