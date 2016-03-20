@@ -158,11 +158,13 @@ class DiplomaPdfController extends AlphaPDFController
 
     function Wedstrijdnummer($turnster)
     {
-        $this->SetFont('Helvetica','',20);
-        $this->Ln(30);
+		$this->SetFont('Helvetica','',20);
+        $this->Ln(15);
         $this->Cell(210,15,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),0,1,"C");
-        $this->SetFont('Helvetica','',130);
+		$this->Ln(16);
+        $this->SetFont('Helvetica','',200);
         $this->Cell(210,62,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['wedstrijdnummer']),0,1,"C");
+		$this->Ln(10);
         $this->SetFont('Helvetica','',20);
         $this->Cell(210,10,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),0,0,"C");
     }
