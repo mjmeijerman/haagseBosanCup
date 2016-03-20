@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Scores;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,6 +193,39 @@ class UitslagenController extends BaseController
         }
         return new Response($pdf->Output(), 200, [
             'Content-Type' => 'application/pdf'
+        ]);
+    }
+
+    /**
+     * @Route("/scores/", name="scores")
+     * @Method("GET")
+     */
+    public function scores(Request $request)
+    {
+        $activeBaan = '';
+        $banen = $this->getDoctrine()->getRepository("AppBundle:Scores")
+            ->getBanen();
+        $turnsters = [];
+        foreach ($banen as $baan) {
+            if ($baan['baan'] == $request->query->get('baan')) {
+                $activeBaan = $request->query->get('baan');
+                $repo = $this->getDoctrine()->getRepository("AppBundle:Scores");
+                $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer'];
+                foreach ($toestellen as $toestel) {
+                    $turnsters[$toestel] = [];
+                    /** @var Scores[] $results */
+                    $results = $repo->getLiveScoresPerBaanPerToestel($activeBaan, $toestel);
+                    foreach ($results as $result) {
+                        $turnsters[$toestel][] = $result->getScores();
+                    }
+                }
+                break;
+            }
+        }
+        return $this->render('uitslagen/scores.html.twig', [
+            'banen' => $banen,
+            'activeBaan' => $activeBaan,
+            'turnsters' => $turnsters,
         ]);
     }
 }

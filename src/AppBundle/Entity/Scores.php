@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Turnster;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ScoresRepository")
  * @ORM\Table(name="scores")
  */
 class Scores
@@ -195,6 +195,53 @@ class Scores
      * @var \DateTime
      */
     private $updatedVloer;
+
+    public function getScores()
+    {
+        $totaalBrug = (floatval($this->getDBrug()) + floatval($this->getEBrug()) -
+            floatval($this->getNBrug()) > 0) ? floatval($this->getDBrug()) +
+            floatval($this->getEBrug()) - floatval($this->getNBrug()) : 0;
+        $totaalBalk = (floatval($this->getDBalk()) + floatval($this->getEBalk()) -
+            floatval($this->getNBalk()) > 0) ? floatval($this->getDBalk()) +
+            floatval($this->getEBalk()) - floatval($this->getNBalk()) : 0;
+        $totaalVloer = (floatval($this->getDVloer()) + floatval($this->getEVloer()) -
+            floatval($this->getNVloer()) > 0) ? floatval($this->getDVloer()) +
+            floatval($this->getEVloer()) - floatval($this->getNVloer()) : 0;
+        $totaalSprong1 = (floatval($this->getDSprong1()) + floatval($this->getESprong1()) -
+            floatval($this->getNSprong1()) > 0) ? floatval($this->getDSprong1()) +
+            floatval($this->getESprong1()) - floatval($this->getNSprong1()) : 0;
+        $totaalSprong2 = (floatval($this->getDSprong2()) + floatval($this->getESprong2()) -
+            floatval($this->getNSprong2()) > 0) ? floatval($this->getDSprong2()) +
+            floatval($this->getESprong2()) - floatval($this->getNSprong2()) : 0;
+        $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
+        $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
+        return [
+            'userId' => $this->getTurnster()->getUser()->getId(),
+            'wedstrijdnummer' => $this->getWedstrijdnummer(),
+            'naam' => $this->getTurnster()->getVoornaam() . ' ' . $this->getTurnster()->getAchternaam(),
+            'vereniging' => $this->getTurnster()->getUser()->getVereniging()->getNaam() . ' ' . $this->getTurnster()
+                ->getUser()->getVereniging()->getPlaats(),
+            'categorie' => $this->getTurnster()->getCategorie(),
+            'niveau' => $this->getTurnster()->getNiveau(),
+            'dBrug' => number_format($this->getDBrug(), 2, ",", "."),
+            'nBrug' => number_format($this->getNBrug(), 2, ",", "."),
+            'totaalBrug' => number_format($totaalBrug, 3, ",", "."),
+            'dBalk' => number_format($this->getDBalk(), 2, ",", "."),
+            'nBalk' => number_format($this->getNBalk(), 2, ",", "."),
+            'totaalBalk' => number_format($totaalBalk, 3, ",", "."),
+            'dVloer' => number_format($this->getDVloer(), 2, ",", "."),
+            'nVloer' => number_format($this->getNVloer(), 2, ",", "."),
+            'totaalVloer' => number_format($totaalVloer, 3, ",", "."),
+            'dSprong1' => number_format($this->getDSprong1(), 2, ",", "."),
+            'nSprong1' => number_format($this->getNSprong1(), 2, ",", "."),
+            'totaalSprong1' => number_format($totaalSprong1, 3, ",", "."),
+            'dSprong2' => number_format($this->getDSprong2(), 2, ",", "."),
+            'nSprong2' => number_format($this->getNSprong2(), 2, ",", "."),
+            'totaalSprong2' => number_format($totaalSprong2, 3, ",", "."),
+            'totaalSprong' => number_format($totaalSprong, 3, ",", "."),
+            'totaal' => number_format($totaal, 3, ",", "."),
+        ];
+    }
 
     /**
      * Get id
