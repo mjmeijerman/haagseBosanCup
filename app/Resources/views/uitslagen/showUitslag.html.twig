@@ -79,7 +79,11 @@
             </tr>
 
             {% for turnster in turnsters %}
-                <tr>
+                {% if turnster.userId == userId %}
+                    <tr style="background-color: rgb(245,245,167);">
+                {% else %}
+                    <tr>
+                {% endif %}
                     <td>{{ turnster.wedstrijdnummer }}</td>
                     <td>{{ turnster.naam }}</td>
                     <td>{{ turnster.vereniging }}</td>

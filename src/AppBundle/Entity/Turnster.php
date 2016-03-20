@@ -127,6 +127,7 @@ class Turnster
         $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
         return [
             'id' => $this->getId(),
+            'userId' => $this->getUser()->getId(),
             'wedstrijdnummer' => $this->getScores()->getWedstrijdnummer(),
             'naam' => $this->voornaam . ' ' . $this->achternaam,
             'vereniging' => $this->getUser()->getVereniging()->getNaam() . ' ' . $this->getUser()->getVereniging()

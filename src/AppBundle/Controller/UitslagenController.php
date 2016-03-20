@@ -76,7 +76,7 @@ class UitslagenController extends BaseController
         return $waardes;
     }
 
-    private function uitslagenPdf(Request $request, $turnsters)
+    private function uitslagenPdf(Request $request, $turnsters, $userId)
     {
         $pdf = new UitslagenPdfController('L', 'mm', 'A4');
         $pdf->setCategorie($request->query->get('categorie'));
@@ -84,7 +84,7 @@ class UitslagenController extends BaseController
         $pdf->SetLeftMargin(7);
         $pdf->AliasNbPages();
         $pdf->AddPage();
-        $pdf->Table($turnsters);
+        $pdf->Table($turnsters, $userId);
         return new Response($pdf->Output(
             $request->query->get('categorie') . "_" . $request->query->get('niveau') . ".pdf", "I"
         ), 200, [
@@ -116,6 +116,10 @@ class UitslagenController extends BaseController
         if ($request->query->get('categorie') && $request->query->get('niveau') && $this->checkIfNiveauToegestaan
             ($request->query->get('categorie'), $request->query->get('niveau'))
         ) {
+            $userId = 0;
+            if ($this->getUser()) {
+                $userId = $this->getUser()->getId();
+            }
             $order = 'totaal';
             if ($request->query->get('order')) {
                 $order = $request->query->get('order');
@@ -131,11 +135,12 @@ class UitslagenController extends BaseController
             if ($request->query->get('prijswinnaars')) {
                 return $this->prijswinnaarsPdf($request, $turnsters);
             } elseif ($request->query->get('pdf')) {
-                return $this->uitslagenPdf($request, $turnsters);
+                return $this->uitslagenPdf($request, $turnsters, $userId);
             }
             return $this->render('uitslagen/showUitslag.html.twig', [
                 'order' => $order,
                 'turnsters' => $turnsters,
+                'userId' => $userId,
             ]);
         }
         $niveaus = $this->getToegestaneNiveaus();
