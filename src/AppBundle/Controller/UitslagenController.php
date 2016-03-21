@@ -234,7 +234,7 @@ class UitslagenController extends BaseController
     }
 
     /**
-     * @Route("/organisatie/Juryzaken/juryBadges", name="juryBadges")
+     * @Route("/organisatie/Juryzaken/juryBadges/", name="juryBadges")
      * @Method("GET")
      */
     function juryBadges()
@@ -257,7 +257,7 @@ class UitslagenController extends BaseController
                 ];
             }
         }
-        $pdf = new JuryBadgePdfController('L','mm',[85.6,53.98]);
+        $pdf = new JurybadgePdfController('L','mm',[85.6,53.98]);
         $pdf->setDatumHBC(self::DATUM_HBC);
         $pdf->SetMargins(0,0);
         $pdf->AddFont('Gotham','','Gotham-Light.php');
