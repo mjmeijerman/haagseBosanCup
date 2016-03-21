@@ -10,7 +10,7 @@
                 {% for baan in banen %}
                     <td>
                     {% if activeBaan == baan.baan %}
-                            <a id="active">
+                        <a id="active">
                     {% else %}
                         <a href="{{ path('scores', { 'baan': baan.baan }) }}">
                     {% endif %}
