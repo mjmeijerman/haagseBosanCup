@@ -85,7 +85,7 @@ class PrijswinnaarsPdfController extends AlphaPDFController
                         if (isset($waardes[$k][$i][$j])) {
                             $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", $waardes[$k][$i][$j]), 1, 0);
                         } else {
-                            $this->Cell($w[$j], 7, '', 1, 0);
+                            $this->Cell($w[$j], 7, '', 0, 0);
                         }
 
                     }
@@ -124,7 +124,7 @@ class PrijswinnaarsPdfController extends AlphaPDFController
                         if (isset($waardes[$k][$i][$j])) {
                             $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", $waardes[$k][$i][$j]), 1, 0);
                         } else {
-                            $this->Cell($w[$j], 7, '', 1, 0);
+                            $this->Cell($w[$j], 7, '', 0, 0);
                         }
                     }
                 }
