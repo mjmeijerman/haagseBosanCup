@@ -205,6 +205,9 @@ class UitslagenController extends BaseController
         $activeBaan = '';
         $banen = $this->getDoctrine()->getRepository("AppBundle:Scores")
             ->getBanen();
+        usort($banen, function($a, $b){
+            return ($a['baan'] < $b['baan']) ? -1 : 1;
+        });
         $turnsters = [];
         foreach ($banen as $baan) {
             if ($baan['baan'] == $request->query->get('baan')) {
