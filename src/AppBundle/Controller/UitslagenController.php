@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -230,5 +231,41 @@ class UitslagenController extends BaseController
             'activeBaan' => $activeBaan,
             'turnsters' => $turnsters,
         ]);
+    }
+
+    /**
+     * @Route("/organisatie/Juryzaken/juryBadges", name="juryBadges")
+     * @Method("GET")
+     */
+    function juryBadges()
+    {
+        $juryleden = [];
+        /** @var Jurylid[] $results */
+        $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->findAll();
+        foreach ($results as $result) {
+            if ($result->getZaterdag()) {
+                $juryleden[] = [
+                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'dag' => 'Zaterdag',
+                ];
+            }
+            if ($result->getZondag()) {
+                $juryleden[] = [
+                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'dag' => 'Zondag',
+                ];
+            }
+        }
+        $pdf = new JuryBadgePdfController('L','mm',[85.6,53.98]);
+        $pdf->setDatumHBC(self::DATUM_HBC);
+        $pdf->SetMargins(0,0);
+        $pdf->AddFont('Gotham','','Gotham-Light.php');
+        $pdf->AddFont('Franklin','','Frabk.php');
+        foreach ($juryleden as $jurylid) {
+            $pdf->AddPage();
+            $pdf->badgeContent($jurylid);
+        }
+        $pdf->Output();
     }
 }
