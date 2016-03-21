@@ -23,7 +23,7 @@
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
-                                <td>{{ jurylid.dag }}</td>
+                                <td id="{{ jurylid.id }}" class="edit">{{ jurylid.dag }}</td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
                                 <td>
@@ -69,7 +69,7 @@
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
-                                <td>{{ jurylid.dag }}</td>
+                                <td id="{{ jurylid.id }}" class="edit">{{ jurylid.dag }}</td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
                                 <td>
@@ -99,4 +99,18 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/wachtlijst_remove_etc.js') }}"></script>
+    <script src="{{ asset('js/EditFieldByClicking.js') }}"></script>
+    <script>
+        $('.edit').click(function () {
+            var data = $(this).text();
+            var fieldName = this.id;
+                onClickJurydag(data, fieldName, 'number');
+        });
+        $(document).on('blur keypress', '.txt_edit', function (e) {
+            if (e.type === 'keypress' && e.keyCode !== 13) return;
+            var data = $(this).val();
+            var fieldName = this.id.replace('txt_', '');
+            //onChange(data, fieldName, 'editJurydag');
+        });
+    </script>
 {% endblock %}

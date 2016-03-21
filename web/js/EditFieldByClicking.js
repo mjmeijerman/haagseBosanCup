@@ -44,3 +44,7 @@ function onClick(data, fieldName, type) {
     }
     $('#txt_' + fieldName).focus();
 }
+
+function onClickJurydag(data, fieldName) {
+    console.log('hoi' + data + fieldName);
+}
