@@ -3,7 +3,10 @@ namespace AppBundle\Controller;
 
 class WedstrijdIndelingPdfController extends AlphaPDFController
 {
-    private $datumHBC;
+    protected $wedstrijddag;
+    protected $wedstrijdronde;
+    protected $baan;
+    protected $datumHBC;
 
     /**
      * @param mixed $datumHBC
@@ -13,29 +16,69 @@ class WedstrijdIndelingPdfController extends AlphaPDFController
         $this->datumHBC = $datumHBC;
     }
 
+    /**
+     * @param mixed $baan
+     */
+    public function setBaan($baan)
+    {
+        $this->baan = $baan;
+    }
+
+    /**
+     * @param mixed $wedstrijdronde
+     */
+    public function setWedstrijdronde($wedstrijdronde)
+    {
+        $this->wedstrijdronde = $wedstrijdronde;
+    }
+
+    /**
+     * @param mixed $wedstrijddag
+     */
+    public function setWedstrijddag($wedstrijddag)
+    {
+        $this->wedstrijddag = $wedstrijddag;
+    }
+
+
     function Header()
     {
         //BACKGROUND
-        $this->Image('images/BadgeBackground.png',0,0);	//BACKGROUND2: 0,45		BACKGROUND3: 17,77
+        $this->Image('images/background4.png',0,0);	//BACKGROUND2: 0,45		BACKGROUND3: 17,77
         //			$this->SetFillColor(127);
         //			$this->Rect(0,0,210,35,'F');
         //LOGO
         $this->SetFillColor(0);
         $this->SetAlpha(0.5);
-        $this->Rect(0,0,85.6,11,'F');
+        $this->Rect(0,0,297,35,'F');
         $this->SetAlpha(1);
-        $this->Image('images/BadgeHeader.png',0,0);
+        $this->Image('images/HBCFactuurHeader.png',0,0);
 
-        //LINKS EN DATUM
-        $this->SetFont('Gotham','',8);
-        $this->SetTextColor(0,0,0);
-        $this->SetAlpha(0.6);
-        $this->Text(30.1,14,'- ' . $this->datumHBC . ' -');
+        //TITEL
+        $this->SetFont('Gotham','',20);
+        $this->SetTextColor(0);
+        $this->Ln(37.5);
+        $this->SetFillColor(51,51,51);
+        $this->Cell(210,10,'- Wedstrijdindeling ' . $this->wedstrijddag . ' -',0,1,'C');
+        $this->Cell(210,10,'Wedstrijd ' . $this->wedstrijdronde . ', Baan ' . $this->baan,0,1,'C');
     }
 
+    //FOOTER
     function Footer()
     {
+        $this->SetX(3);
+        $this->SetAlpha(0.6);
+        $this->SetFont('Gotham','',12);
+        $this->SetTextColor(0);
 
+        //DONAR SITE
+        $this->Text(3,294,'www.donargym.nl');
+
+        //HBC SITE
+        $this->Text(154,294,'www.haagsebosancup.nl');
+
+        //DATUM
+        $this->Text(87,294,'- ' . $this->datumHBC . ' -');
     }
 
     //ROUNDED RECTANGLE
@@ -96,50 +139,37 @@ class WedstrijdIndelingPdfController extends AlphaPDFController
             $x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
     }
 
-    function badgeContent($jurylid)
+    function wedstrijdIndelingContent($turnsters, $userId)
     {
-        $this->SetFont('Gotham','',12);
-        $this->SetTextColor(0,0,0);
-
-        //TODO: DAG NOG ERGENS INVOEGEN, GEBRUIK $jurylid['dag'] op dezelfde manier als de naam
-
-        //NAAM
-        //FILL
-        $this->SetFillColor(255,255,0);
-        $this->SetAlpha(0.5);
-        $this->RoundedRect(3,24.7,80,8,2,'F');
-        $this->SetAlpha(1);
-
-        //TEKST
-        $this->Ln(29);
-        $this->SetFont('Gotham','',16);
-        $this->Cell(85.6,0,iconv("UTF-8", "CP1250//TRANSLIT", $jurylid['naam']),0,1,'C');
-
-        //TAAK
-        $this->SetFont('Gotham','',12);
-        $this->Text(33,37,'JURYLID');
-
-        //DAGEN
-        //FILL
-        $this->SetAlpha(0.5);
-        $this->SetFillColor(0);
-        $this->RoundedRect(3,45.98,30,5,1,'F'); //LUNCH
-        $this->RoundedRect(52.6,45.98,30,5,1,'F'); //DINER
-        $this->SetAlpha(1);
-
-        //TEKST
-        $this->SetTextColor(255,255,0);
-        $this->SetFontSize(10);
-        //LUNCH
-        $this->Text(12,49.8,'Lunch');
-        $this->SetDrawColor(255,255,0);
-        $this->SetFillColor(255,255,0);
-        $this->Rect(6,47.5,2,2,'D');
-
-        //DINER
-        $this->Text(61.6,49.8,'Diner');
-        $this->SetDrawColor(255,255,0);
-        $this->SetFillColor(255,255,0);
-        $this->Rect(55.6,47.5,2,2,'D');
+        $i = 1;
+        foreach ($turnsters as $toestel => $turnsterPerGroep) {
+            //Toestel
+            $this->SetFontSize(12);
+            $this->SetFillColor(51,51,51);
+            $this->SetTextColor(255);
+            $this->Cell(10,8,'',0,0,'','F'); //FILL
+            $this->Cell(160,8,'Groep ' . $i,0,0,'L','F');
+            $this->Cell(30,8,$toestel,0,0,'R','F');
+            $this->Cell(10,8,'',0,1,'','F');
+            foreach ($turnsterPerGroep as $turnster) {
+                $fill = false;
+                if ($turnster['userId'] == $userId) {
+                    $fill = true;
+                }
+                //TURNSTERS
+                $this->SetTextColor(0);
+                $this->SetFontSize(8);
+                $this->SetFillColor(245,245,167);
+                //TURNSTER 1
+                $this->Cell(10,6,'',0,0,'',$fill); //FILL
+                $this->Cell(15,6,$turnster['wedstrijdnummer'],0,0,'',$fill); //WEDSTRIJDNUMMER
+                $this->Cell(50,6,$turnster['naam'],0,0,'L',$fill); //NAAM
+                $this->Cell(70,6,$turnster['vereniging'],0,0,'L',$fill); //VERENIGING
+                $this->Cell(30,6,$turnster['categorie'] . ' ' . $turnster['niveau'],0,0,'L',$fill); //CATEGORIE + NIVEAU
+                $this->Cell(122,6,'',0,1,'',$fill); //fill
+            }
+            $this->Ln(5);
+            $i++;
+        }
     }
 }

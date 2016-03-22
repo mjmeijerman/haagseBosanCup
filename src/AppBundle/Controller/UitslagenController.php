@@ -270,14 +270,55 @@ class UitslagenController extends BaseController
      * @Route("/pagina/Wedstrijdindeling/indelingPdf/", name="wedstrijdindelingPdf")
      * @Method("GET")
      */
-    function wedstrijdindelingPdf()
+    function wedstrijdindelingPdf(Request $request)
     {
-
-        $pdf = new JurybadgePdfController('L','mm',[85.6,53.98]);
+        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer'];
+        $turnsters = [];
+        foreach ($toestellen as $toestel) {
+            $turnsters[$toestel] = [];
+            /** @var Scores[] $results */
+            $results = $this->getDoctrine()->getRepository('AppBundle:Scores')
+                ->findBy([
+                    'wedstrijddag' => $request->query->get('wedstrijddag'),
+                    'wedstrijdronde' => $request->query->get('wedstrijdronde'),
+                    'baan' => $request->query->get('baan'),
+                    'groep' => $toestel,
+                ], [
+                    'wedstrijdnummer' => 'ASC',
+                ]);
+            foreach ($results as $result) {
+                $turnsters[$toestel][] = [
+                    'userId' => $result->getTurnster()->getUser()->getId(),
+                    'wedstrijdnummer' => $result->getWedstrijdnummer(),
+                    'naam' => $result->getTurnster()->getVoornaam() . ' ' . $result->getTurnster()->getAchternaam(),
+                    'vereniging' => $result->getTurnster()->getUser()->getVereniging()->getNaam() . ' ' .
+                        $result->getTurnster()->getUser()->getVereniging()->getPlaats(),
+                    'categorie' => $result->getTurnster()->getCategorie(),
+                    'niveau' => $result->getTurnster()->getNiveau(),
+                ];
+            }
+        }
+        $userId = 0;
+        if ($this->getUser()) {
+            $userId = $this->getUser()->getId();
+        }
+        $pdf = new WedstrijdIndelingPdfController();
         $pdf->setDatumHBC(self::DATUM_HBC);
+        $pdf->setBaan($request->query->get('baan'));
+        $pdf->setWedstrijddag($request->query->get('wedstrijddag'));
+        $pdf->setWedstrijdronde($request->query->get('wedstrijdronde'));
         $pdf->SetMargins(0,0);
         $pdf->AddFont('Gotham','','Gotham-Light.php');
         $pdf->AddFont('Franklin','','Frabk.php');
-        $pdf->Output();
+        $pdf->AddPage();
+        $pdf->SetFont('Gotham','',14);
+        $pdf->SetY(60);
+        $pdf->wedstrijdIndelingContent($turnsters, $userId);
+        return new Response($pdf->Output(
+            'wedstrijdindeling HBC ' . self::DATUM_HBC . " " .$request->query->get('wedstrijddag') . " wedstrijdronde ".
+            $request->query->get('wedstrijdronde') . " baan " . $request->query->get('baan') . ".pdf", "I"
+        ), 200, [
+            'Content-Type' => 'application/pdf'
+        ]);
     }
 }

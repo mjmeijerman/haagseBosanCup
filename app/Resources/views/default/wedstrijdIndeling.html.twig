@@ -15,12 +15,13 @@
                 <tr>
                     <td>Wedstrijdronde {{ wedstrijdronde.wedstrijdronde }}</td>
                     {% for baan in banen[dag.wedstrijddag] %}
-                        <td>
+                        <td><a href="{{ path('wedstrijdindelingPdf', { 'wedstrijddag': dag.wedstrijddag,
+                                'wedstrijdronde': wedstrijdronde.wedstrijdronde, 'baan': baan.baan }) }}">
                             {% for catNiv in categorieNiveau[dag.wedstrijddag][wedstrijdronde.wedstrijdronde][baan
                             .baan] %}
                                 {{ catNiv.categorie }} {{ catNiv.niveau }}<br />
                             {% endfor %}
-                        </td>
+                        </a></td>
                     {% endfor %}
                 </tr>
             {% endfor %}
