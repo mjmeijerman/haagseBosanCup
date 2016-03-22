@@ -1136,4 +1136,87 @@ class OrganisatieController extends BaseController
         }
     }
 
+    /**
+     * @Route("/organisatie/{page}/uploadWedstrijdindelingen/", name="uploadWedstrijdindelingen")
+     * @Method({"GET", "POST"})
+     */
+    public function uploadWedstrijdindelingen(Request $request, $page)
+    {
+        if ($request->getMethod() == 'POST') {
+            if ($_FILES["userfile"])
+            {
+                if (!empty($_FILES['userfile']['name']))
+                {
+                    $allow[0] = "csv";
+                    $extentie = strtolower(substr($_FILES['userfile']['name'], -3));
+                    if ($extentie == $allow[0])
+                    {
+                        if (is_uploaded_file($_FILES['userfile']['tmp_name']))
+                        {
+                            if($_FILES['userfile']['size']<5000000)
+                            {
+                                $localfile = $_FILES['userfile']['tmp_name'];
+                                $fp = fopen($localfile, 'r');
+                                $data = fread($fp, filesize($localfile));
+                                fclose($fp);
+                                $lines = explode("\n", $data);
+                                foreach ($lines as $line) {
+                                    $repo = $this->getDoctrine()->getRepository('AppBundle:Turnster');
+                                    $lineData = explode(";", $line);
+                                    /** @var Turnster $turnster */
+                                    $turnster = $repo->find(trim($lineData[0]));
+                                    if ($turnster) {
+                                        $score = $turnster->getScores();
+                                        $score->setWedstrijdnummer(trim($lineData[5]));
+                                        $score->setWedstrijddag(trim($lineData[6]));
+                                        $score->setWedstrijdronde(trim($lineData[7]));
+                                        $score->setBaan(trim($lineData[8]));
+                                        $score->setGroep(trim($lineData[9]));
+                                        $this->addToDB($score);
+                                    }
+                                }
+                                return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+                            }
+                            else
+                            {
+                                $this->addFlash(
+                                    'error',
+                                    'Helaas, de upload is mislukt: het bestand is te groot.'
+                                );
+                            }
+                        }
+                        else
+                        {
+                            $this->addFlash(
+                                'error',
+                                'Helaas, de upload is mislukt.'
+                            );
+                        }
+                    }
+                    else
+                    {
+                        $this->addFlash(
+                            'error',
+                            'Helaas, de upload is mislukt: het bestand moet .csv zijn.'
+                        );
+                    }
+                }
+                else
+                {
+                    $this->addFlash(
+                        'error',
+                        'Selecteer een bestand.'
+                    );
+                }
+            }
+        }
+        $this->setBasicPageData('Organisatie');
+        return $this->render('organisatie/uploadWedstrijdindelingen.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+        ));
+    }
 }
