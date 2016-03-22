@@ -22,11 +22,60 @@ class ScoresRepository extends EntityRepository
         return $results;
     }
 
-    public function getWedstrijdrondes()
+    public function getWedstrijdDagen()
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->select('cc.wedstrijddag')
+            ->where('cc.wedstrijddag IS NOT NULL')
+            ->orderBy('cc.wedstrijddag', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getWedstrijdrondesPerDag($dag)
     {
         $results = $this->createQueryBuilder('cc')
             ->select('cc.wedstrijdronde')
             ->where('cc.wedstrijdronde IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->setParameter('dag', $dag)
+            ->orderBy('cc.wedstrijdronde')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getNiveausPerDagPerRondePerBaan($dag, $ronde, $baan)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.turnster', 'g')
+            ->select('g.niveau, g.categorie')
+            ->where('cc.wedstrijdronde IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->andWhere('cc.wedstrijdronde = :ronde')
+            ->andWhere('cc.baan = :baan')
+            ->setParameters([
+                'dag' => $dag,
+                'ronde' => $ronde,
+                'baan' => $baan
+            ])
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getBanenPerDag($dag)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->select('cc.baan')
+            ->where('cc.baan IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->setParameter('dag', $dag)
+            ->orderBy('cc.baan')
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -38,6 +87,7 @@ class ScoresRepository extends EntityRepository
         $results = $this->createQueryBuilder('cc')
             ->select('cc.baan')
             ->where('cc.baan IS NOT NULL')
+            ->orderBy('cc.baan')
             ->distinct()
             ->getQuery()
             ->getResult();

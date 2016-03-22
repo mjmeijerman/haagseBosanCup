@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\ScoresRepository;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,8 @@ class ContentController extends BaseController
                     break;
                 case 'Laatste nieuws':
                     return $this->getNieuwsIndexPage();
+                case 'Wedstrijdindeling':
+                    return $this->getWedstrijdindelingPage();
                 case 'Sponsors':
                     return $this->render('default/sponsors.html.twig', array(
                         'menuItems' => $this->menuItems,
@@ -158,6 +161,42 @@ class ContentController extends BaseController
             'aantalPlekken' => $aantalPlekken,
             'tijdVol' => $tijdVol,
             'tijdTotVol' => $tijdTotVol,
+        ));
+    }
+
+    private function getWedstrijdindelingPage()
+    {
+        /** @var ScoresRepository $repo */
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
+        $dagen = $repo->getDagen();
+        usort($dagen, function($a, $b) {
+            if ($a['wedstrijddag'] == $b['wedstrijddag']) {
+                return 0;
+            }
+            return ($a['wedstrijddag'] < $b['wedstrijddag']) ? -1 : 1;
+        });
+        $banen = [];
+        $wedstrijdrondes = [];
+        foreach ($dagen as $dag) {
+            $banen[$dag['wedstrijddag']] = $repo->getBanenPerDag($dag['wedstrijddag']);
+            $wedstrijdrondes[$dag['wedstrijddag']] = $repo->getWedstrijdrondesPerDag($dag['wedstrijddag']);
+            foreach ($banen[$dag['wedstrijddag']] as $baan) {
+                foreach ($wedstrijdrondes[$dag['wedstrijddag']] as $wedstrijdronde) {
+                    $categorieNiveau[$dag['wedstrijddag']][$wedstrijdronde['wedstrijdronde']][$baan['baan']] =
+                        $repo->getNiveausPerDagPerRondePerBaan
+                    ($dag['wedstrijddag'],
+                        $wedstrijdronde['wedstrijdronde'], $baan['baan']);
+
+                }
+            }
+        }
+        return $this->render('default/wedstrijdIndeling.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'sponsors' => $this->sponsors,
+            'dagen' => $dagen,
+            'banen' => $banen,
+            'wedstrijdrondes' => $wedstrijdrondes,
+            'categorieNiveau' => $categorieNiveau,
         ));
     }
 

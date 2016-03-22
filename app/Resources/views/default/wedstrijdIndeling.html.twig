@@ -1,0 +1,29 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    <h1>Wedstrijdindeling</h1>
+    {% for dag in dagen %}
+        <h2>{{ dag.wedstrijddag }}</h2>
+        <table border="1">
+            <tr>
+                <td></td>
+                {% for baan in banen[dag.wedstrijddag] %}
+                    <td>Baan {{ baan.baan }}</td>
+                {% endfor %}
+            </tr>
+            {% for wedstrijdronde in wedstrijdrondes[dag.wedstrijddag] %}
+                <tr>
+                    <td>Wedstrijdronde {{ wedstrijdronde.wedstrijdronde }}</td>
+                    {% for baan in banen[dag.wedstrijddag] %}
+                        <td>
+                            {% for catNiv in categorieNiveau[dag.wedstrijddag][wedstrijdronde.wedstrijdronde][baan
+                            .baan] %}
+                                {{ catNiv.categorie }} {{ catNiv.niveau }}<br />
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}

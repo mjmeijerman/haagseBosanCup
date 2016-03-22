@@ -206,9 +206,6 @@ class UitslagenController extends BaseController
         $activeBaan = '';
         $banen = $this->getDoctrine()->getRepository("AppBundle:Scores")
             ->getBanen();
-        usort($banen, function($a, $b){
-            return ($a['baan'] < $b['baan']) ? -1 : 1;
-        });
         $turnsters = [];
         foreach ($banen as $baan) {
             if ($baan['baan'] == $request->query->get('baan')) {
@@ -266,6 +263,21 @@ class UitslagenController extends BaseController
             $pdf->AddPage();
             $pdf->badgeContent($jurylid);
         }
+        $pdf->Output();
+    }
+
+    /**
+     * @Route("/pagina/Wedstrijdindeling/indelingPdf/", name="wedstrijdindelingPdf")
+     * @Method("GET")
+     */
+    function wedstrijdindelingPdf()
+    {
+
+        $pdf = new JurybadgePdfController('L','mm',[85.6,53.98]);
+        $pdf->setDatumHBC(self::DATUM_HBC);
+        $pdf->SetMargins(0,0);
+        $pdf->AddFont('Gotham','','Gotham-Light.php');
+        $pdf->AddFont('Franklin','','Frabk.php');
         $pdf->Output();
     }
 }
