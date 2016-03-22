@@ -3,27 +3,32 @@
 {% block body %}
     <h1>Wedstrijdindeling</h1>
     {% for dag in dagen %}
-        <h2>{{ dag.wedstrijddag }}</h2>
-        <table border="1">
+        <h4 id="contact">» {{ dag.wedstrijddag }}</h4>
+        <table class="wedstrijdindeling">
             <tr>
-                <td></td>
+                <th class="first_row"></th>
                 {% for baan in banen[dag.wedstrijddag] %}
-                    <td>Baan {{ baan.baan }}</td>
+                    <th>Baan {{ baan.baan }}</th>
                 {% endfor %}
             </tr>
             {% for wedstrijdronde in wedstrijdrondes[dag.wedstrijddag] %}
                 <tr>
-                    <td>Wedstrijdronde {{ wedstrijdronde.wedstrijdronde }}</td>
+                    <th>Wedstrijd {{ wedstrijdronde.wedstrijdronde }}</th>
                     {% for baan in banen[dag.wedstrijddag] %}
-                        <td>
+                        <td class="niv"><a href="#">
                             {% for catNiv in categorieNiveau[dag.wedstrijddag][wedstrijdronde.wedstrijdronde][baan
                             .baan] %}
-                                {{ catNiv.categorie }} {{ catNiv.niveau }}<br />
+                                » {{ catNiv.categorie }} {{ catNiv.niveau }} «<br />
                             {% endfor %}
+							</a>
                         </td>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </table>
     {% endfor %}
+	<h4 id="contact">» Juryindeling</h4>
+	<p>
+		De juryindeling kan <a href="#">hier</a> worden ingezien.
+	</p>
 {% endblock %}
