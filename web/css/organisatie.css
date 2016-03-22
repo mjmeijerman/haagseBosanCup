@@ -442,6 +442,35 @@ article .instellingen_overzicht tr:hover {
 
 /* BUTTON */
 
+article .jurybadges_button {
+	display: block;
+	float: right;
+	padding: .3em .8em;
+	border-radius: 5px;
+	width: 10em;
+	background: rgba(0,127,255,0.4);
+	color: #007FFF;
+	text-align: center;
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
+	text-decoration: none;
+}
+
+article .jurybadges_button:hover {
+	background: rgba(0,127,255,0.8);
+	cursor: pointer;
+	color: #FFF;
+	text-decoration: none;
+}
+
+article .jurybadges_button a:link, article .jurybadges_button a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
 article .niet_gepubliceerd {
 	display: block;
 	padding: .3em .8em;

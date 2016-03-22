@@ -101,8 +101,16 @@ class JurybadgePdfController extends AlphaPDFController
         $this->SetFont('Gotham','',12);
         $this->SetTextColor(0,0,0);
 
-        //TODO: DAG NOG ERGENS INVOEGEN, GEBRUIK $jurylid['dag'] op dezelfde manier als de naam
-
+		//DAG
+		$this->SetFontSize(10);
+		$this->SetAlpha(1);
+		if ($jurylid['dag'] == 'Zaterdag') {
+			$this->Text(34.8,50,'Zaterdag');
+		}
+		else {
+			$this->Text(36,50,'Zondag');
+		}
+		
         //NAAM
         //FILL
         $this->SetFillColor(255,255,0);
@@ -118,13 +126,14 @@ class JurybadgePdfController extends AlphaPDFController
         //TAAK
         $this->SetFont('Gotham','',12);
         $this->Text(33,37,'JURYLID');
-
-        //DAGEN
+		//$pdf->Text(28.25,37,'HOOFD JURY'); // HOOFD JURY
+		
+        //LUNCH EN DINER
         //FILL
         $this->SetAlpha(0.5);
         $this->SetFillColor(0);
-        $this->RoundedRect(3,45.98,30,5,1,'F'); //LUNCH
-        $this->RoundedRect(52.6,45.98,30,5,1,'F'); //DINER
+        $this->RoundedRect(3,45.98,25,5,1,'F'); //LUNCH
+        $this->RoundedRect(57.6,45.98,25,5,1,'F'); //DINER
         $this->SetAlpha(1);
 
         //TEKST
@@ -137,9 +146,9 @@ class JurybadgePdfController extends AlphaPDFController
         $this->Rect(6,47.5,2,2,'D');
 
         //DINER
-        $this->Text(61.6,49.8,'Diner');
+        $this->Text(66.6,49.8,'Diner');
         $this->SetDrawColor(255,255,0);
         $this->SetFillColor(255,255,0);
-        $this->Rect(55.6,47.5,2,2,'D');
+        $this->Rect(60.6,47.5,2,2,'D');
     }
 }
