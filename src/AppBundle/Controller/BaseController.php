@@ -1235,6 +1235,34 @@ class BaseController extends Controller
             }
             return new Response('Iternal server error', 500);
         }
-        return new Response('voor deze actie moet je ingelogd zijn', 403);
+        return new Response('Invalid key!', 403);
+    }
+
+    /**
+     * @Route("/publiceerUitslag/{categorie}/{niveau}/", name="publiceerUitslag")
+     * @Method({"GET"})
+     */
+    public function publiceerUitslag(Request $request, $categorie, $niveau)
+    {
+        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
+            /** @var ToegestaneNiveaus $result */
+            $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+                ->findOneBy([
+                    'categorie' => $categorie,
+                    'niveau' => $niveau,
+                ]);
+            if ($result) {
+                try {
+                    $result->setUitslagGepubliceerd(true);
+                    $this->addToDB($result);
+                    return new Response('ok', 200);
+                } catch (\Exception $e) {
+                    return new Response($e->getMessage(), $e->getCode());
+                }
+            } else {
+                return new Response('Combinatie van niveau/categorie niet gevonden!', 500);
+            }
+        }
+        return new Response('Invalid key!', 403);
     }
 }

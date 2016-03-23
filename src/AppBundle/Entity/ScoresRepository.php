@@ -119,4 +119,15 @@ class ScoresRepository extends EntityRepository
             ->getResult();
         return $results;
     }
+
+
+    public function getTePublicerenScores($toestel)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->where('cc.gepubliceerd' . $toestel . ' = 0')
+            ->andWhere('cc.updated' . $toestel . ' IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
 }
