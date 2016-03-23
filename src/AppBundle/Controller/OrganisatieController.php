@@ -6,6 +6,7 @@ use AppBundle\Entity\Betaling;
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
+use AppBundle\Entity\Scores;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;

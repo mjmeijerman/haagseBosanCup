@@ -1143,4 +1143,98 @@ class BaseController extends Controller
             return $this->redirectToRoute('getIndexPage');
         }
     }
+
+    /**
+     * @Route("/organisatie/updateScores/{wedstrijdnummer}/", name="updateScores")
+     * @Method({"GET"})
+     */
+    public function updateScores(Request $request, $wedstrijdnummer)
+    {
+        if ($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') {
+            $toestellen = ['sprong', 'brug', 'balk', 'vloer'];
+            if ($request->query->get('toestel') && in_array(strtolower($request->query->get('toestel')), $toestellen)) {
+                /** @var Scores $score */
+                $score = $this->getDoctrine()->getRepository('AppBundle:Scores')
+                    ->findOneBy(['wedstrijdnummer' => $wedstrijdnummer]);
+                if ($score) {
+                    switch (strtolower($request->query->get('toestel'))) {
+                        case 'sprong':
+                            if ($request->query->get('dSprong1') !== null && $request->query->get('eSprong1') !== null &&
+                                $request->query->get('nSprong1') !== null && $request->query->get('dSprong2') !== null &&
+                                $request->query->get('eSprong2') !== null && $request->query->get('nSprong2') !== null) {
+                                try {
+                                    $score->setDSprong1($request->query->get('dSprong1'));
+                                    $score->setESprong1($request->query->get('eSprong1'));
+                                    $score->setNSprong1($request->query->get('nSprong1'));
+                                    $score->setDSprong2($request->query->get('dSprong2'));
+                                    $score->setESprong2($request->query->get('eSprong2'));
+                                    $score->setNSprong2($request->query->get('nSprong2'));
+                                    $this->addToDB($score);
+                                } catch (\Exception $e) {
+                                    return new Response($e->getMessage(), $e->getCode());
+                                }
+                                return new Response('ok', 200);
+                            } else {
+                                return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
+                            }
+                            break;
+                        case 'brug':
+                            if ($request->query->get('dBrug') !== null && $request->query->get('eBrug') !== null &&
+                                $request->query->get('nBrug') !== null) {
+                                try {
+                                    $score->setDBrug($request->query->get('dBrug'));
+                                    $score->setEBrug($request->query->get('eBrug'));
+                                    $score->setNBrug($request->query->get('nBrug'));
+                                    $this->addToDB($score);
+                                } catch (\Exception $e) {
+                                    return new Response($e->getMessage(), $e->getCode());
+                                }
+                                return new Response('ok', 200);
+                            } else {
+                                return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
+                            }
+                            break;
+                        case 'balk':
+                            if ($request->query->get('dBalk') !== null && $request->query->get('eBalk') !== null &&
+                                $request->query->get('nBalk') !== null) {
+                                try {
+                                    $score->setDBalk($request->query->get('dBalk'));
+                                    $score->setEBalk($request->query->get('eBalk'));
+                                    $score->setNBalk($request->query->get('nBalk'));
+                                    $this->addToDB($score);
+                                } catch (\Exception $e) {
+                                    return new Response($e->getMessage(), $e->getCode());
+                                }
+                                return new Response('ok', 200);
+                            } else {
+                                return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
+                            }
+                            break;
+                        case 'vloer':
+                            if ($request->query->get('dVloer') !== null && $request->query->get('eVloer') !== null &&
+                                $request->query->get('nVloer') !== null) {
+                                try {
+                                    $score->setDVloer($request->query->get('dVloer'));
+                                    $score->setEVloer($request->query->get('eVloer'));
+                                    $score->setNVloer($request->query->get('nVloer'));
+                                    $this->addToDB($score);
+                                } catch (\Exception $e) {
+                                    return new Response($e->getMessage(), $e->getCode());
+                                }
+                                return new Response('ok', 200);
+                            } else {
+                                return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
+                            }
+                            break;
+                    }
+                } else {
+                    return new Response('Geen geldig wedstrijdnummer', 500);
+                }
+            } else {
+                return new Response('Invalid toestel', 500);
+            }
+            return new Response('Iternal server error', 500);
+        }
+        return new Response('voor deze actie moet je ingelogd zijn', 403);
+    }
 }

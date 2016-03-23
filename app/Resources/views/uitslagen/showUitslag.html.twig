@@ -88,12 +88,12 @@
                     <td>{{ turnster.naam }}</td>
                     <td>{{ turnster.vereniging }}</td>
                     <td class="score" style="border-left:1px solid #000;">
-                        {{ turnster.dBrug|number_format(2, ',') }}
+                        {{ turnster.dBrug }}
                     </td>
                     <td class="score">
-                        {% if turnster.nBrug > 0 %}-{{ turnster.nBrug|number_format(1, ',') }}{% else %}0{% endif %}
+                        {{ turnster.nBrug }}
                     </td>
-                    <td class="score">{{ turnster.totaalBrug|number_format(3, ',') }}</td>
+                    <td class="score">{{ turnster.totaalBrug }}</td>
                     <td
                             {% if turnster.rankBrug == 1 or turnster.rankBrug == 2 or turnster.rankBrug == 3 %}
                             style="background-color:yellow;font-weight:bold;">
@@ -102,10 +102,10 @@
                         {% endif %}
                         {{ turnster.rankBrug }}</td>
                     <td class="score" style="border-left:1px solid #000;">
-                        {{ turnster.dBalk|number_format(2, ',') }}
+                        {{ turnster.dBalk }}
                     </td>
                     <td class="score">
-                        {% if turnster.nBalk > 0 %}-{{ turnster.nBalk|number_format(1, ',') }}{% else %}0{% endif %}
+                        {{ turnster.nBalk }}
                     </td>
                     <td class="score">{{ turnster.totaalBalk|number_format(3, ',') }}</td>
                     <td
@@ -116,12 +116,12 @@
                         {% endif %}
                         {{ turnster.rankBalk }}</td>
                     <td class="score" style="border-left:1px solid #000;">
-                        {{ turnster.dVloer|number_format(2, ',') }}
+                        {{ turnster.dVloer }}
                     </td>
                     <td class="score">
-                        {% if turnster.nVloer > 0 %}-{{ turnster.nVloer|number_format(1, ',') }}{% else %}0{% endif %}
+                        {{ turnster.nVloer }}
                     </td>
-                    <td class="score">{{ turnster.totaalVloer|number_format(3, ',') }}</td>
+                    <td class="score">{{ turnster.totaalVloer }}</td>
                     <td
                             {% if turnster.rankVloer == 1 or turnster.rankVloer == 2 or turnster.rankVloer == 3 %}
                             style="background-color:yellow;font-weight:bold;">
@@ -130,28 +130,20 @@
                         {% endif %}
                         {{ turnster.rankVloer }}</td>
                     <td class="score" style="border-left:1px solid #000;">
-                        {{ turnster.dSprong1|number_format(2, ',') }}
+                        {{ turnster.dSprong1 }}
                     </td>
                     <td class="score">
-                        {% if turnster.nSprong1 > 0 %}
-                            -{{ turnster.nSprong1|number_format(1, ',') }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        {{ turnster.nSprong1 }}
                     </td>
-                    <td class="score">{{ turnster.totaalSprong1|number_format(3, ',') }}</td>
+                    <td class="score">{{ turnster.totaalSprong1 }}</td>
                     <td class="score" style="border-left:1px solid #000;">
-                        {{ turnster.dSprong2|number_format(2, ',') }}
+                        {{ turnster.dSprong2 }}
                     </td>
                     <td class="score">
-                        {% if turnster.nSprong2 > 0 %}
-                            -{{ turnster.nSprong2|number_format(1, ',') }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        {{ turnster.nSprong2 }}
                     </td>
-                    <td class="score">{{ turnster.totaalSprong2|number_format(3, ',') }}</td>
-                    <td class="score">{{ turnster.totaalSprong|number_format(3, ',') }}</td>
+                    <td class="score">{{ turnster.totaalSprong2 }}</td>
+                    <td class="score">{{ turnster.totaalSprong }}</td>
                     <td
                             {% if turnster.rankSprong == 1 or turnster.rankSprong == 2 or turnster.rankSprong == 3 %}
                             style="background-color:yellow;font-weight:bold;">
@@ -159,7 +151,7 @@
                             class="score">
                         {% endif %}
                         {{ turnster.rankSprong }}</td>
-                    <td style="border-left:1px solid #000;">{{ turnster.totaal|number_format(3, ',') }}</td>
+                    <td style="border-left:1px solid #000;">{{ turnster.totaal }}</td>
                     <td
                             {% if turnster.rank == 1 or turnster.rank == 2 or turnster.rank == 3 %}
                             style="background-color:yellow;font-weight:bold;">
