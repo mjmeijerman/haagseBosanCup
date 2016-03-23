@@ -19,3 +19,4 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     standaard_wachtwoord: lalala
+    update_scores_string: lalala

@@ -1150,7 +1150,7 @@ class BaseController extends Controller
      */
     public function updateScores(Request $request, $wedstrijdnummer)
     {
-        if ($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') {
+        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
             $toestellen = ['sprong', 'brug', 'balk', 'vloer'];
             if ($request->query->get('toestel') && in_array(strtolower($request->query->get('toestel')), $toestellen)) {
                 /** @var Scores $score */
