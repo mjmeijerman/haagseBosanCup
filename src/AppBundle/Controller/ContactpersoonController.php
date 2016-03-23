@@ -8,8 +8,10 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Scores;
+use AppBundle\Entity\ScoresRepository;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Entity\Turnster;
+use AppBundle\Entity\TurnsterRepository;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vloermuziek;
 use AppBundle\Form\Type\EditSponsorType;
@@ -41,6 +43,7 @@ class ContactpersoonController extends BaseController
      */
     public function getIndexPageAction()
     {
+        $indelingen = $this->getWedstrijdindelingen();
         $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan();
         $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
         $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
@@ -159,7 +162,53 @@ class ContactpersoonController extends BaseController
             'uploadenVloermuziekToegestaan' => $uploadenVloermuziekToegestaan,
             'factuurBekijkenToegestaan' => $factuurBekijkenToegestaan,
             'factuurId' => $factuurId,
+            'banen' => $indelingen['banen'],
+            'dagen' => $indelingen['dagen'],
+            'wedstrijdrondes' => $indelingen['wedstrijdrondes'],
+            'categorieNiveau' => $indelingen['categorieNiveau'],
         ));
+    }
+
+    /**
+     * @Route("/contactpersoon/uitslagen/", name="contactpersoonUitslagen")
+     * @Method({"GET"})
+     */
+    public function contactpersoonUitslagen()
+    {
+        /** @var TurnsterRepository $repo */
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Turnster');
+        $catNivs = $repo->getDistinctCatNiv($this->getUser()->getId());
+        $pdf = new UitslagenPdfController('L', 'mm', 'A4');
+        foreach ($catNivs as $catNiv) {
+            $check = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+                ->findOneBy([
+                    'categorie' => $catNiv['categorie'],
+                    'niveau' => $catNiv['niveau'],
+                    'uitslagGepubliceerd' => 1,
+                ]);
+            if ($check) {
+                /** @var Turnster[] $results */
+                $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
+                    ->getIngeschrevenTurnstersCatNiveau($catNiv['categorie'], $catNiv['niveau']);
+                $turnsters = [];
+                foreach ($results as $result) {
+                    $turnsters[] = $result->getUitslagenLijst();
+                }
+                $turnsters = $this->getRanking($turnsters);
+                $pdf->setCategorie($catNiv['categorie']);
+                $pdf->setNiveau($catNiv['niveau']);
+                $pdf->SetLeftMargin(7);
+                $pdf->AliasNbPages();
+                $pdf->AddPage();
+                $pdf->Table($turnsters, $this->getUser()->getId());
+            }
+        }
+        return new Response($pdf->Output(
+            'Uitslagen ' . $this->getUser()->getVereniging()->getNaam() . ' ' . $this->getUser()->getVereniging()
+                ->getPlaats() . ' HBC ' . self::DATUM_HBC . ".pdf", "I"
+        ), 200, [
+            'Content-Type' => 'application/pdf'
+        ]);
     }
 
     /**
@@ -975,5 +1024,41 @@ class ContactpersoonController extends BaseController
                 'turnster' => $turnster,
             ));
         }
+    }
+
+    private function getWedstrijdindelingen()
+    {
+        /** @var ScoresRepository $repo */
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
+        $dagen = $repo->getDagenForUser($this->getUser()->getId());
+        usort($dagen, function($a, $b) {
+            if ($a['wedstrijddag'] == $b['wedstrijddag']) {
+                return 0;
+            }
+            return ($a['wedstrijddag'] < $b['wedstrijddag']) ? -1 : 1;
+        });
+        $banen = [];
+        $wedstrijdrondes = [];
+        $categorieNiveau = [];
+        foreach ($dagen as $dag) {
+            $banen[$dag['wedstrijddag']] = $repo->getBanenPerDagForUser($dag['wedstrijddag'], $this->getUser()
+                ->getId());
+            $wedstrijdrondes[$dag['wedstrijddag']] = $repo->getWedstrijdrondesPerDagForUser($dag['wedstrijddag'],
+                $this->getUser()->getId());
+            foreach ($banen[$dag['wedstrijddag']] as $baan) {
+                foreach ($wedstrijdrondes[$dag['wedstrijddag']] as $wedstrijdronde) {
+                    $categorieNiveau[$dag['wedstrijddag']][$wedstrijdronde['wedstrijdronde']][$baan['baan']] =
+                        $repo->getNiveausPerDagPerRondePerBaanForUser($dag['wedstrijddag'],
+                            $wedstrijdronde['wedstrijdronde'], $baan['baan'], $this->getUser()->getId());
+
+                }
+            }
+        }
+        return [
+            'dagen' => $dagen,
+            'banen' => $banen,
+            'wedstrijdrondes' => $wedstrijdrondes,
+            'categorieNiveau' => $categorieNiveau,
+        ];
     }
 }

@@ -22,6 +22,21 @@ class ScoresRepository extends EntityRepository
         return $results;
     }
 
+    public function getDagenForUser($userId)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.turnster', 'g')
+            ->join('g.user', 'u')
+            ->select('cc.wedstrijddag')
+            ->where('cc.wedstrijddag IS NOT NULL')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
     public function getWedstrijdDagen()
     {
         $results = $this->createQueryBuilder('cc')
@@ -41,6 +56,26 @@ class ScoresRepository extends EntityRepository
             ->where('cc.wedstrijdronde IS NOT NULL')
             ->andWhere('cc.wedstrijddag = :dag')
             ->setParameter('dag', $dag)
+            ->orderBy('cc.wedstrijdronde')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getWedstrijdrondesPerDagForUser($dag, $userId)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.turnster', 'g')
+            ->join('g.user', 'u')
+            ->select('cc.wedstrijdronde')
+            ->where('cc.wedstrijdronde IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->andWhere('u.id = :userId')
+            ->setParameters([
+                'userId' => $userId,
+                'dag' => $dag,
+            ])
             ->orderBy('cc.wedstrijdronde')
             ->distinct()
             ->getQuery()
@@ -68,6 +103,29 @@ class ScoresRepository extends EntityRepository
         return $results;
     }
 
+    public function getNiveausPerDagPerRondePerBaanForUser($dag, $ronde, $baan, $userId)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.turnster', 'g')
+            ->join('g.user', 'u')
+            ->select('g.niveau, g.categorie')
+            ->where('cc.wedstrijdronde IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->andWhere('cc.wedstrijdronde = :ronde')
+            ->andWhere('cc.baan = :baan')
+            ->andWhere('u.id = :userId')
+            ->setParameters([
+                'dag' => $dag,
+                'ronde' => $ronde,
+                'baan' => $baan,
+                'userId' => $userId,
+            ])
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
     public function getBanenPerDag($dag)
     {
         $results = $this->createQueryBuilder('cc')
@@ -75,6 +133,26 @@ class ScoresRepository extends EntityRepository
             ->where('cc.baan IS NOT NULL')
             ->andWhere('cc.wedstrijddag = :dag')
             ->setParameter('dag', $dag)
+            ->orderBy('cc.baan')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
+
+    public function getBanenPerDagForUser($dag, $userId)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.turnster', 'g')
+            ->join('g.user', 'u')
+            ->select('cc.baan')
+            ->where('cc.baan IS NOT NULL')
+            ->andWhere('cc.wedstrijddag = :dag')
+            ->andWhere('u.id = :userId')
+            ->setParameters([
+                'userId' => $userId,
+                'dag' => $dag,
+            ])
             ->orderBy('cc.baan')
             ->distinct()
             ->getQuery()

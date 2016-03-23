@@ -1270,4 +1270,33 @@ class BaseController extends Controller
         }
         return new Response('Invalid key!', 403);
     }
+
+    protected function getRanking($scores, $order = '')
+    {
+        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
+        foreach ($toestellen as $toestel) {
+            usort($scores, function ($a, $b) use ($toestel) {
+                if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
+                    return 0;
+                }
+                return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
+            });
+            for ($i = 1; $i <= count($scores); $i++) {
+                if ($i == 1) {
+                    $scores[($i - 1)]['rank' . $toestel] = $i;
+                } elseif ($scores[($i - 1)]['totaal' . $toestel] == $scores[($i - 2)]['totaal' . $toestel]) {
+                    $scores[($i - 1)]['rank' . $toestel] = $scores[($i - 2)]['rank' . $toestel];
+                } else {
+                    $scores[($i - 1)]['rank' . $toestel] = $i;
+                }
+            }
+        }
+        usort($scores, function ($a, $b) use ($order) {
+            if ($a['totaal' . $order] == $b['totaal' . $order]) {
+                return 0;
+            }
+            return ($a['totaal' . $order] > $b['totaal' . $order]) ? -1 : 1;
+        });
+        return $scores;
+    }
 }

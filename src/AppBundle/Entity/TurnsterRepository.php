@@ -225,4 +225,17 @@ class TurnsterRepository extends EntityRepository
             ->getResult();
         return $result;
     }
+
+    public function getDistinctCatNiv($userId)
+    {
+        $results = $this->createQueryBuilder('cc')
+            ->join('cc.user', 'u')
+            ->select('cc.categorie, cc.niveau')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        return $results;
+    }
 }
