@@ -1145,7 +1145,7 @@ class BaseController extends Controller
     }
 
     /**
-     * @Route("/organisatie/updateScores/{wedstrijdnummer}/", name="updateScores")
+     * @Route("/updateScores/{wedstrijdnummer}/", name="updateScores")
      * @Method({"GET"})
      */
     public function updateScores(Request $request, $wedstrijdnummer)
