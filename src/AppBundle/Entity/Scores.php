@@ -392,29 +392,6 @@ class Scores
     }
 
     /**
-     * Set afgemeld
-     *
-     * @param boolean $afgemeld
-     * @return Scores
-     */
-    public function setAfgemeld($afgemeld)
-    {
-        $this->afgemeld = $afgemeld;
-
-        return $this;
-    }
-
-    /**
-     * Get afgemeld
-     *
-     * @return boolean 
-     */
-    public function getAfgemeld()
-    {
-        return $this->afgemeld;
-    }
-
-    /**
      * Set dSprong1
      *
      * @param string $dSprong1

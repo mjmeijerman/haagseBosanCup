@@ -394,9 +394,9 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function __construct()
     {
-        $this->jurylid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->turnster = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->betaling = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->jurylid = new ArrayCollection();
+        $this->turnster = new ArrayCollection();
+        $this->betaling = new ArrayCollection();
     }
 
     /**
