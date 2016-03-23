@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Scores;
+use AppBundle\Entity\ScoresRepository;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -210,6 +211,7 @@ class UitslagenController extends BaseController
         foreach ($banen as $baan) {
             if ($baan['baan'] == $request->query->get('baan')) {
                 $activeBaan = $request->query->get('baan');
+                /** @var ScoresRepository $repo */
                 $repo = $this->getDoctrine()->getRepository("AppBundle:Scores");
                 $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer'];
                 foreach ($toestellen as $toestel) {

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\Scores;
 use AppBundle\Entity\SendMail;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
@@ -1169,6 +1170,7 @@ class BaseController extends Controller
                                     $score->setDSprong2($request->query->get('dSprong2'));
                                     $score->setESprong2($request->query->get('eSprong2'));
                                     $score->setNSprong2($request->query->get('nSprong2'));
+                                    $score->setUpdatedSprong(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
@@ -1185,6 +1187,7 @@ class BaseController extends Controller
                                     $score->setDBrug($request->query->get('dBrug'));
                                     $score->setEBrug($request->query->get('eBrug'));
                                     $score->setNBrug($request->query->get('nBrug'));
+                                    $score->setUpdatedBrug(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
@@ -1201,6 +1204,7 @@ class BaseController extends Controller
                                     $score->setDBalk($request->query->get('dBalk'));
                                     $score->setEBalk($request->query->get('eBalk'));
                                     $score->setNBalk($request->query->get('nBalk'));
+                                    $score->setUpdatedBalk(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
@@ -1217,6 +1221,7 @@ class BaseController extends Controller
                                     $score->setDVloer($request->query->get('dVloer'));
                                     $score->setEVloer($request->query->get('eVloer'));
                                     $score->setNVloer($request->query->get('nVloer'));
+                                    $score->setUpdatedVloer(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
