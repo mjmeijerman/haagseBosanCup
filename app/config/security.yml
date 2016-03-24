@@ -12,6 +12,7 @@ security:
         ROLE_CONTACT:     [ROLE_INGELOGD]
         ROLE_ADMIN:       [ROLE_INGELOGD]
         ROLE_ORGANISATIE: [ROLE_INGELOGD]
+        ROLE_JURY:        [ROLE_INGELOGD]
 
     firewalls:
         dev:

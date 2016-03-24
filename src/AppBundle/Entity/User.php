@@ -42,14 +42,12 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @ORM\Column(name="voornaam", type="string", length=255)
      */
     private $voornaam;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @ORM\Column(name="achternaam", type="string", length=255)
      */
     private $achternaam;

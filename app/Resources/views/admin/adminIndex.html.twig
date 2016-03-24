@@ -93,4 +93,25 @@
         {% endfor %}
     </table>
 
+    <h2>Jurysysteem gebruikers
+        <a href="{{ path('addJuryGebruiker') }}">
+            <img src="{{ asset('images/add.png') }}" width="18px"/>
+        </a></h2>
+    <table border="1">
+        <tr>
+            <th>Inlognaam</th>
+            <th></th>
+        </tr>
+        {% for lid in juryGebruikers %}
+            <tr>
+                <td>{{ lid.username }}</td>
+                <td><a href="{{ path('removeOrganisatieLid', { 'username': lid.username }) }}">
+                        <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
 {% endblock %}

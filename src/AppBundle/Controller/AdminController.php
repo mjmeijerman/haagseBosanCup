@@ -8,6 +8,7 @@ use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Sponsor;
 use AppBundle\Entity\User;
 use AppBundle\Form\Type\EditSponsorType;
+use AppBundle\Form\Type\JuryGebruikerType;
 use AppBundle\Form\Type\NieuwsberichtType;
 use AppBundle\Form\Type\OrganisatieType;
 use AppBundle\Form\Type\SponsorType;
@@ -39,12 +40,14 @@ class AdminController extends BaseController
         $fotoUploads = $this->getUploads('Foto');
         $fileUploads = $this->getUploads('File');
         $organisatieLeden = $this->getOrganisatieLeden();
+        $juryGebruikers = $this->getJuryGebruikers();
         return $this->render('admin/adminIndex.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' =>$this->sponsors,
             'fotoUploads' => $fotoUploads,
             'fileUploads' => $fileUploads,
             'organisatieLeden' => $organisatieLeden,
+            'juryGebruikers' => $juryGebruikers,
         ));
     }
 
@@ -53,6 +56,18 @@ class AdminController extends BaseController
         $results = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->loadUsersByRole('ROLE_ORGANISATIE');
+        $organisatieLeden = array();
+        foreach ($results as $result) {
+            $organisatieLeden[] = $result->getAll();
+        }
+        return $organisatieLeden;
+    }
+
+    private function getJuryGebruikers()
+    {
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->loadUsersByRole('ROLE_JURY');
         $organisatieLeden = array();
         foreach ($results as $result) {
             $organisatieLeden[] = $result->getAll();
@@ -112,6 +127,44 @@ class AdminController extends BaseController
         }
         else {
             return $this->render('admin/addOrganisatieLid.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+                'sponsors' =>$this->sponsors,
+            ));
+        }
+
+    }
+
+    /**
+     * @Route("/admin/organisatie/addJuryGebruiker/", name="addJuryGebruiker")
+     * @Method({"GET", "POST"})
+     */
+    public function addJuryGebruiker(Request $request)
+    {
+        $this->setBasicPageData();
+        $organisatieLid = new User();
+        $form = $this->createForm(new JuryGebruikerType(), $organisatieLid);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $password = $request->request->get('password');
+            $encoder = $this->container
+                ->get('security.encoder_factory')
+                ->getEncoder($organisatieLid);
+            $organisatieLid->setRole('ROLE_JURY')
+                ->setIsActive(true)
+                ->setCreatedAt(new \DateTime('now'))
+                ->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()))
+                ->setVoornaam(' ')
+                ->setAchternaam(' ')
+                ->setEmail(' ')
+            ;
+            $this->addToDB($organisatieLid);
+
+            return $this->redirectToRoute('getAdminIndexPage');
+        }
+        else {
+            return $this->render('admin/addJuryGebruiker.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'form' => $form->createView(),
                 'sponsors' =>$this->sponsors,
