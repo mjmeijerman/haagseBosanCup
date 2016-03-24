@@ -1,10 +1,12 @@
 {% extends 'organisatie/base.html.twig' %}
 
 {% block body %}
-    <h1>Inschrijvingen</h1>
-    <a href="{{ path('uploadWedstrijdindelingen', { 'page': app.request.get('page'), }) }}">
-    	Wedstrijdindelingen uploaden
-	</a>
+    <div class="indelingen_button">
+		<a href="{{ path('uploadWedstrijdindelingen', { 'page': app.request.get('page'), }) }}">
+			Wedstrijdindelingen uploaden
+		</a>
+	</div>
+	<h1>Inschrijvingen</h1>
 
 			<p>
 				<div class="titel">
