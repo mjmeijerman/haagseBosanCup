@@ -177,6 +177,7 @@ class ContentController extends BaseController
         });
         $banen = [];
         $wedstrijdrondes = [];
+        $categorieNiveau = [];
         foreach ($dagen as $dag) {
             $banen[$dag['wedstrijddag']] = $repo->getBanenPerDag($dag['wedstrijddag']);
             $wedstrijdrondes[$dag['wedstrijddag']] = $repo->getWedstrijdrondesPerDag($dag['wedstrijddag']);
