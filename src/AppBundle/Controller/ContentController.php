@@ -123,7 +123,7 @@ class ContentController extends BaseController
                 array('id' => 'DESC'),
                 10
             );
-        if ($this->inschrijvingToegestaan()) {
+        if ($this->verwijderenTurnsterToegestaan()) {
             $aantalPlekken = $this->getVrijePlekken();
             if ($aantalPlekken == 0) {
                 /** @var \DateTime $tijdVolObject */
