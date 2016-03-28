@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Betaling;
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\JuryIndeling;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
 use AppBundle\Entity\Scores;
@@ -98,10 +99,10 @@ class OrganisatieController extends BaseController
 
     /**
      * @Template()
-     * @Route("/organisatie/{page}/uploadReglementen/", name="addReglementen")
+     * @Route("/organisatie/{page}/addReglementen/", name="addReglementen")
      * @Method({"GET", "POST"})
      */
-    public function addAdminFileAction(Request $request, $page)
+    public function addReglementen(Request $request, $page)
     {
         $this->setBasicPageData('Organisatie');
         $file = new Reglementen();
@@ -131,6 +132,41 @@ class OrganisatieController extends BaseController
         }
     }
 
+    /**
+     * @Template()
+     * @Route("/organisatie/{page}/addjuryIndeling/", name="addjuryIndeling")
+     * @Method({"GET", "POST"})
+     */
+    public function addjuryIndelingAction(Request $request, $page)
+    {
+        $this->setBasicPageData('Organisatie');
+        $file = new JuryIndeling();
+        $form = $this->createFormBuilder($file)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $file->setUploader($user->getUsername());
+            $file->setCreatedAt(new \DateTime('now'));
+            $this->addToDB($file);
+            return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+        } else {
+            return $this->render('organisatie/juryIndeling.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
+            ));
+        }
+    }
+
     private function getGegevens()
     {
         $userObject = $this->getUser();
@@ -139,6 +175,7 @@ class OrganisatieController extends BaseController
 
     private function getJuryPage()
     {
+        $juryIndeling = $this->getJuryIndeling();
         /** @var Jurylid[] $results */
         $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
             ->getAllJuryleden();
@@ -180,6 +217,7 @@ class OrganisatieController extends BaseController
             'totaalAantalJuryleden' => $this->aantalJury,
             'juryleden' => $juryleden,
             'juryledenNiet' => $juryledenNiet,
+            'juryIndeling' => $juryIndeling,
         ));
     }
 

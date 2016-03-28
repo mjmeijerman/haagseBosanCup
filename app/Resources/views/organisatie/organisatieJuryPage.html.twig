@@ -2,6 +2,47 @@
 
 {% block body %}
     <div class="jurybadges_button"><a href="{{ path('juryBadges') }}" target="_blank">Jurybadges downloaden</a></div><h1>Juryzaken</h1>
+    <p>
+        <div class="titel">
+            <h2>Juryindeling</h2>
+        </div>
+        <div class="bericht">
+            <table id="uploads" border="1" class="instellingen">
+            <col width="15%"/>
+            <col width="66.5%"/>
+            <col width="18.5%"/>
+            <col width="3.5%"/>
+            <tr>
+                <th>Naam</th>
+                <th>Locatie</th>
+                <th>Datum</th>
+                <th></th>
+            </tr>
+            {% if juryIndeling %}
+                <tr>
+                    <td>{{ juryIndeling.naam }}</td>
+                    <td>http://www.haagsebosancup.nl/uploads/juryIndeling/{{ juryIndeling.locatie }}</td>
+                    <td>{{ juryIndeling.createdAt }}</td>
+                    <td><a href="{{ path('addjuryIndeling', { 'page': app.request.get('page') }) }}">
+                            <img src="{{ asset('images/refresh.png') }}" width="18px"/>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="{{ path('addjuryIndeling', { 'page': app.request.get('page') }) }}">
+                            <img src="{{ asset('images/add.png') }}" width="18px"/>
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+        </div>
+    </p>
+
 			<p>
 				<div class="titel">
 					<h2>Juryleden geleverd door verenigingen met geplaatste turnsters (<span
@@ -104,7 +145,7 @@
         $('.edit').click(function () {
             var data = $(this).text();
             var fieldName = this.id;
-                onClickJurydag(data, fieldName, 'number');
+            onClickJurydag(data, fieldName, 'number');
         });
         $(document).on('blur keypress', '.txt_edit', function (e) {
             if (e.type === 'keypress' && e.keyCode !== 13) return;

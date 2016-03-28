@@ -166,6 +166,7 @@ class ContentController extends BaseController
 
     private function getWedstrijdindelingPage()
     {
+        $juryIndeling = $this->getJuryIndeling();
         /** @var ScoresRepository $repo */
         $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
         $dagen = $repo->getDagen();
@@ -198,6 +199,7 @@ class ContentController extends BaseController
             'banen' => $banen,
             'wedstrijdrondes' => $wedstrijdrondes,
             'categorieNiveau' => $categorieNiveau,
+            'juryIndeling' => $juryIndeling,
         ));
     }
 

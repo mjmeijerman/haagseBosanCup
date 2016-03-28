@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
+use AppBundle\Entity\JuryIndeling;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\SendMail;
 use AppBundle\Entity\ToegestaneNiveaus;
@@ -384,6 +385,23 @@ class BaseController extends Controller
             return true;
         }
         return false;
+    }
+
+    protected function getJuryIndeling()
+    {
+        /** @var JuryIndeling[] $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:JuryIndeling')
+            ->findBy(
+                [],
+                ['id' => 'DESC']
+            );
+        if ($result) {
+            $juryIndeling = $result[0]->getAll();
+            return $juryIndeling;
+        } else {
+            return false;
+        }
     }
 
     protected function verwijderenTurnsterToegestaan()

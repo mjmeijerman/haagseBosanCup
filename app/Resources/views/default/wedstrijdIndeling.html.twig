@@ -28,8 +28,12 @@
             {% endfor %}
         </table>
     {% endfor %}
-	{#<h4 id="contact">» Juryindeling</h4>
-	<p>
-		De juryindeling kan <a href="#">hier</a> worden ingezien.
-	</p>#}
+	{% if juryIndeling %}
+        <h4 id="contact">» Juryindeling</h4>
+        <p>
+            De juryindeling kan
+            <a href="http://www.haagsebosancup.nl/uploads/juryIndeling/juryIndeling.pdf" target="_blank">
+                hier</a> worden ingezien.
+        </p>
+    {% endif %}
 {% endblock %}
