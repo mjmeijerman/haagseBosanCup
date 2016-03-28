@@ -686,6 +686,19 @@ class BaseController extends Controller
             ->setOnderwerp($subject)
             ->setBericht($message->getBody());
         $this->addToDB($sendMail);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo('webmaster@haagsebosancup.nl')
+            ->setBody(
+                $this->renderView(
+                    $view,
+                    array('parameters' => $parameters)
+                ),
+                'text/plain'
+            );
+        $this->get('mailer')->send($message);
     }
 
     protected function addToDB($object, $detach = null)
