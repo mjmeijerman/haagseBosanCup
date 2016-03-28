@@ -102,7 +102,7 @@ class OrganisatieController extends BaseController
      * @Route("/organisatie/{page}/addReglementen/", name="addReglementen")
      * @Method({"GET", "POST"})
      */
-    public function addReglementen(Request $request, $page)
+    public function addReglementenAction(Request $request, $page)
     {
         $this->setBasicPageData('Organisatie');
         $file = new Reglementen();
