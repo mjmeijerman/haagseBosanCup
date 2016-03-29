@@ -196,6 +196,27 @@ class Scores
      */
     private $updatedVloer;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $geturndVloer = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getGeturndVloer()
+    {
+        return $this->geturndVloer;
+    }
+
+    /**
+     * @param mixed $geturndVloer
+     */
+    public function setGeturndVloer($geturndVloer)
+    {
+        $this->geturndVloer = $geturndVloer;
+    }
+
     public function getScores()
     {
         $totaalBrug = (floatval($this->getDBrug()) + floatval($this->getEBrug()) -
