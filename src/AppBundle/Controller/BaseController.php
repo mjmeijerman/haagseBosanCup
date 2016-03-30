@@ -176,8 +176,10 @@ class BaseController extends Controller
             return 'Beide';
         } elseif ($juryObject->getZaterdag()) {
             return 'Za';
-        } else {
+        } elseif ($juryObject->getZondag()) {
             return 'Zo';
+        } else {
+            return 'Geen';
         }
     }
 

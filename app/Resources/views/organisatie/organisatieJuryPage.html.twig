@@ -64,7 +64,29 @@
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
-                                <td id="{{ jurylid.id }}" class="edit">{{ jurylid.dag }}</td>
+                                <td>
+                                    <select id="selectDag_{{ jurylid.id }}" onchange="changeDag('{{ jurylid.id }}');">
+                                        <option value="Geen"
+                                        {% if jurylid.dag == 'Geen' %}
+                                            selected
+                                        {% endif %}
+                                        >Geen</option>
+                                        <option value="Za"
+                                        {% if jurylid.dag == 'Za' %}
+                                            selected
+                                        {% endif %}
+                                        >Zaterdag</option>
+                                        <option value="Zo"
+                                        {% if jurylid.dag == 'Zo' %}
+                                            selected
+                                        {% endif %}
+                                        >Zondag</option>
+                                        <option value="ZaZo"
+                                        {% if jurylid.dag == 'Beide' %}
+                                            selected
+                                        {% endif %}>Beide</option>
+                                    </select>
+                                </td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
                                 <td>
@@ -110,7 +132,29 @@
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
-                                <td id="{{ jurylid.id }}" class="edit">{{ jurylid.dag }}</td>
+                                <td>
+                                    <select id="selectDag_{{ jurylid.id }}" onchange="changeDag('{{ jurylid.id }}');">
+                                        <option value="Geen"
+                                        {% if jurylid.dag == 'Geen' %}
+                                            selected
+                                        {% endif %}
+                                        >Geen</option>
+                                        <option value="Za"
+                                        {% if jurylid.dag == 'Za' %}
+                                            selected
+                                        {% endif %}
+                                        >Zaterdag</option>
+                                        <option value="Zo"
+                                        {% if jurylid.dag == 'Zo' %}
+                                            selected
+                                        {% endif %}
+                                        >Zondag</option>
+                                        <option value="ZaZo"
+                                        {% if jurylid.dag == 'Beide' %}
+                                            selected
+                                        {% endif %}>Beide</option>
+                                    </select>
+                                </td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
                                 <td>
@@ -153,5 +197,14 @@
             var fieldName = this.id.replace('txt_', '');
             //onChange(data, fieldName, 'editJurydag');
         });
+
+        function changeDag(id) {
+            var select = document.getElementById('selectDag_' + id);
+            var dag = select.options[select.selectedIndex].value;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('changeJuryDagAjaxCall', {id: id, dag: dag})
+            });
+        }
     </script>
 {% endblock %}

@@ -797,13 +797,6 @@ class OrganisatieController extends BaseController
             ->getRepository('AppBundle:User')
             ->findOneBy(['id' => $userId]);
         if ($request->getMethod() == "POST") {
-            $turnster = [
-                'voornaam' => $request->request->get('voornaam'),
-                'achternaam' => $request->request->get('achternaam'),
-                'geboortejaar' => $request->request->get('geboorteJaar'),
-                'niveau' => $request->request->get('niveau'),
-                'opmerking' => $request->request->get('opmerking'),
-            ];
             $postedToken = $request->request->get('csrfToken');
             if (!empty($postedToken)) {
                 if ($this->isTokenValid($postedToken)) {
@@ -907,6 +900,36 @@ class OrganisatieController extends BaseController
             ->findOneBy(['id' => $id]);
         if ($result) {
             $result->setUitslagGepubliceerd(0);
+            $this->addToDB($result);
+        }
+        return new Response('true');
+    }
+
+    /**
+     * @Route("/organisatie/Juryzaken/changeJuryDagAjaxCall/{id}/{dag}/",
+     * name="changeJuryDagAjaxCall", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function changeJuryDagAjaxCall($id, $dag)
+    {
+        /** @var Jurylid $result */
+        $result = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+            ->findOneBy(['id' => $id]);
+        if ($result) {
+            $result->setZaterdag(false);
+            $result->setZondag(false);
+            switch ($dag) {
+                case 'Za':
+                    $result->setZaterdag(true);
+                    break;
+                case 'Zo':
+                    $result->setZondag(true);
+                    break;
+                case 'ZaZo':
+                    $result->setZaterdag(true);
+                    $result->setZondag(true);
+                    break;
+            }
             $this->addToDB($result);
         }
         return new Response('true');
