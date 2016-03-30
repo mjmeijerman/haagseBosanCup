@@ -186,20 +186,21 @@ class BaseController extends Controller
     protected function getToegestaneNiveaus()
     {
         $toegestaneNiveaus = [];
-        $categorien = $this->getCategorien();
-        foreach ($categorien as $categorie) {
+        $repo = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus');
+        /** @var ToegestaneNiveaus[] $results */
+        if ($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') {
+            $results = $repo->findAll();
+        } else {
+            $results = $repo->findBy([
+                'uitslagGepubliceerd' => 1,
+            ]);
+        }
+        foreach ($results as $result) {
             /** @var ToegestaneNiveaus[] $results */
-            $results = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
-                ->findBy(['categorie' => $categorie]);
-            foreach ($results as $result) {
-                if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
-                $result->getUitslagGepubliceerd()) {
-                    $toegestaneNiveaus[$categorie][$result->getId()] = [
-                        'niveau' => $result->getNiveau(),
-                        'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
-                    ];
-                }
-            }
+            $toegestaneNiveaus[$result->getCategorie()][$result->getId()] = [
+                'niveau' => $result->getNiveau(),
+                'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
+            ];
         }
         return $toegestaneNiveaus;
     }
