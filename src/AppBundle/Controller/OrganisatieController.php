@@ -8,6 +8,7 @@ use AppBundle\Entity\JuryIndeling;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
 use AppBundle\Entity\Scores;
+use AppBundle\Entity\TijdSchema;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -141,6 +142,41 @@ class OrganisatieController extends BaseController
     {
         $this->setBasicPageData('Organisatie');
         $file = new JuryIndeling();
+        $form = $this->createFormBuilder($file)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $file->setUploader($user->getUsername());
+            $file->setCreatedAt(new \DateTime('now'));
+            $this->addToDB($file);
+            return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+        } else {
+            return $this->render('organisatie/juryIndeling.html.twig', array(
+                'menuItems' => $this->menuItems,
+                'form' => $form->createView(),
+                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+                'totaalAantalTurnsters' => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden' => $this->aantalJury,
+            ));
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/organisatie/{page}/tijdSchema/", name="addtijdSchema")
+     * @Method({"GET", "POST"})
+     */
+    public function addtijdSchemaAction(Request $request, $page)
+    {
+        $this->setBasicPageData('Organisatie');
+        $file = new TijdSchema();
         $form = $this->createFormBuilder($file)
             ->add('naam')
             ->add('file')

@@ -6,6 +6,7 @@ use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\JuryIndeling;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\SendMail;
+use AppBundle\Entity\TijdSchema;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
@@ -402,6 +403,23 @@ class BaseController extends Controller
         if ($result) {
             $juryIndeling = $result[0]->getAll();
             return $juryIndeling;
+        } else {
+            return false;
+        }
+    }
+
+    protected function getTijdSchema()
+    {
+        /** @var TijdSchema[] $result */
+        $result = $this->getDoctrine()
+            ->getRepository('AppBundle:TijdSchema')
+            ->findBy(
+                [],
+                ['id' => 'DESC']
+            );
+        if ($result) {
+            $tijdSchema = $result[0]->getAll();
+            return $tijdSchema;
         } else {
             return false;
         }

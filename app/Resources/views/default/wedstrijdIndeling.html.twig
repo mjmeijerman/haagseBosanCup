@@ -2,6 +2,14 @@
 
 {% block body %}
     <h1>Wedstrijdindeling</h1>
+    {% if tijdSchema%}
+        <h4 id="contact">» Tijdschema</h4>
+        <p>
+            Het tijdschema kan
+            <a href="http://www.haagsebosancup.nl/uploads/tijdSchema/tijdSchema.pdf" target="_blank">
+                hier</a> worden ingezien.
+        </p>
+    {% endif %}
     {% for dag in dagen %}
         <h4 id="contact">» {{ dag.wedstrijddag }}</h4>
         <table class="wedstrijdindeling">
