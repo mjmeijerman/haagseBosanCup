@@ -81,6 +81,13 @@ class PrijswinnaarsPdfController extends AlphaPDFController
                 for ($j = 0; $j < 5; $j++) {
                     if (($j + 1) % 5 == 0) {
                         $this->Cell($w[$j], 7, '', 0, 0);
+                    } elseif ($j == 2) {
+                        if (isset($waardes[$k][$i][$j])) {
+                            $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", number_format
+                            ($waardes[$k][$i][$j], 3, ',', '.')), 1, 0);
+                        } else {
+                            $this->Cell($w[$j], 7, '', 0, 0);
+                        }
                     } else {
                         if (isset($waardes[$k][$i][$j])) {
                             $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", $waardes[$k][$i][$j]), 1, 0);
@@ -120,6 +127,13 @@ class PrijswinnaarsPdfController extends AlphaPDFController
                 for ($j = 0; $j < 5; $j++) {
                     if (($j + 1) % 5 == 0) {
                         $this->Cell($w[$j], 7, '', 0, 0);
+                    } elseif ($j == 2) {
+                        if (isset($waardes[$k][$i][$j])) {
+                            $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", number_format
+                            ($waardes[$k][$i][$j], 3, ',', '.')), 1, 0);
+                        } else {
+                            $this->Cell($w[$j], 7, '', 0, 0);
+                        }
                     } else {
                         if (isset($waardes[$k][$i][$j])) {
                             $this->Cell($w[$j], 7, iconv("UTF-8", "CP1250//TRANSLIT", $waardes[$k][$i][$j]), 1, 0);

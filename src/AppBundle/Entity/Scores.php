@@ -217,24 +217,72 @@ class Scores
         $this->geturndVloer = $geturndVloer;
     }
 
+    /**
+     * @return float|int
+     */
+    public function getTotaalBrug()
+    {
+        return ((floatval($this->getDBrug()) + floatval($this->getEBrug()) -
+            floatval($this->getNBrug()) > 0) ? floatval($this->getDBrug()) +
+            floatval($this->getEBrug()) - floatval($this->getNBrug()) : 0);
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getTotaalBalk()
+    {
+        return ((floatval($this->getDBalk()) + floatval($this->getEBalk()) -
+            floatval($this->getNBalk()) > 0) ? floatval($this->getDBalk()) +
+            floatval($this->getEBalk()) - floatval($this->getNBalk()) : 0);
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getTotaalVloer()
+    {
+        return ((floatval($this->getDVloer()) + floatval($this->getEVloer()) -
+            floatval($this->getNVloer()) > 0) ? floatval($this->getDVloer()) +
+            floatval($this->getEVloer()) - floatval($this->getNVloer()) : 0);
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getTotaalSprong1()
+    {
+        return ((floatval($this->getDSprong1()) + floatval($this->getESprong1()) -
+            floatval($this->getNSprong1()) > 0) ? floatval($this->getDSprong1()) +
+            floatval($this->getESprong1()) - floatval($this->getNSprong1()) : 0);
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getTotaalSprong2()
+    {
+        return ((floatval($this->getDSprong2()) + floatval($this->getESprong2()) -
+            floatval($this->getNSprong2()) > 0) ? floatval($this->getDSprong2()) +
+            floatval($this->getESprong2()) - floatval($this->getNSprong2()) : 0);
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotaalSprong()
+    {
+        return (($this->getTotaalSprong1() + $this->getTotaalSprong2()) / 2);
+    }
+
     public function getScores()
     {
-        $totaalBrug = (floatval($this->getDBrug()) + floatval($this->getEBrug()) -
-            floatval($this->getNBrug()) > 0) ? floatval($this->getDBrug()) +
-            floatval($this->getEBrug()) - floatval($this->getNBrug()) : 0;
-        $totaalBalk = (floatval($this->getDBalk()) + floatval($this->getEBalk()) -
-            floatval($this->getNBalk()) > 0) ? floatval($this->getDBalk()) +
-            floatval($this->getEBalk()) - floatval($this->getNBalk()) : 0;
-        $totaalVloer = (floatval($this->getDVloer()) + floatval($this->getEVloer()) -
-            floatval($this->getNVloer()) > 0) ? floatval($this->getDVloer()) +
-            floatval($this->getEVloer()) - floatval($this->getNVloer()) : 0;
-        $totaalSprong1 = (floatval($this->getDSprong1()) + floatval($this->getESprong1()) -
-            floatval($this->getNSprong1()) > 0) ? floatval($this->getDSprong1()) +
-            floatval($this->getESprong1()) - floatval($this->getNSprong1()) : 0;
-        $totaalSprong2 = (floatval($this->getDSprong2()) + floatval($this->getESprong2()) -
-            floatval($this->getNSprong2()) > 0) ? floatval($this->getDSprong2()) +
-            floatval($this->getESprong2()) - floatval($this->getNSprong2()) : 0;
-        $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
+        $totaalBrug = $this->getTotaalBrug();
+        $totaalBalk = $this->getTotaalBalk();
+        $totaalVloer = $this->getTotaalVloer();
+        $totaalSprong1 = $this->getTotaalSprong1();
+        $totaalSprong2 = $this->getTotaalSprong2();
+        $totaalSprong = $this->getTotaalSprong();
         $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
         return [
             'userId' => $this->getTurnster()->getUser()->getId(),
@@ -246,21 +294,21 @@ class Scores
             'niveau' => $this->getTurnster()->getNiveau(),
             'dBrug' => number_format($this->getDBrug(), 2, ",", "."),
             'nBrug' => number_format($this->getNBrug(), 2, ",", "."),
-            'totaalBrug' => number_format($totaalBrug, 3, ",", "."),
+            'totaalBrug' => $totaalBrug,
             'dBalk' => number_format($this->getDBalk(), 2, ",", "."),
             'nBalk' => number_format($this->getNBalk(), 2, ",", "."),
-            'totaalBalk' => number_format($totaalBalk, 3, ",", "."),
+            'totaalBalk' => $totaalBalk,
             'dVloer' => number_format($this->getDVloer(), 2, ",", "."),
             'nVloer' => number_format($this->getNVloer(), 2, ",", "."),
-            'totaalVloer' => number_format($totaalVloer, 3, ",", "."),
+            'totaalVloer' => $totaalVloer,
             'dSprong1' => number_format($this->getDSprong1(), 2, ",", "."),
             'nSprong1' => number_format($this->getNSprong1(), 2, ",", "."),
-            'totaalSprong1' => number_format($totaalSprong1, 3, ",", "."),
+            'totaalSprong1' => $totaalSprong1,
             'dSprong2' => number_format($this->getDSprong2(), 2, ",", "."),
             'nSprong2' => number_format($this->getNSprong2(), 2, ",", "."),
-            'totaalSprong2' => number_format($totaalSprong2, 3, ",", "."),
-            'totaalSprong' => number_format($totaalSprong, 3, ",", "."),
-            'totaal' => number_format($totaal, 3, ",", "."),
+            'totaalSprong2' => $totaalSprong2,
+            'totaalSprong' => $totaalSprong, 3,
+            'totaal' => $totaal,
         ];
     }
 

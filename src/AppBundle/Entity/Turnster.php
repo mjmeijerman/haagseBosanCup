@@ -108,24 +108,14 @@ class Turnster
 
     public function getUitslagenLijst()
     {
-        $totaalBrug = (floatval($this->getScores()->getDBrug()) + floatval($this->getScores()->getEBrug()) -
-            floatval($this->getScores()->getNBrug()) > 0) ? floatval($this->getScores()->getDBrug()) +
-            floatval($this->getScores()->getEBrug()) - floatval($this->getScores()->getNBrug()) : 0;
-        $totaalBalk = (floatval($this->getScores()->getDBalk()) + floatval($this->getScores()->getEBalk()) -
-            floatval($this->getScores()->getNBalk()) > 0) ? floatval($this->getScores()->getDBalk()) +
-            floatval($this->getScores()->getEBalk()) - floatval($this->getScores()->getNBalk()) : 0;
-        $totaalVloer = (floatval($this->getScores()->getDVloer()) + floatval($this->getScores()->getEVloer()) -
-            floatval($this->getScores()->getNVloer()) > 0) ? floatval($this->getScores()->getDVloer()) +
-            floatval($this->getScores()->getEVloer()) - floatval($this->getScores()->getNVloer()) : 0;
-        $totaalSprong1 = (floatval($this->getScores()->getDSprong1()) + floatval($this->getScores()->getESprong1()) -
-            floatval($this->getScores()->getNSprong1()) > 0) ? floatval($this->getScores()->getDSprong1()) +
-            floatval($this->getScores()->getESprong1()) - floatval($this->getScores()->getNSprong1()) : 0;
-        $totaalSprong2 = (floatval($this->getScores()->getDSprong2()) + floatval($this->getScores()->getESprong2()) -
-            floatval($this->getScores()->getNSprong2()) > 0) ? floatval($this->getScores()->getDSprong2()) +
-            floatval($this->getScores()->getESprong2()) - floatval($this->getScores()->getNSprong2()) : 0;
-        $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
-        $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
-        return [
+        $totaalBrug = (floatval($this->getScores()->getTotaalBrug()));
+        $totaalBalk = (floatval($this->getScores()->getTotaalBalk()));
+        $totaalVloer = (floatval($this->getScores()->getTotaalVloer()));
+        $totaalSprong1 = (floatval($this->getScores()->getTotaalSprong1()));
+        $totaalSprong2 = (floatval($this->getScores()->getTotaalSprong2()));
+        $totaalSprong = (floatval($this->getScores()->getTotaalSprong()));
+        $totaal = floatval($totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer);
+        return array(
             'id' => $this->getId(),
             'userId' => $this->getUser()->getId(),
             'wedstrijdnummer' => $this->getScores()->getWedstrijdnummer(),
@@ -136,22 +126,22 @@ class Turnster
             'niveau' => $this->getNiveau(),
             'dBrug' => number_format($this->getScores()->getDBrug(), 2, ",", "."),
             'nBrug' => number_format($this->getScores()->getNBrug(), 2, ",", "."),
-            'totaalBrug' => number_format($totaalBrug, 3, ",", "."),
+            'totaalBrug' => $totaalBrug,
             'dBalk' => number_format($this->getScores()->getDBalk(), 2, ",", "."),
             'nBalk' => number_format($this->getScores()->getNBalk(), 2, ",", "."),
-            'totaalBalk' => number_format($totaalBalk, 3, ",", "."),
+            'totaalBalk' => $totaalBalk,
             'dVloer' => number_format($this->getScores()->getDVloer(), 2, ",", "."),
             'nVloer' => number_format($this->getScores()->getNVloer(), 2, ",", "."),
-            'totaalVloer' => number_format($totaalVloer, 3, ",", "."),
+            'totaalVloer' => $totaalVloer,
             'dSprong1' => number_format($this->getScores()->getDSprong1(), 2, ",", "."),
             'nSprong1' => number_format($this->getScores()->getNSprong1(), 2, ",", "."),
-            'totaalSprong1' => number_format($totaalSprong1, 3, ",", "."),
+            'totaalSprong1' => $totaalSprong1,
             'dSprong2' => number_format($this->getScores()->getDSprong2(), 2, ",", "."),
             'nSprong2' => number_format($this->getScores()->getNSprong2(), 2, ",", "."),
-            'totaalSprong2' => number_format($totaalSprong2, 3, ",", "."),
-            'totaalSprong' => number_format($totaalSprong, 3, ",", "."),
-            'totaal' => number_format($totaal, 3, ",", "."),
-        ];
+            'totaalSprong2' => $totaalSprong2,
+            'totaalSprong' => $totaalSprong,
+            'totaal' => $totaal,
+        );
     }
 
     public function getId()
