@@ -1315,15 +1315,17 @@ class BaseController extends Controller
         $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
         foreach ($toestellen as $toestel) {
             usort($scores, function ($a, $b) use ($toestel) {
-                if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
+                $epsilon = 0.00001;
+                if (abs($a['totaal' . $toestel] - $b['totaal' . $toestel]) < $epsilon) {
                     return 0;
                 }
                 return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
             });
+            $epsilon = 0.00001;
             for ($i = 1; $i <= count($scores); $i++) {
                 if ($i == 1) {
                     $scores[($i - 1)]['rank' . $toestel] = $i;
-                } elseif ($scores[($i - 1)]['totaal' . $toestel] == $scores[($i - 2)]['totaal' . $toestel]) {
+                } elseif (abs($scores[($i - 1)]['totaal' . $toestel] - $scores[($i - 2)]['totaal' . $toestel]) < $epsilon) {
                     $scores[($i - 1)]['rank' . $toestel] = $scores[($i - 2)]['rank' . $toestel];
                 } else {
                     $scores[($i - 1)]['rank' . $toestel] = $i;
