@@ -151,8 +151,11 @@
     <div class="bericht">
         <table>
             <tr>
-                <td>Inschrijvingen verwijderen</td>
-                <td>Knop</td>
+                <div class="indelingen_button" style="float: left;">
+                    <a href="{{ path('removeInschrijvingen', { 'page': app.request.get('page'), }) }}">
+                        Alle inschrijvingen verwijderen
+                    </a>
+                </div>
             </tr>
         </table>
     </div>

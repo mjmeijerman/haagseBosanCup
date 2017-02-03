@@ -12,6 +12,7 @@ use AppBundle\Entity\TijdSchema;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserRepository;
 use AppBundle\Entity\Voorinschrijving;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,7 +193,7 @@ class OrganisatieController extends BaseController
             $this->addToDB($file);
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
-            return $this->render('organisatie/juryIndeling.html.twig', array(
+            return $this->render('organisatie/tijdSchema.html.twig', array(
                 'menuItems' => $this->menuItems,
                 'form' => $form->createView(),
                 'totaalAantalVerenigingen' => $this->aantalVerenigingen,
@@ -1310,6 +1311,41 @@ class OrganisatieController extends BaseController
         }
         $this->setBasicPageData('Organisatie');
         return $this->render('organisatie/uploadWedstrijdindelingen.html.twig', array(
+            'menuItems' => $this->menuItems,
+            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
+            'totaalAantalTurnsters' => $this->aantalTurnsters,
+            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+            'totaalAantalJuryleden' => $this->aantalJury,
+        ));
+    }
+
+    /**
+     * @Route("/organisatie/{page}/removeInschrijvingen/", name="removeInschrijvingen")
+     * @Method({"GET", "POST"})
+     */
+    public function removeInschrijvingen(Request $request, $page)
+    {
+        if ($request->getMethod() == 'POST') {
+            if ($request->get('confirmRemoveInschrijvingen') === 'JAZEKER') {
+                $em = $this->getDoctrine()->getManager();
+
+                /** @var UserRepository $repository */
+                $repository = $this->getDoctrine()->getRepository('AppBundle:User');
+
+                /** @var User $users */
+                $users = $repository->loadUsersByRole('ROLE_CONTACT');
+
+                foreach ($users as $user) {
+                    $em->remove($user);
+                }
+                $em->flush();
+
+                return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+            }
+        }
+
+        $this->setBasicPageData('Organisatie');
+        return $this->render('organisatie/removeInschrijvingen.html.twig', array(
             'menuItems' => $this->menuItems,
             'totaalAantalVerenigingen' => $this->aantalVerenigingen,
             'totaalAantalTurnsters' => $this->aantalTurnsters,
