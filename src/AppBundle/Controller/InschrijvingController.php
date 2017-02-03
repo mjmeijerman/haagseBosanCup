@@ -118,7 +118,7 @@ class InschrijvingController extends BaseController
                                         $user->getVereniging()->getPlaats(),
                                     'contactEmail'   => $user->getEmail(),
                                 ];
-                                $this->sendEmail($subject, $to, $view, $parameters);
+                                $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsebosancup.nl');
                             }
                         }
                     }
