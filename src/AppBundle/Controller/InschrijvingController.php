@@ -8,17 +8,12 @@ use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vereniging;
 use AppBundle\Entity\Voorinschrijving;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Content;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception;
-use AppBundle\Controller\BaseController;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 
@@ -26,7 +21,7 @@ class InschrijvingController extends BaseController
 {
     private function InschrijvenPageDeelTwee(User $user, Session $session, Request $request)
     {
-        $aantalJury = (ceil($session->get('aantalTurnsters')/10) - count($user->getJurylid()));
+        $aantalJury = (ceil($session->get('aantalTurnsters') / 10) - count($user->getJurylid()));
         if ($request->getMethod() == 'POST') {
             $postedToken = $request->request->get('csrfToken');
             if (!empty($postedToken)) {
@@ -35,23 +30,35 @@ class InschrijvingController extends BaseController
                         $ids = explode('.', $request->request->get('ids'));
                         array_pop($ids);
                         foreach ($ids as $id) {
-                            if ($request->request->get('voornaam_' . trim($id)) && $request->request->get('achternaam_' . trim($id)) &&
-                                $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get('niveau_' . trim($id))) {
+                            if ($request->request->get('voornaam_' . trim($id)) && $request->request->get(
+                                    'achternaam_' . trim($id)
+                                ) &&
+                                $request->request->get('geboorteJaar_' . trim($id)) && $request->request->get(
+                                    'niveau_' . trim($id)
+                                )
+                            ) {
                                 /** @var Turnster $turnster */
                                 if ($turnster = $this->getDoctrine()->getRepository('AppBundle:Turnster')
-                                    ->findOneBy(['id' => trim($id)])) {
+                                    ->findOneBy(['id' => trim($id)])
+                                ) {
                                     $turnster->setVoornaam(trim($request->request->get('voornaam_' . trim($id))));
                                     $turnster->setAchternaam(trim($request->request->get('achternaam_' . trim($id))));
                                     $turnster->setGeboortejaar($request->request->get('geboorteJaar_' . trim($id)));
                                     $turnster->setNiveau($request->request->get('niveau_' . trim($id)));
-                                    $turnster->setCategorie($this->getCategorie($request->request->get
-                                    ('geboorteJaar_' . trim($id))));
+                                    $turnster->setCategorie(
+                                        $this->getCategorie(
+                                            $request->request->get
+                                            (
+                                                'geboorteJaar_' . trim($id)
+                                            )
+                                        )
+                                    );
                                     $turnster->setExpirationDate(null);
                                     $turnster->setIngevuld(true);
                                     $this->addToDB($turnster);
                                 } else {
                                     $turnster = new Turnster();
-                                    $scores = new Scores();
+                                    $scores   = new Scores();
                                     if ($this->getVrijePlekken() > 0) {
                                         $turnster->setWachtlijst(false);
                                     } else {
@@ -72,9 +79,14 @@ class InschrijvingController extends BaseController
                             }
                         }
                         for ($i = 1; $i <= $aantalJury; $i++) {
-                            if ($request->request->get('jury_voornaam_' . $i) && $request->request->get('jury_achternaam_' . $i)
-                                && $request->request->get('jury_email_' . $i) && $request->request->get('jury_brevet_' . $i)
-                                && $request->request->get('jury_dag_'. $i)) {
+                            if ($request->request->get('jury_voornaam_' . $i) && $request->request->get(
+                                    'jury_achternaam_' . $i
+                                )
+                                && $request->request->get('jury_email_' . $i) && $request->request->get(
+                                    'jury_brevet_' . $i
+                                )
+                                && $request->request->get('jury_dag_' . $i)
+                            ) {
                                 $jurylid = new Jurylid();
                                 $jurylid->setVoornaam(trim($request->request->get('jury_voornaam_' . $i)));
                                 $jurylid->setAchternaam(trim($request->request->get('jury_achternaam_' . $i)));
@@ -94,6 +106,19 @@ class InschrijvingController extends BaseController
                                 $jurylid->setUser($user);
                                 $user->addJurylid($jurylid);
                                 $this->addToDB($user);
+
+                                $subject    = 'Aanmelding Haagse Bosan Cup';
+                                $to         = $jurylid->getEmail();
+                                $view       = 'mails/inschrijven_jurylid.html.twig';
+                                $parameters = [
+                                    'voornaam'       => $jurylid->getVoornaam(),
+                                    'achternaam'     => $jurylid->getAchternaam(),
+                                    'contactpersoon' => $user->getVoornaam() . ' ' . $user->getAchternaam(),
+                                    'vereniging'     => $user->getVereniging()->getNaam() . ', ' .
+                                        $user->getVereniging()->getPlaats(),
+                                    'contactEmail'   => $user->getEmail(),
+                                ];
+                                $this->sendEmail($subject, $to, $view, $parameters);
                             }
                         }
                     }
@@ -104,14 +129,14 @@ class InschrijvingController extends BaseController
                 }
             }
         }
-        $turnsterFields = [];
+        $turnsterFields   = [];
         $timeToExpiration = 0;
         /** @var Turnster[] $turnsters */
         $turnsters = $user->getTurnster();
         if (count($turnsters) < $session->get('aantalTurnsters')) {
             for ($i = 0; $i < ($session->get('aantalTurnsters') - count($turnsters)); $i++) {
                 $turnster = new Turnster();
-                $scores = new Scores();
+                $scores   = new Scores();
                 if ($this->getVrijePlekken() > $i) {
                     $turnster->setWachtlijst(false);
                 } else {
@@ -125,24 +150,24 @@ class InschrijvingController extends BaseController
                 $this->addToDB($user);
             }
         }
-        $geboorteJaren = $this->getGeboorteJaren();
+        $geboorteJaren       = $this->getGeboorteJaren();
         $opgeslagenTurnsters = [];
         foreach ($turnsters as $turnster) {
             if ($turnster->getExpirationDate()) {
                 $turnsterFields[$turnster->getId()] = $turnster->getWachtlijst();
                 if ($timeToExpiration == 0) {
-                    $timeToExpiration = floor(($turnster->getExpirationDate()->getTimestamp() - time() - 120)/60);
+                    $timeToExpiration = floor(($turnster->getExpirationDate()->getTimestamp() - time() - 120) / 60);
                 }
                 if ($timeToExpiration < 0) {
                     $timeToExpiration = 0;
                 }
             } else {
                 $opgeslagenTurnsters[] = [
-                    'voornaam' => $turnster->getVoornaam(),
-                    'achternaam' => $turnster->getAchternaam(),
+                    'voornaam'     => $turnster->getVoornaam(),
+                    'achternaam'   => $turnster->getAchternaam(),
                     'geboortejaar' => $turnster->getGeboortejaar(),
-                    'niveau' => $turnster->getNiveau(),
-                    'wachtlijst' => $turnster->getWachtlijst(),
+                    'niveau'       => $turnster->getNiveau(),
+                    'wachtlijst'   => $turnster->getWachtlijst(),
                 ];
             }
         }
@@ -151,30 +176,33 @@ class InschrijvingController extends BaseController
         $juryleden = $user->getJurylid();
         foreach ($juryleden as $jurylid) {
             $opgeslagenJuryleden[] = [
-                'voornaam' => $jurylid->getVoornaam(),
+                'voornaam'   => $jurylid->getVoornaam(),
                 'achternaam' => $jurylid->getAchternaam(),
-                'email' => $jurylid->getEmail(),
-                'brevet' => $jurylid->getBrevet(),
+                'email'      => $jurylid->getEmail(),
+                'brevet'     => $jurylid->getBrevet(),
             ];
         }
-        $tijdTot = date('d-m-Y H:i', (time() + ($timeToExpiration)*60));
-        $csrfToken = $this->getToken();
-        $optegevenJury = ceil($session->get('aantalTurnsters')/10);
-        $aantalJury = (ceil($session->get('aantalTurnsters')/10) - count($user->getJurylid()));
-        return $this->render('inschrijven/inschrijven_turnsters.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'sponsors' => $this->sponsors,
-            'csrfToken' => $csrfToken,
-            'timeToExpiration' => $timeToExpiration,
-            'turnsterFields' => $turnsterFields,
-            'tijdTot' => $tijdTot,
-            'geboorteJaren' => $geboorteJaren,
-            'opgeslagenTurnsters' => $opgeslagenTurnsters,
-            'aantalJury' => $aantalJury,
-            'opgeslagenJuryleden' => $opgeslagenJuryleden,
-            'optegevenJury' => $optegevenJury,
-            'vrijePlekken' => $session->get('vrijePlekken'),
-        ));
+        $tijdTot       = date('d-m-Y H:i', (time() + ($timeToExpiration) * 60));
+        $csrfToken     = $this->getToken();
+        $optegevenJury = ceil($session->get('aantalTurnsters') / 10);
+        $aantalJury    = (ceil($session->get('aantalTurnsters') / 10) - count($user->getJurylid()));
+        return $this->render(
+            'inschrijven/inschrijven_turnsters.html.twig',
+            array(
+                'menuItems'           => $this->menuItems,
+                'sponsors'            => $this->sponsors,
+                'csrfToken'           => $csrfToken,
+                'timeToExpiration'    => $timeToExpiration,
+                'turnsterFields'      => $turnsterFields,
+                'tijdTot'             => $tijdTot,
+                'geboorteJaren'       => $geboorteJaren,
+                'opgeslagenTurnsters' => $opgeslagenTurnsters,
+                'aantalJury'          => $aantalJury,
+                'opgeslagenJuryleden' => $opgeslagenJuryleden,
+                'optegevenJury'       => $optegevenJury,
+                'vrijePlekken'        => $session->get('vrijePlekken'),
+            )
+        );
     }
 
     /**
@@ -188,74 +216,75 @@ class InschrijvingController extends BaseController
         if ($this->inschrijvingToegestaan($request->query->get('token'), $session)) {
             $this->setBasicPageData();
             if ($session->get('username') && $user = $this->getDoctrine()->getRepository('AppBundle:User')
-                    ->loadUserByUsername($session->get('username'))){
+                    ->loadUserByUsername($session->get('username'))
+            ) {
                 return $this->InschrijvenPageDeelTwee($user, $session, $request);
             }
-            $display = "none";
+            $display          = "none";
             $verenigingOption = '';
-            $values = [
-                'verenigingId' => '',
-                'verenigingsnaam' => '',
+            $values           = [
+                'verenigingId'      => '',
+                'verenigingsnaam'   => '',
                 'verenigingsplaats' => '',
-                'voornaam' => '',
-                'achternaam' => '',
-                'email' => '',
-                'telefoonnummer' => '',
-                'username' => '',
-                'wachtwoord' => '',
-                'wachtwoord2' => '',
-                'aantalTurnsters' => '',
+                'voornaam'          => '',
+                'achternaam'        => '',
+                'email'             => '',
+                'telefoonnummer'    => '',
+                'username'          => '',
+                'wachtwoord'        => '',
+                'wachtwoord2'       => '',
+                'aantalTurnsters'   => '',
             ];
-            $classNames = [
-                'verenigingnaam' => 'select',
-                'verenigingsnaam' => 'text',
-                'verenigingsplaats' => 'text',
-                'voornaam' => 'text',
-                'achternaam' => 'text',
-                'email' => 'text',
-                'telefoonnummer' => 'text',
-                'username' => 'text',
-                'wachtwoord' => 'text',
-                'wachtwoord2' => 'text',
-                'aantalTurnsters' => 'number',
-                'inschrijven_vereniging_header' => '',
+            $classNames       = [
+                'verenigingnaam'                    => 'select',
+                'verenigingsnaam'                   => 'text',
+                'verenigingsplaats'                 => 'text',
+                'voornaam'                          => 'text',
+                'achternaam'                        => 'text',
+                'email'                             => 'text',
+                'telefoonnummer'                    => 'text',
+                'username'                          => 'text',
+                'wachtwoord'                        => 'text',
+                'wachtwoord2'                       => 'text',
+                'aantalTurnsters'                   => 'number',
+                'inschrijven_vereniging_header'     => '',
                 'inschrijven_contactpersoon_header' => '',
-                'aantal_plekken_header' => '',
+                'aantal_plekken_header'             => '',
             ];
             if ($request->getMethod() == 'POST') {
                 $display = "";
                 if ($request->request->get('verenigingsid')) {
                     $values['verenigingId'] = $request->request->get('verenigingsid');
                 } else {
-                    $values['verenigingsnaam'] = $request->request->get('verenigingsnaam');
+                    $values['verenigingsnaam']   = $request->request->get('verenigingsnaam');
                     $values['verenigingsplaats'] = $request->request->get('verenigingsplaats');;
                     $verenigingOption = 'checked';
                 }
-                $values['voornaam'] = $request->request->get('voornaam');
-                $values['achternaam'] = $request->request->get('achternaam');
-                $values['email'] = $request->request->get('email');
-                $values['telefoonnummer'] = $request->request->get('telefoonnummer');
-                $values['username'] = $request->request->get('username');
-                $values['wachtwoord'] = $request->request->get('wachtwoord');
-                $values['wachtwoord2'] = $request->request->get('wachtwoord2');
+                $values['voornaam']        = $request->request->get('voornaam');
+                $values['achternaam']      = $request->request->get('achternaam');
+                $values['email']           = $request->request->get('email');
+                $values['telefoonnummer']  = $request->request->get('telefoonnummer');
+                $values['username']        = $request->request->get('username');
+                $values['wachtwoord']      = $request->request->get('wachtwoord');
+                $values['wachtwoord2']     = $request->request->get('wachtwoord2');
                 $values['aantalTurnsters'] = $request->request->get('aantalTurnsters');
-                $postedToken = $request->request->get('csrfToken');
+                $postedToken               = $request->request->get('csrfToken');
                 if (!empty($postedToken)) {
                     if ($this->isTokenValid($postedToken)) {
                         $validationVereniging = [
-                            'verengingsId' => false,
-                            'verenigingsnaam' => false,
+                            'verengingsId'      => false,
+                            'verenigingsnaam'   => false,
                             'verenigingsplaats' => false,
                         ];
 
                         if ($request->request->get('verenigingsid')) {
-                            $validationVereniging['verenigingsnaam'] = true;
+                            $validationVereniging['verenigingsnaam']   = true;
                             $validationVereniging['verenigingsplaats'] = true;
                             if ($vereniging = $this->getDoctrine()->getRepository('AppBundle:Vereniging')
                                 ->findOneBy(['id' => $request->request->get('verenigingsid')])
                             ) {
                                 $validationVereniging['verengingsId'] = true;
-                                $classNames['verenigingnaam'] = 'selectIngevuld';
+                                $classNames['verenigingnaam']         = 'selectIngevuld';
                             } else {
                                 $this->addFlash(
                                     'error',
@@ -264,11 +293,11 @@ class InschrijvingController extends BaseController
                                 $classNames['verenigingnaam'] = 'error';
                             }
                         } else {
-                            $vereniging = new Vereniging();
+                            $vereniging                           = new Vereniging();
                             $validationVereniging['verengingsId'] = true;
                             if (strlen($request->request->get('verenigingsnaam')) > 1) {
                                 $validationVereniging['verenigingsnaam'] = true;
-                                $classNames['verenigingsnaam'] = 'succesIngevuld';
+                                $classNames['verenigingsnaam']           = 'succesIngevuld';
                                 $vereniging->setNaam(trim(strtoupper($request->request->get('verenigingsnaam'))));
                             } else {
                                 $this->addFlash(
@@ -279,7 +308,7 @@ class InschrijvingController extends BaseController
                             }
                             if (strlen($request->request->get('verenigingsplaats')) > 1) {
                                 $validationVereniging['verenigingsplaats'] = true;
-                                $classNames['verenigingsplaats'] = 'succesIngevuld';
+                                $classNames['verenigingsplaats']           = 'succesIngevuld';
                                 $vereniging->setPlaats(trim(strtoupper($request->request->get('verenigingsplaats'))));
                             } else {
                                 $this->addFlash(
@@ -297,18 +326,18 @@ class InschrijvingController extends BaseController
                         }
 
                         $validationContactpersoon = [
-                            'voornaam' => false,
-                            'achternaam' => false,
-                            'email' => false,
+                            'voornaam'       => false,
+                            'achternaam'     => false,
+                            'email'          => false,
                             'telefoonnummer' => false,
-                            'username' => false,
-                            'wachtwoord' => false,
-                            'wachtwoord2' => false,
+                            'username'       => false,
+                            'wachtwoord'     => false,
+                            'wachtwoord2'    => false,
                         ];
 
                         if (strlen($request->request->get('voornaam')) > 1) {
                             $validationContactpersoon['voornaam'] = true;
-                            $classNames['voornaam'] = 'succesIngevuld';
+                            $classNames['voornaam']               = 'succesIngevuld';
                         } else {
                             $this->addFlash(
                                 'error',
@@ -319,7 +348,7 @@ class InschrijvingController extends BaseController
 
                         if (strlen($request->request->get('achternaam')) > 1) {
                             $validationContactpersoon['achternaam'] = true;
-                            $classNames['achternaam'] = 'succesIngevuld';
+                            $classNames['achternaam']               = 'succesIngevuld';
                         } else {
                             $this->addFlash(
                                 'error',
@@ -329,13 +358,13 @@ class InschrijvingController extends BaseController
                         }
 
                         $emailConstraint = new EmailConstraint();
-                        $errors = $this->get('validator')->validate(
+                        $errors          = $this->get('validator')->validate(
                             $request->request->get('email'),
                             $emailConstraint
                         );
                         if (count($errors) == 0) {
                             $validationContactpersoon['email'] = true;
-                            $classNames['email'] = 'succesIngevuld';
+                            $classNames['email']               = 'succesIngevuld';
                         } else {
                             foreach ($errors as $error) {
                                 $this->addFlash(
@@ -347,11 +376,13 @@ class InschrijvingController extends BaseController
                         }
 
                         $re = '/^([0-9]+)$/';
-                        if (preg_match($re,
-                                $request->request->get('telefoonnummer')) && strlen($request->request->get('telefoonnummer')) == 10
+                        if (preg_match(
+                                $re,
+                                $request->request->get('telefoonnummer')
+                            ) && strlen($request->request->get('telefoonnummer')) == 10
                         ) {
                             $validationContactpersoon['telefoonnummer'] = true;
-                            $classNames['telefoonnummer'] = 'succesIngevuld';
+                            $classNames['telefoonnummer']               = 'succesIngevuld';
                         } else {
                             $this->addFlash(
                                 'error',
@@ -363,7 +394,7 @@ class InschrijvingController extends BaseController
                         if (strlen($request->request->get('username')) > 1) {
                             if ($this->checkUsernameAvailability($request->request->get('username')) === 'true') {
                                 $validationContactpersoon['username'] = true;
-                                $classNames['username'] = 'succesIngevuld';
+                                $classNames['username']               = 'succesIngevuld';
                             } else {
                                 $this->addFlash(
                                     'error',
@@ -380,10 +411,10 @@ class InschrijvingController extends BaseController
                         }
 
                         if (strlen($request->request->get('wachtwoord')) > 5) {
-                            $validationContactpersoon['wachtwoord'] = true;
-                            $classNames['wachtwoord'] = 'succesIngevuld';
+                            $validationContactpersoon['wachtwoord']  = true;
+                            $classNames['wachtwoord']                = 'succesIngevuld';
                             $validationContactpersoon['wachtwoord2'] = true;
-                            $classNames['wachtwoord2'] = 'succesIngevuld';
+                            $classNames['wachtwoord2']               = 'succesIngevuld';
                         } else {
                             $this->addFlash(
                                 'error',
@@ -398,7 +429,7 @@ class InschrijvingController extends BaseController
                                 'error',
                                 'De wachtwoorden zijn niet aan elkaar gelijk'
                             );
-                            $classNames['wachtwoord'] = 'error';
+                            $classNames['wachtwoord']  = 'error';
                             $classNames['wachtwoord2'] = 'error';
                         }
 
@@ -413,9 +444,9 @@ class InschrijvingController extends BaseController
                                     'error',
                                     'Je probeert te veel plekken te reserveren!'
                                 );
-                            } else{
-                                $validationAantalturnsters = true;
-                                $classNames['aantalTurnsters'] = 'numberIngevuld';
+                            } else {
+                                $validationAantalturnsters           = true;
+                                $classNames['aantalTurnsters']       = 'numberIngevuld';
                                 $classNames['aantal_plekken_header'] = 'success';
                             }
                         } else {
@@ -425,8 +456,10 @@ class InschrijvingController extends BaseController
                             );
                         }
 
-                        if (!(in_array(false, $validationVereniging)) && !(in_array(false,
-                                $validationContactpersoon)) &&
+                        if (!(in_array(false, $validationVereniging)) && !(in_array(
+                                false,
+                                $validationContactpersoon
+                            )) &&
                             $validationAantalturnsters
                         ) {
                             if ($request->query->get('token')) {
@@ -447,39 +480,47 @@ class InschrijvingController extends BaseController
                             $contactpersoon->setVoornaam(trim($request->request->get('voornaam')));
                             $contactpersoon->setAchternaam(trim($request->request->get('achternaam')));
                             $password = $request->request->get('wachtwoord');
-                            $encoder = $this->container
+                            $encoder  = $this->container
                                 ->get('security.encoder_factory')
                                 ->getEncoder($contactpersoon);
-                            $contactpersoon->setPassword($encoder->encodePassword($password, $contactpersoon->getSalt()));
+                            $contactpersoon->setPassword(
+                                $encoder->encodePassword($password, $contactpersoon->getSalt())
+                            );
                             $contactpersoon->setIsActive(true);
                             $contactpersoon->setTelefoonnummer($request->request->get('telefoonnummer'));
                             $contactpersoon->setCreatedAt(new \DateTime('now'));
                             $contactpersoon->setVereniging($vereniging);
                             for ($i = 0; $i < $request->request->get('aantalTurnsters'); $i++) {
                                 $turnster = new Turnster();
-                                $scores = new Scores();
+                                $scores   = new Scores();
                                 if ($this->getVrijePlekken() > $i) {
                                     $turnster->setWachtlijst(false);
                                 } else {
                                     $turnster->setWachtlijst(true);
                                 }
                                 $turnster->setCreationDate(new \DateTime('now'));
-                                $turnster->setExpirationDate(new \DateTime('now + ' . ($this->getMinutesToExpiration($request->request->get('aantalTurnsters'))
-                                 + 3) . 'minutes'));
+                                $turnster->setExpirationDate(
+                                    new \DateTime(
+                                        'now + ' . ($this->getMinutesToExpiration(
+                                                $request->request->get('aantalTurnsters')
+                                            )
+                                            + 3) . 'minutes'
+                                    )
+                                );
                                 $turnster->setScores($scores);
                                 $turnster->setUser($contactpersoon);
                                 $contactpersoon->addTurnster($turnster);
                             }
                             $session->set('vrijePlekken', $this->getVrijePlekken());
                             $this->addToDB($contactpersoon);
-                            $subject = 'Inloggegevens Haagse Bosan Cup';
-                            $to = $contactpersoon->getEmail();
-                            $view = 'mails/inschrijven_contactpersoon.html.twig';
+                            $subject        = 'Inloggegevens Haagse Bosan Cup';
+                            $to             = $contactpersoon->getEmail();
+                            $view           = 'mails/inschrijven_contactpersoon.html.twig';
                             $inschrijvenTot = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
-                            $parameters = [
-                                'voornaam' => $contactpersoon->getVoornaam(),
+                            $parameters     = [
+                                'voornaam'       => $contactpersoon->getVoornaam(),
                                 'inschrijvenTot' => $inschrijvenTot[self::SLUITING_INSCHRIJVING_TURNSTERS],
-                                'inlognaam' => $contactpersoon->getUsername(),
+                                'inlognaam'      => $contactpersoon->getUsername(),
                             ];
                             $this->sendEmail($subject, $to, $view, $parameters);
                             $session->set('username', $contactpersoon->getUsername());
@@ -491,18 +532,21 @@ class InschrijvingController extends BaseController
             }
             $vrijePlekken = $this->getVrijePlekken();
             $verenigingen = $this->getVerenigingen();
-            $csrfToken = $this->getToken();
-            return $this->render('inschrijven/inschrijven_contactpersoon.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'sponsors' => $this->sponsors,
-                'vrijePlekken' => $vrijePlekken,
-                'verenigingen' => $verenigingen,
-                'csrfToken' => $csrfToken,
-                'display' => $display,
-                'verenigingOption' => $verenigingOption,
-                'classNames' => $classNames,
-                'values' => $values,
-            ));
+            $csrfToken    = $this->getToken();
+            return $this->render(
+                'inschrijven/inschrijven_contactpersoon.html.twig',
+                array(
+                    'menuItems'        => $this->menuItems,
+                    'sponsors'         => $this->sponsors,
+                    'vrijePlekken'     => $vrijePlekken,
+                    'verenigingen'     => $verenigingen,
+                    'csrfToken'        => $csrfToken,
+                    'display'          => $display,
+                    'verenigingOption' => $verenigingOption,
+                    'classNames'       => $classNames,
+                    'values'           => $values,
+                )
+            );
         } else {
             return $this->redirectToRoute('getContent', array('page' => 'Inschrijvingsinformatie'));
         }
@@ -546,7 +590,7 @@ class InschrijvingController extends BaseController
     {
         $this->updateGereserveerdePlekken();
         /** @var User[] $users */
-        $users = $this->getDoctrine()
+        $users     = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findAll();
         $usernames = [];

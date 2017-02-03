@@ -664,6 +664,22 @@ class ContactpersoonController extends BaseController
                                 'success',
                                 'Jurylid succesvol toegevoegd!'
                             );
+
+                            /** @var User $user */
+                            $user = $this->getUser();
+                            $subject    = 'Aanmelding Haagse Bosan Cup';
+                            $to         = $jurylid->getEmail();
+                            $view       = 'mails/inschrijven_jurylid.html.twig';
+                            $parameters = [
+                                'voornaam'       => $jurylid->getVoornaam(),
+                                'achternaam'     => $jurylid->getAchternaam(),
+                                'contactpersoon' => $user->getVoornaam() . ' ' . $user->getAchternaam(),
+                                'vereniging'     => $user->getVereniging()->getNaam() . ', ' .
+                                    $user->getVereniging()->getPlaats(),
+                                'contactEmail'   => $user->getEmail(),
+                            ];
+                            $this->sendEmail($subject, $to, $view, $parameters);
+
                             return $this->redirectToRoute('getContactpersoonIndexPage');
                         }
                     }
