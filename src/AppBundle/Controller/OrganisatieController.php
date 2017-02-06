@@ -1427,14 +1427,12 @@ class OrganisatieController extends BaseController
 
     private function rrmdir($dir)
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         foreach (glob($dir . '/*') as $file) {
             if (is_dir($file)) {
                 $this->rrmdir($file);
             } else {
                 unlink($file);
-            } rmdir($dir);
-        }
+            }
+        } rmdir($dir);
     }
 }
