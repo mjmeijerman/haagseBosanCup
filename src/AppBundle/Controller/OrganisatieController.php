@@ -7,26 +7,19 @@ use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\JuryIndeling;
 use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Reglementen;
-use AppBundle\Entity\Scores;
 use AppBundle\Entity\TijdSchema;
 use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserRepository;
 use AppBundle\Entity\Voorinschrijving;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception;
-use AppBundle\Controller\BaseController;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
-use Symfony\Component\Validator\Constraints\NotBlank as EmptyConstraint;
 
 /**
  * @Security("has_role('ROLE_ORGANISATIE')")
@@ -84,17 +77,20 @@ class OrganisatieController extends BaseController
                 }
             }
             $contactpersoon = [
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'naam'       => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                 'vereniging' => $result->getVereniging()->getNaam() . ', ' . $result->getVereniging()->getPlaats(),
             ];
-            return $this->render('organisatie/removeContactpersoon.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'contactpersoon' => $contactpersoon,
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/removeContactpersoon.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'contactpersoon'                  => $contactpersoon,
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
         return $this->redirectToRoute('organisatieGetContent', ['page' => 'Inschrijvingen']);
     }
@@ -123,14 +119,17 @@ class OrganisatieController extends BaseController
             $this->addToDB($file);
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
-            return $this->render('organisatie/reglementen.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'form' => $form->createView(),
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/reglementen.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'form'                            => $form->createView(),
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
     }
 
@@ -158,14 +157,17 @@ class OrganisatieController extends BaseController
             $this->addToDB($file);
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
-            return $this->render('organisatie/juryIndeling.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'form' => $form->createView(),
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/juryIndeling.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'form'                            => $form->createView(),
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
     }
 
@@ -193,14 +195,17 @@ class OrganisatieController extends BaseController
             $this->addToDB($file);
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
-            return $this->render('organisatie/tijdSchema.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'form' => $form->createView(),
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/tijdSchema.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'form'                            => $form->createView(),
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
     }
 
@@ -214,68 +219,76 @@ class OrganisatieController extends BaseController
     {
         $juryIndeling = $this->getJuryIndeling();
         /** @var Jurylid[] $results */
-        $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+        $results       = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
             ->getAllJuryleden();
-        $juryleden = [];
+        $juryleden     = [];
         $juryledenNiet = [];
         foreach ($results as $result) {
 
-            if ($this->getDoctrine()->getRepository('AppBundle:Turnster')->getIngeschrevenTurnsters($result->getUser
-                ()) > 0
+            if ($this->getDoctrine()->getRepository('AppBundle:Turnster')->getIngeschrevenTurnsters(
+                    $result->getUser
+                    ()
+                ) > 0
             ) {
                 $juryleden[] = [
-                    'id' => $result->getId(),
-                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'id'         => $result->getId(),
+                    'naam'       => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                     'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                             ->getVereniging()->getPlaats(),
-                    'brevet' => $result->getBrevet(),
-                    'dag' => $this->getBeschikbareDag($result),
-                    'opmerking' => $result->getOpmerking(),
-                    'email' => $result->getEmail(),
+                    'brevet'     => $result->getBrevet(),
+                    'dag'        => $this->getBeschikbareDag($result),
+                    'opmerking'  => $result->getOpmerking(),
+                    'email'      => $result->getEmail(),
                 ];
             } else {
                 $juryledenNiet[] = [
-                    'id' => $result->getId(),
-                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                    'id'         => $result->getId(),
+                    'naam'       => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                     'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                             ->getVereniging()->getPlaats(),
-                    'brevet' => $result->getBrevet(),
-                    'dag' => $this->getBeschikbareDag($result),
-                    'opmerking' => $result->getOpmerking(),
-                    'email' => $result->getEmail(),
+                    'brevet'     => $result->getBrevet(),
+                    'dag'        => $this->getBeschikbareDag($result),
+                    'opmerking'  => $result->getOpmerking(),
+                    'email'      => $result->getEmail(),
                 ];
             }
         }
-        return $this->render('organisatie/organisatieJuryPage.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'juryleden' => $juryleden,
-            'juryledenNiet' => $juryledenNiet,
-            'juryIndeling' => $juryIndeling,
-        ));
+        return $this->render(
+            'organisatie/organisatieJuryPage.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'juryleden'                       => $juryleden,
+                'juryledenNiet'                   => $juryledenNiet,
+                'juryIndeling'                    => $juryIndeling,
+            )
+        );
     }
 
     private function getOrganisatieGegevensPage()
     {
         $gegevens = $this->getGegevens();
-        return $this->render('organisatie/organisatieGegevens.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'gegevens' => $gegevens,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-        ));
+        return $this->render(
+            'organisatie/organisatieGegevens.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'gegevens'                        => $gegevens,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+            )
+        );
     }
 
     private function getOrganisatieVloermuziekPage()
     {
         $vloermuziek = [];
-        $categorien = ['Jeugd 2', 'Junior', 'Senior'];
-        $niveaus = ['Div. 3', 'Div. 4', 'Div. 5'];
+        $categorien  = ['Jeugd 2', 'Junior', 'Senior'];
+        $niveaus     = ['Div. 3', 'Div. 4', 'Div. 5'];
         foreach ($categorien as $categorie) {
             foreach ($niveaus as $niveau) {
                 /** @var Turnster[] $results */
@@ -285,42 +298,45 @@ class OrganisatieController extends BaseController
                     if (!$result->getVloermuziek()) {
                         $vloermuziek[$categorie][$niveau]['niet'][$result->getUser()->getId()][] = [
                             'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
-                            'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                            'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
+                            'turnsterNaam'    => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                            'vereniging'      => $result->getUser()->getVereniging()->getNaam() . ' ' .
                                 $result->getUser()->getVereniging()->getPlaats(),
-                            'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
-                            'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
-                            'baan' => $result->getScores()->getBaan(),
-                            'groep' => $result->getScores()->getGroep(),
-                            'contactPersoon' => $result->getUser()->getVoornaam() . ' ' . $result->getUser()
+                            'wedstrijdDag'    => $result->getScores()->getWedstrijddag(),
+                            'wedstrijdRonde'  => $result->getScores()->getWedstrijdronde(),
+                            'baan'            => $result->getScores()->getBaan(),
+                            'groep'           => $result->getScores()->getGroep(),
+                            'contactPersoon'  => $result->getUser()->getVoornaam() . ' ' . $result->getUser()
                                     ->getAchternaam(),
-                            'mail' => $result->getUser()->getEmail(),
-                            'telNr' => $result->getUser()->getTelefoonnummer(),
+                            'mail'            => $result->getUser()->getEmail(),
+                            'telNr'           => $result->getUser()->getTelefoonnummer(),
                         ];
                     } else {
                         $vloermuziek[$categorie][$niveau]['wel'][$result->getUser()->getId()][] = [
                             'wedstrijdNummer' => $result->getScores()->getWedstrijdnummer(),
-                            'turnsterNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                            'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .
+                            'turnsterNaam'    => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                            'vereniging'      => $result->getUser()->getVereniging()->getNaam() . ' ' .
                                 $result->getUser()->getVereniging()->getPlaats(),
-                            'wedstrijdDag' => $result->getScores()->getWedstrijddag(),
-                            'wedstrijdRonde' => $result->getScores()->getWedstrijdronde(),
-                            'baan' => $result->getScores()->getBaan(),
-                            'groep' => $result->getScores()->getGroep(),
-                            'locatie' => $result->getVloermuziek()->getWebPath(),
+                            'wedstrijdDag'    => $result->getScores()->getWedstrijddag(),
+                            'wedstrijdRonde'  => $result->getScores()->getWedstrijdronde(),
+                            'baan'            => $result->getScores()->getBaan(),
+                            'groep'           => $result->getScores()->getGroep(),
+                            'locatie'         => $result->getVloermuziek()->getWebPath(),
                         ];
                     }
                 }
             }
         }
-        return $this->render('organisatie/vloermuziek.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'vloermuziek' => $vloermuziek,
-        ));
+        return $this->render(
+            'organisatie/vloermuziek.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'vloermuziek'                     => $vloermuziek,
+            )
+        );
     }
 
     /**
@@ -329,10 +345,10 @@ class OrganisatieController extends BaseController
      */
     public function editInstellingen($fieldName, $data)
     {
-        $fieldName = str_replace('_', ' ', $fieldName);
+        $fieldName           = str_replace('_', ' ', $fieldName);
         $returnData['error'] = null;
-        $result = $this->getOrganisatieInstellingen($fieldName);
-        $returnData['data'] = $result[$fieldName];
+        $result              = $this->getOrganisatieInstellingen($fieldName);
+        $returnData['data']  = $result[$fieldName];
         if ($data == 'null') {
             return new JsonResponse($returnData);
         }
@@ -344,7 +360,7 @@ class OrganisatieController extends BaseController
                     $instellingen->setGewijzigd(new \DateTime('now'));
                     $instellingen->setAantal($data);
                     $this->addToDB($instellingen);
-                    $result = $this->getOrganisatieInstellingen($fieldName);
+                    $result             = $this->getOrganisatieInstellingen($fieldName);
                     $returnData['data'] = $result[$fieldName];
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
@@ -356,7 +372,7 @@ class OrganisatieController extends BaseController
                     $instellingen->setGewijzigd(new \DateTime('now'));
                     $instellingen->setDatum(new \DateTime($data));
                     $this->addToDB($instellingen);
-                    $result = $this->getOrganisatieInstellingen($fieldName);
+                    $result             = $this->getOrganisatieInstellingen($fieldName);
                     $returnData['data'] = $result[$fieldName];
                 } catch (\Exception $e) {
                     $returnData['error'] = $e->getMessage();
@@ -380,13 +396,16 @@ class OrganisatieController extends BaseController
             return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
         } else {
             $this->setBasicPageData('Organisatie');
-            return $this->render('organisatie/genereerVoorinschrijving.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/genereerVoorinschrijving.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
     }
 
@@ -446,7 +465,7 @@ class OrganisatieController extends BaseController
     private function getVoorinschrijvingen()
     {
         /** @var Voorinschrijving[] $results */
-        $results = $this->getDoctrine()
+        $results            = $this->getDoctrine()
             ->getRepository('AppBundle:Voorinschrijving')
             ->findBy(
                 [],
@@ -472,9 +491,9 @@ class OrganisatieController extends BaseController
             $reglementen = $result[0]->getAll();
         } else {
             $reglementen = [
-                'id' => 0,
-                'naam' => '',
-                'locatie' => '',
+                'id'        => 0,
+                'naam'      => '',
+                'locatie'   => '',
                 'createdAt' => '',
             ];
         }
@@ -483,46 +502,52 @@ class OrganisatieController extends BaseController
 
     private function getOrganisatieInstellingenPage($successMessage = false)
     {
-        $instellingen = $this->getOrganisatieInstellingen();
+        $instellingen       = $this->getOrganisatieInstellingen();
         $voorinschrijvingen = $this->getVoorinschrijvingen();
-        $reglementen = $this->getReglementen();
-        $toegestaneNiveaus = $this->getToegestaneNiveaus();
-        return $this->render('organisatie/organisatieInstellingen.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'instellingen' => $instellingen,
-            'voorinschrijvingen' => $voorinschrijvingen,
-            'reglementen' => $reglementen,
-            'successMessage' => $successMessage,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'toegestaneNiveaus' => $toegestaneNiveaus,
-        ));
+        $reglementen        = $this->getReglementen();
+        $toegestaneNiveaus  = $this->getToegestaneNiveaus();
+        return $this->render(
+            'organisatie/organisatieInstellingen.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'instellingen'                    => $instellingen,
+                'voorinschrijvingen'              => $voorinschrijvingen,
+                'reglementen'                     => $reglementen,
+                'successMessage'                  => $successMessage,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'toegestaneNiveaus'               => $toegestaneNiveaus,
+            )
+        );
     }
 
     private function getOrganisatieHomePage()
     {
-        return $this->render('organisatie/organisatieIndex.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-        ));
+        return $this->render(
+            'organisatie/organisatieIndex.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+            )
+        );
     }
 
     private function getContactpersonen()
     {
         /** @var User[] $results */
-        $results = $this->getDoctrine()
+        $results         = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->loadUsersByRole('ROLE_CONTACT');
         $contactpersonen = [];
         foreach ($results as $result) {
             /** @var Turnster[] $turnsters */
-            $turnsters = $result->getTurnster();
-            $turnstersGeplaatst = [];
+            $turnsters           = $result->getTurnster();
+            $turnstersGeplaatst  = [];
             $turnstersWachtlijst = [];
             foreach ($turnsters as $turnster) {
                 if ($turnster->getAfgemeld()) {
@@ -534,15 +559,16 @@ class OrganisatieController extends BaseController
                     $turnstersGeplaatst[] = $turnster;
                 }
             }
-            $juryleden = $result->getJurylid();
+            $juryleden         = $result->getJurylid();
             $contactpersonen[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                'vereniging' => $result->getVereniging()->getNaam() . ', ' . $result->getVereniging()->getPlaats(),
-                'turnstersGeplaatst' => count($turnstersGeplaatst),
+                'id'                  => $result->getId(),
+                'naam'                => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'vereniging'          => $result->getVereniging()->getNaam() . ', ' . $result->getVereniging()
+                        ->getPlaats(),
+                'turnstersGeplaatst'  => count($turnstersGeplaatst),
                 'turnstersWachtlijst' => count($turnstersWachtlijst),
-                'aantalJuryleden' => count($juryleden),
-                'email' => $result->getEmail(),
+                'aantalJuryleden'     => count($juryleden),
+                'email'               => $result->getEmail(),
             ];
         }
         return $contactpersonen;
@@ -550,31 +576,39 @@ class OrganisatieController extends BaseController
 
     private function getAantallenPerNiveau($groepen)
     {
-        $aantallenPerNiveau = [];
-        $aantallenPerNiveau['geplaatst'] = [];
+        $aantallenPerNiveau               = [];
+        $aantallenPerNiveau['geplaatst']  = [];
         $aantallenPerNiveau['wachtlijst'] = [];
         foreach ($groepen as $categorie => $niveaus) {
-            $aantallenPerNiveau['geplaatst'][$categorie] = [];
+            $aantallenPerNiveau['geplaatst'][$categorie]  = [];
             $aantallenPerNiveau['wachtlijst'][$categorie] = [];
             foreach ($niveaus as $niveau) {
                 $geboortejaren = $this->getGeboortejaarFromCategorie($categorie);
                 if (is_array($geboortejaren)) {
-                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau] = 0;
+                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau]  = 0;
                     $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] = 0;
                     foreach ($geboortejaren as $geboortejaar) {
                         $aantallenPerNiveau['geplaatst'][$categorie][$niveau] += $this->getDoctrine()->getRepository
-                        ('AppBundle:Turnster')
+                        (
+                            'AppBundle:Turnster'
+                        )
                             ->getAantalTurnstersPerNiveau($geboortejaar, $niveau);
                         $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] += $this->getDoctrine()->getRepository
-                        ('AppBundle:Turnster')
+                        (
+                            'AppBundle:Turnster'
+                        )
                             ->getAantalTurnstersWachtlijstPerNiveau($geboortejaar, $niveau);
                     }
                 } else {
-                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau] = $this->getDoctrine()->getRepository
-                    ('AppBundle:Turnster')
+                    $aantallenPerNiveau['geplaatst'][$categorie][$niveau]  = $this->getDoctrine()->getRepository
+                    (
+                        'AppBundle:Turnster'
+                    )
                         ->getAantalTurnstersPerNiveau($geboortejaren, $niveau);
                     $aantallenPerNiveau['wachtlijst'][$categorie][$niveau] = $this->getDoctrine()->getRepository
-                    ('AppBundle:Turnster')
+                    (
+                        'AppBundle:Turnster'
+                    )
                         ->getAantalTurnstersWachtlijstPerNiveau($geboortejaren, $niveau);
                 }
             }
@@ -585,22 +619,24 @@ class OrganisatieController extends BaseController
     private function getOrganisatieFacturenPage()
     {
         /** @var User[] $results */
-        $results = $this->getDoctrine()
+        $results           = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->loadUsersByRole('ROLE_CONTACT');
         $factuurInformatie = [];
         foreach ($results as $result) {
-            $factuurNummer = $this->getFactuurNummer($result);
-            $bedragPerTurnster = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
-            $juryBoeteBedrag = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
+            $factuurNummer             = $this->getFactuurNummer($result);
+            $bedragPerTurnster
+                                       = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
+            $juryBoeteBedrag
+                                       = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
             $jurylidPerAantalTurnsters = self::AANTAL_TURNSTERS_PER_JURY; //todo: toevoegen als instelling
-            $juryledenAantal = $this->getDoctrine()
+            $juryledenAantal           = $this->getDoctrine()
                 ->getRepository('AppBundle:Jurylid')
                 ->getIngeschrevenJuryleden($result);
-            $turnstersAantal = $this->getDoctrine()
+            $turnstersAantal           = $this->getDoctrine()
                 ->getRepository('AppBundle:Turnster')
                 ->getIngeschrevenTurnsters($result);
-            $turnstersAfgemeldAantal = $this->getDoctrine()
+            $turnstersAfgemeldAantal   = $this->getDoctrine()
                 ->getRepository('AppBundle:Turnster')
                 ->getAantalAfgemeldeTurnsters($result);
 
@@ -612,48 +648,51 @@ class OrganisatieController extends BaseController
                 $juryBoeteBedrag;
 
             /** @var Betaling[] $betalingen */
-            $betalingen = $result->getBetaling();
+            $betalingen    = $result->getBetaling();
             $betaaldBedrag = 0;
             if ($teBetalenBedrag == 0) {
                 $voldaanClass = 'voldaan';
-                $status = 'Voldaan';
+                $status       = 'Voldaan';
             } elseif (count($betalingen) == 0) {
                 $voldaanClass = 'niet_voldaan';
-                $status = 'Niet voldaan';
+                $status       = 'Niet voldaan';
             } else {
                 foreach ($betalingen as $betaling) {
                     $betaaldBedrag += $betaling->getBedrag();
                 }
                 if ($betaaldBedrag < $teBetalenBedrag) {
                     $voldaanClass = 'bijna_voldaan';
-                    $status = 'Gedeeltelijk voldaan';
+                    $status       = 'Gedeeltelijk voldaan';
                 } else {
                     $voldaanClass = 'voldaan';
-                    $status = 'Voldaan';
+                    $status       = 'Voldaan';
                 }
             }
 
             $factuurInformatie[] = [
-                'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
-                'factuurNr' => $factuurNummer,
-                'bedrag' => $teBetalenBedrag,
-                'status' => $status,
-                'voldaanClass' => $voldaanClass,
+                'vereniging'       => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+                'factuurNr'        => $factuurNummer,
+                'bedrag'           => $teBetalenBedrag,
+                'status'           => $status,
+                'voldaanClass'     => $voldaanClass,
                 'openstaandBedrag' => $teBetalenBedrag - $betaaldBedrag,
-                'aantalTurnsters' => $turnstersAantal,
-                'aantalAfgemeld' => $turnstersAfgemeldAantal,
-                'juryTekort' => $juryTekort,
-                'userId' => $result->getId(),
+                'aantalTurnsters'  => $turnstersAantal,
+                'aantalAfgemeld'   => $turnstersAfgemeldAantal,
+                'juryTekort'       => $juryTekort,
+                'userId'           => $result->getId(),
             ];
         }
-        return $this->render('organisatie/organisatieFinancieel.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'factuurInformatie' => $factuurInformatie,
-        ));
+        return $this->render(
+            'organisatie/organisatieFinancieel.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'factuurInformatie'               => $factuurInformatie,
+            )
+        );
     }
 
     /**
@@ -668,20 +707,26 @@ class OrganisatieController extends BaseController
                 $niveau->setCategorie($request->request->get('categorie'));
                 $niveau->setNiveau($request->request->get('niveau'));
                 $this->addToDB($niveau);
-                return $this->redirectToRoute('organisatieGetContent', array(
-                    'page' => $page,
-                ));
+                return $this->redirectToRoute(
+                    'organisatieGetContent',
+                    array(
+                        'page' => $page,
+                    )
+                );
             }
         }
         $this->setBasicPageData('Organisatie');
-        return $this->render('organisatie/niveauToevoegen.html.twig', [
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'categorien' => $this->getCategorien(),
-        ]);
+        return $this->render(
+            'organisatie/niveauToevoegen.html.twig',
+            [
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'categorien'                      => $this->getCategorien(),
+            ]
+        );
     }
 
     /**
@@ -707,20 +752,21 @@ class OrganisatieController extends BaseController
     {
         $this->setBasicPageData('Organisatie');
         /** @var User[] $results */
-        $result = $this->getDoctrine()
+        $result                    = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->findOneBy(['id' => $userId]);
-        $factuurNummer = $this->getFactuurNummer($result);
-        $bedragPerTurnster = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
-        $juryBoeteBedrag = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
+        $factuurNummer             = $this->getFactuurNummer($result);
+        $bedragPerTurnster         = self::BEDRAG_PER_TURNSTER; //todo: bedrag per turnster toevoegen aan instellingen
+        $juryBoeteBedrag
+                                   = self::JURY_BOETE_BEDRAG; //todo: boete bedrag jury tekort toevoegen aan instellingen
         $jurylidPerAantalTurnsters = self::AANTAL_TURNSTERS_PER_JURY; //todo: toevoegen als instelling
-        $juryledenAantal = $this->getDoctrine()
+        $juryledenAantal           = $this->getDoctrine()
             ->getRepository('AppBundle:Jurylid')
             ->getIngeschrevenJuryleden($result);
-        $turnstersAantal = $this->getDoctrine()
+        $turnstersAantal           = $this->getDoctrine()
             ->getRepository('AppBundle:Turnster')
             ->getIngeschrevenTurnsters($result);
-        $turnstersAfgemeldAantal = $this->getDoctrine()
+        $turnstersAfgemeldAantal   = $this->getDoctrine()
             ->getRepository('AppBundle:Turnster')
             ->getAantalAfgemeldeTurnsters($result);
 
@@ -733,55 +779,58 @@ class OrganisatieController extends BaseController
 
         /** @var Betaling[] $betalingen */
         $betalingenObjecten = $result->getBetaling();
-        $betaaldBedrag = 0;
-        $betalingen = [];
+        $betaaldBedrag      = 0;
+        $betalingen         = [];
         if (count($betalingenObjecten) == 0) {
             $voldaanClass = 'niet_voldaan';
-            $status = 'Niet voldaan';
+            $status       = 'Niet voldaan';
         } else {
             /** @var Betaling $betaling */
             foreach ($betalingenObjecten as $betaling) {
                 $betaaldBedrag += $betaling->getBedrag();
                 $betalingen[] = [
-                    'id' => $betaling->getId(),
-                    'datum' => $betaling->getDatumBetaald()->format('d-m-Y'),
+                    'id'     => $betaling->getId(),
+                    'datum'  => $betaling->getDatumBetaald()->format('d-m-Y'),
                     'bedrag' => $betaling->getBedrag(),
                 ];
             }
             if ($betaaldBedrag < $teBetalenBedrag) {
                 $voldaanClass = 'bijna_voldaan';
-                $status = 'Gedeeltelijk voldaan';
+                $status       = 'Gedeeltelijk voldaan';
             } else {
                 $voldaanClass = 'voldaan';
-                $status = 'Voldaan';
+                $status       = 'Voldaan';
             }
         }
 
         $factuurInformatie = [
-            'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
-            'factuurNr' => $factuurNummer,
-            'bedrag' => $teBetalenBedrag,
-            'status' => $status,
-            'voldaanClass' => $voldaanClass,
-            'openstaandBedrag' => $teBetalenBedrag - $betaaldBedrag,
-            'betaaldBedrag' => $betaaldBedrag,
-            'aantalTurnsters' => $turnstersAantal,
-            'aantalAfgemeld' => $turnstersAfgemeldAantal,
-            'juryTekort' => $juryTekort,
-            'userId' => $result->getId(),
-            'contactpersoonNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+            'vereniging'          => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+            'factuurNr'           => $factuurNummer,
+            'bedrag'              => $teBetalenBedrag,
+            'status'              => $status,
+            'voldaanClass'        => $voldaanClass,
+            'openstaandBedrag'    => $teBetalenBedrag - $betaaldBedrag,
+            'betaaldBedrag'       => $betaaldBedrag,
+            'aantalTurnsters'     => $turnstersAantal,
+            'aantalAfgemeld'      => $turnstersAfgemeldAantal,
+            'juryTekort'          => $juryTekort,
+            'userId'              => $result->getId(),
+            'contactpersoonNaam'  => $result->getVoornaam() . ' ' . $result->getAchternaam(),
             'contactpersoonEmail' => $result->getEmail(),
-            'contactpersoonTel' => $result->getTelefoonnummer(),
+            'contactpersoonTel'   => $result->getTelefoonnummer(),
         ];
-        return $this->render('organisatie/betalingInzien.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'factuurInformatie' => $factuurInformatie,
-            'betalingen' => $betalingen,
-        ));
+        return $this->render(
+            'organisatie/betalingInzien.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'factuurInformatie'               => $factuurInformatie,
+                'betalingen'                      => $betalingen,
+            )
+        );
     }
 
     /**
@@ -807,20 +856,26 @@ class OrganisatieController extends BaseController
                 'error',
                 'Betaling niet gevonden'
             );
-            return $this->redirectToRoute('betalingInzien', [
-                'page' => $page,
-                'userId' => $userId,
-            ]);
+            return $this->redirectToRoute(
+                'betalingInzien',
+                [
+                    'page'   => $page,
+                    'userId' => $userId,
+                ]
+            );
         }
         $this->removeFromDB($result);
         $this->addFlash(
             'success',
             'Betaling succesvol verwijderd!'
         );
-        return $this->redirectToRoute('betalingInzien', [
-            'page' => $page,
-            'userId' => $userId,
-        ]);
+        return $this->redirectToRoute(
+            'betalingInzien',
+            [
+                'page'   => $page,
+                'userId' => $userId,
+            ]
+        );
     }
 
     /**
@@ -847,50 +902,59 @@ class OrganisatieController extends BaseController
                         'success',
                         'Betaling succesvol toegevoegd!'
                     );
-                    return $this->redirectToRoute('betalingInzien', [
-                        'page' => $page,
-                        'userId' => $userId,
-                    ]);
+                    return $this->redirectToRoute(
+                        'betalingInzien',
+                        [
+                            'page'   => $page,
+                            'userId' => $userId,
+                        ]
+                    );
                 }
             }
         }
         $this->setBasicPageData('Organisatie');
-        $factuurNr = $this->getFactuurNummer($result);
+        $factuurNr      = $this->getFactuurNummer($result);
         $contactpersoon = [
-            'id' => $result->getId(),
-            'contactpersoonNaam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+            'id'                  => $result->getId(),
+            'contactpersoonNaam'  => $result->getVoornaam() . ' ' . $result->getAchternaam(),
             'contactpersoonEmail' => $result->getEmail(),
-            'contactpersoonTel' => $result->getTelefoonnummer(),
-            'vereniging' => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
+            'contactpersoonTel'   => $result->getTelefoonnummer(),
+            'vereniging'          => $result->getVereniging()->getNaam() . ' ' . $result->getVereniging()->getPlaats(),
         ];
-        $csrfToken = $this->getToken();
-        return $this->render('organisatie/addBetaling.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'factuurNr' => $factuurNr,
-            'contactpersoon' => $contactpersoon,
-            'csrfToken' => $csrfToken,
-        ));
+        $csrfToken      = $this->getToken();
+        return $this->render(
+            'organisatie/addBetaling.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'factuurNr'                       => $factuurNr,
+                'contactpersoon'                  => $contactpersoon,
+                'csrfToken'                       => $csrfToken,
+            )
+        );
     }
 
     private function getOrganisatieInschrijvingenPage()
     {
-        $groepen = $this->getGroepen();
+        $groepen            = $this->getGroepen();
         $aantallenPerNiveau = $this->getAantallenPerNiveau($groepen);
-        $contactpersonen = $this->getContactpersonen();
-        return $this->render('organisatie/organisatieInschrijvingen.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'contactpersonen' => $contactpersonen,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'groepen' => $groepen,
-            'aantallenPerNiveau' => $aantallenPerNiveau,
-        ));
+        $contactpersonen    = $this->getContactpersonen();
+        return $this->render(
+            'organisatie/organisatieInschrijvingen.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'contactpersonen'                 => $contactpersonen,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'groepen'                         => $groepen,
+                'aantallenPerNiveau'              => $aantallenPerNiveau,
+            )
+        );
     }
 
     /**
@@ -1035,42 +1099,45 @@ class OrganisatieController extends BaseController
          * todo: Verwijderen ook via ajax call en remove element (get element by id)
          */
         /** @var Turnster[] $results */
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+        $results   = $this->getDoctrine()->getRepository('AppBundle:Turnster')
             ->getIngeschrevenTurnstersCatNiveau($categorie, $niveau);
         $turnsters = [];
         foreach ($results as $result) {
             $turnsters[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'id'         => $result->getId(),
+                'naam'       => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                 'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                         ->getVereniging()->getPlaats(),
-                'opmerking' => $result->getOpmerking(),
+                'opmerking'  => $result->getOpmerking(),
             ];
         }
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+        $results    = $this->getDoctrine()->getRepository('AppBundle:Turnster')
             ->getWachtlijstTurnstersCatNiveau($categorie, $niveau);
         $wachtlijst = [];
         foreach ($results as $result) {
             $wachtlijst[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'id'         => $result->getId(),
+                'naam'       => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                 'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' . $result->getUser()
                         ->getVereniging()->getPlaats(),
-                'opmerking' => $result->getOpmerking(),
+                'opmerking'  => $result->getOpmerking(),
             ];
         }
         $this->setBasicPageData('Organisatie');
-        return $this->render('organisatie/bekijkInschrijvingenPerNiveau.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'categorie' => $categorie,
-            'niveau' => $niveau,
-            'turnsters' => $turnsters,
-            'wachtlijst' => $wachtlijst,
-        ));
+        return $this->render(
+            'organisatie/bekijkInschrijvingenPerNiveau.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'categorie'                       => $categorie,
+                'niveau'                          => $niveau,
+                'turnsters'                       => $turnsters,
+                'wachtlijst'                      => $wachtlijst,
+            )
+        );
     }
 
     /**
@@ -1089,92 +1156,95 @@ class OrganisatieController extends BaseController
          */
         $this->setBasicPageData('Organisatie');
         /** @var User $user */
-        $user = $this->getDoctrine()->getRepository("AppBundle:User")
+        $user           = $this->getDoctrine()->getRepository("AppBundle:User")
             ->findOneBy(['id' => $userId]);
         $contactpersoon = [
-            'id' => $user->getId(),
-            'vereniging' => $user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats(),
+            'id'             => $user->getId(),
+            'vereniging'     => $user->getVereniging()->getNaam() . ' ' . $user->getVereniging()->getPlaats(),
             'gebruikersnaam' => $user->getUsername(),
-            'naam' => $user->getVoornaam() . ' ' . $user->getAchternaam(),
-            'email' => $user->getEmail(),
-            'telNr' => $user->getTelefoonnummer(),
+            'naam'           => $user->getVoornaam() . ' ' . $user->getAchternaam(),
+            'email'          => $user->getEmail(),
+            'telNr'          => $user->getTelefoonnummer(),
 
         ];
         /** @var Turnster[] $results */
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+        $results   = $this->getDoctrine()->getRepository('AppBundle:Turnster')
             ->getIngeschrevenTurnstersForUser($user);
         $turnsters = [];
         foreach ($results as $result) {
             if ($result->getVloermuziek()) {
                 $vloermuziek = true;
-                $locatie = $result->getVloermuziek()->getWebPath();
+                $locatie     = $result->getVloermuziek()->getWebPath();
             } else {
                 $vloermuziek = false;
-                $locatie = '';
+                $locatie     = '';
             }
             $turnsters[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                'geboortejaar' => $result->getGeboortejaar(),
-                'categorie' => $result->getCategorie(),
-                'niveau' => $result->getNiveau(),
-                'opmerking' => $result->getOpmerking(),
-                'vloermuziek' => $vloermuziek,
+                'id'                 => $result->getId(),
+                'naam'               => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'geboortejaar'       => $result->getGeboortejaar(),
+                'categorie'          => $result->getCategorie(),
+                'niveau'             => $result->getNiveau(),
+                'opmerking'          => $result->getOpmerking(),
+                'vloermuziek'        => $vloermuziek,
                 'vloermuziekLocatie' => $locatie,
 
             ];
         }
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+        $results    = $this->getDoctrine()->getRepository('AppBundle:Turnster')
             ->getWachtlijstTurnstersForUser($user);
         $wachtlijst = [];
         foreach ($results as $result) {
             $wachtlijst[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'id'           => $result->getId(),
+                'naam'         => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                 'geboortejaar' => $result->getGeboortejaar(),
-                'categorie' => $result->getCategorie(),
-                'niveau' => $result->getNiveau(),
-                'opmerking' => $result->getOpmerking(),
+                'categorie'    => $result->getCategorie(),
+                'niveau'       => $result->getNiveau(),
+                'opmerking'    => $result->getOpmerking(),
             ];
         }
-        $results = $this->getDoctrine()->getRepository('AppBundle:Turnster')
+        $results  = $this->getDoctrine()->getRepository('AppBundle:Turnster')
             ->getAfgemeldTurnstersForUser($user);
         $afgemeld = [];
         foreach ($results as $result) {
             $afgemeld[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'id'           => $result->getId(),
+                'naam'         => $result->getVoornaam() . ' ' . $result->getAchternaam(),
                 'geboortejaar' => $result->getGeboortejaar(),
-                'categorie' => $result->getCategorie(),
-                'niveau' => $result->getNiveau(),
-                'opmerking' => $result->getOpmerking(),
+                'categorie'    => $result->getCategorie(),
+                'niveau'       => $result->getNiveau(),
+                'opmerking'    => $result->getOpmerking(),
             ];
         }
         /** @var Jurylid[] $results */
-        $results = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
+        $results   = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
             ->getIngeschrevenJuryledenPerUser($user);
         $juryleden = [];
         foreach ($results as $result) {
             $juryleden[] = [
-                'id' => $result->getId(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                'brevet' => $result->getBrevet(),
-                'dag' => $this->getBeschikbareDag($result),
+                'id'        => $result->getId(),
+                'naam'      => $result->getVoornaam() . ' ' . $result->getAchternaam(),
+                'brevet'    => $result->getBrevet(),
+                'dag'       => $this->getBeschikbareDag($result),
                 'opmerking' => $result->getOpmerking(),
             ];
         }
-        return $this->render('organisatie/bekijkInschrijvingenPerContactpersoon.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-            'turnsters' => $turnsters,
-            'wachtlijst' => $wachtlijst,
-            'afgemeld' => $afgemeld,
-            'juryleden' => $juryleden,
-            'contactpersoon' => $contactpersoon,
-        ));
+        return $this->render(
+            'organisatie/bekijkInschrijvingenPerContactpersoon.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+                'turnsters'                       => $turnsters,
+                'wachtlijst'                      => $wachtlijst,
+                'afgemeld'                        => $afgemeld,
+                'juryleden'                       => $juryleden,
+                'contactpersoon'                  => $contactpersoon,
+            )
+        );
     }
 
     /**
@@ -1209,8 +1279,8 @@ class OrganisatieController extends BaseController
                 }
                 if (!($error)) {
                     $userObject = $this->getUser();
-                    $password = $request->request->get('pass1');
-                    $encoder = $this->container
+                    $password   = $request->request->get('pass1');
+                    $encoder    = $this->container
                         ->get('security.encoder_factory')
                         ->getEncoder($userObject);
                     $userObject->setPassword($encoder->encodePassword($password, $userObject->getSalt()));
@@ -1219,19 +1289,25 @@ class OrganisatieController extends BaseController
                         'success',
                         'Het wachtwoord is succesvol gewijzigd'
                     );
-                    return $this->redirectToRoute('organisatieGetContent', array(
-                        'page' => $page,
-                    ));
+                    return $this->redirectToRoute(
+                        'organisatieGetContent',
+                        array(
+                            'page' => $page,
+                        )
+                    );
                 }
             }
             $this->setBasicPageData('Organisatie');
-            return $this->render('organisatie/editPassword.html.twig', array(
-                'menuItems' => $this->menuItems,
-                'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-                'totaalAantalTurnsters' => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden' => $this->aantalJury,
-            ));
+            return $this->render(
+                'organisatie/editPassword.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
     }
 
@@ -1242,25 +1318,20 @@ class OrganisatieController extends BaseController
     public function uploadWedstrijdindelingen(Request $request, $page)
     {
         if ($request->getMethod() == 'POST') {
-            if ($_FILES["userfile"])
-            {
-                if (!empty($_FILES['userfile']['name']))
-                {
+            if ($_FILES["userfile"]) {
+                if (!empty($_FILES['userfile']['name'])) {
                     $allow[0] = "csv";
                     $extentie = strtolower(substr($_FILES['userfile']['name'], -3));
-                    if ($extentie == $allow[0])
-                    {
-                        if (is_uploaded_file($_FILES['userfile']['tmp_name']))
-                        {
-                            if($_FILES['userfile']['size']<5000000)
-                            {
+                    if ($extentie == $allow[0]) {
+                        if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
+                            if ($_FILES['userfile']['size'] < 5000000) {
                                 $localfile = $_FILES['userfile']['tmp_name'];
-                                $fp = fopen($localfile, 'r');
-                                $data = fread($fp, filesize($localfile));
+                                $fp        = fopen($localfile, 'r');
+                                $data      = fread($fp, filesize($localfile));
                                 fclose($fp);
                                 $lines = explode("\n", $data);
                                 foreach ($lines as $line) {
-                                    $repo = $this->getDoctrine()->getRepository('AppBundle:Turnster');
+                                    $repo     = $this->getDoctrine()->getRepository('AppBundle:Turnster');
                                     $lineData = explode(";", $line);
                                     /** @var Turnster $turnster */
                                     $turnster = $repo->find(trim($lineData[0]));
@@ -1275,33 +1346,25 @@ class OrganisatieController extends BaseController
                                     }
                                 }
                                 return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
-                            }
-                            else
-                            {
+                            } else {
                                 $this->addFlash(
                                     'error',
                                     'Helaas, de upload is mislukt: het bestand is te groot.'
                                 );
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $this->addFlash(
                                 'error',
                                 'Helaas, de upload is mislukt.'
                             );
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $this->addFlash(
                             'error',
                             'Helaas, de upload is mislukt: het bestand moet .csv zijn.'
                         );
                     }
-                }
-                else
-                {
+                } else {
                     $this->addFlash(
                         'error',
                         'Selecteer een bestand.'
@@ -1310,13 +1373,16 @@ class OrganisatieController extends BaseController
             }
         }
         $this->setBasicPageData('Organisatie');
-        return $this->render('organisatie/uploadWedstrijdindelingen.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-        ));
+        return $this->render(
+            'organisatie/uploadWedstrijdindelingen.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+            )
+        );
     }
 
     /**
@@ -1340,17 +1406,35 @@ class OrganisatieController extends BaseController
                 }
                 $em->flush();
 
+                $this->rrmdir('uploads/vloermuziek');
+
                 return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
             }
         }
 
         $this->setBasicPageData('Organisatie');
-        return $this->render('organisatie/removeInschrijvingen.html.twig', array(
-            'menuItems' => $this->menuItems,
-            'totaalAantalVerenigingen' => $this->aantalVerenigingen,
-            'totaalAantalTurnsters' => $this->aantalTurnsters,
-            'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-            'totaalAantalJuryleden' => $this->aantalJury,
-        ));
+        return $this->render(
+            'organisatie/removeInschrijvingen.html.twig',
+            array(
+                'menuItems'                       => $this->menuItems,
+                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'           => $this->aantalJury,
+            )
+        );
+    }
+
+    private function rrmdir($dir)
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        foreach (glob($dir . '/*') as $file) {
+            if (is_dir($file)) {
+                $this->rrmdir($file);
+            } else {
+                unlink($file);
+            } rmdir($dir);
+        }
     }
 }
