@@ -107,10 +107,7 @@
 					<h2>Emailadressen (van juryleden geleverd door verenigingen met geplaatste turnsters)</h2>
 				</div>
 				<div class="bericht">
-					<textarea cols="50" rows="15">
-                        {% for jurylid in juryleden %}
-                            {% if jurylid.email is not empty %}{{ jurylid.email}};{% endif %}
-                        {% endfor %}</textarea>
+					<textarea cols="50" rows="15">{% for jurylid in juryleden %}{% if jurylid.email is not empty %}{{ jurylid.email}};{% endif %}{% endfor %}</textarea>
 				</div>
 			</p>
 
