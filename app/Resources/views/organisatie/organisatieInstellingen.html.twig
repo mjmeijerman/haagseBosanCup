@@ -151,11 +151,13 @@
     <div class="bericht">
         <table>
             <tr>
-                <div class="indelingen_button" style="float: left;">
-                    <a href="{{ path('removeInschrijvingen', { 'page': app.request.get('page'), }) }}">
-                        Alle inschrijvingen verwijderen
-                    </a>
-                </div>
+                {% if not disableRemoveInschrijvingenButton %}
+                    <div class="indelingen_button" style="float: left;">
+                        <a href="{{ path('removeInschrijvingen', { 'page': app.request.get('page'), }) }}">
+                            Alle inschrijvingen verwijderen
+                        </a>
+                    </div>
+                {% endif %}
             </tr>
         </table>
     </div>

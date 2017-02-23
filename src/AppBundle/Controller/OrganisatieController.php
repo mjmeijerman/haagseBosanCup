@@ -506,21 +506,49 @@ class OrganisatieController extends BaseController
         $voorinschrijvingen = $this->getVoorinschrijvingen();
         $reglementen        = $this->getReglementen();
         $toegestaneNiveaus  = $this->getToegestaneNiveaus();
+
+        $disableRemoveInschrijvingenButton = $this->shouldRemoveInschrijvingenBeDisabled($instellingen);
+
         return $this->render(
             'organisatie/organisatieInstellingen.html.twig',
             array(
-                'menuItems'                       => $this->menuItems,
-                'instellingen'                    => $instellingen,
-                'voorinschrijvingen'              => $voorinschrijvingen,
-                'reglementen'                     => $reglementen,
-                'successMessage'                  => $successMessage,
-                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
-                'totaalAantalTurnsters'           => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden'           => $this->aantalJury,
-                'toegestaneNiveaus'               => $toegestaneNiveaus,
+                'menuItems'                         => $this->menuItems,
+                'instellingen'                      => $instellingen,
+                'voorinschrijvingen'                => $voorinschrijvingen,
+                'reglementen'                       => $reglementen,
+                'successMessage'                    => $successMessage,
+                'totaalAantalVerenigingen'          => $this->aantalVerenigingen,
+                'totaalAantalTurnsters'             => $this->aantalTurnsters,
+                'totaalAantalTurnstersWachtlijst'   => $this->aantalWachtlijst,
+                'totaalAantalJuryleden'             => $this->aantalJury,
+                'toegestaneNiveaus'                 => $toegestaneNiveaus,
+                'disableRemoveInschrijvingenButton' => $disableRemoveInschrijvingenButton,
             )
         );
+    }
+
+    /**
+     * @param $instellingen
+     *
+     * @return boolean
+     */
+    private function shouldRemoveInschrijvingenBeDisabled($instellingen)
+    {
+        $inschrijvingOpeningDateTime = new \DateTime($instellingen['Opening inschrijving']);
+        $disableVanaf = clone $inschrijvingOpeningDateTime;
+        $disableVanaf->modify('-1 month');
+
+        $nu = new \DateTime();
+
+        if ($nu < $disableVanaf) {
+            return false;
+        }
+
+        if ($nu->format('n') > '8') {
+            return false;
+        }
+
+        return true;
     }
 
     private function getOrganisatieHomePage()
@@ -1391,38 +1419,64 @@ class OrganisatieController extends BaseController
      */
     public function removeInschrijvingen(Request $request, $page)
     {
-        if ($request->getMethod() == 'POST') {
-            if ($request->get('confirmRemoveInschrijvingen') === 'JAZEKER') {
-                $em = $this->getDoctrine()->getManager();
+        if (!$this->shouldRemoveInschrijvingenBeDisabled($this->getOrganisatieInstellingen())) {
+            if ($request->getMethod() == 'POST') {
+                if ($request->get('confirmRemoveInschrijvingen') === 'JAZEKER') {
 
-                /** @var UserRepository $repository */
-                $repository = $this->getDoctrine()->getRepository('AppBundle:User');
+                    /** @var UserRepository $repository */
+                    $repository = $this->getDoctrine()->getRepository('AppBundle:User');
 
-                /** @var User $users */
-                $users = $repository->loadUsersByRole('ROLE_CONTACT');
+                    /** @var User $users */
+                    $users = $repository->loadUsersByRole('ROLE_CONTACT');
 
-                foreach ($users as $user) {
-                    $em->remove($user);
+                    foreach ($users as $user) {
+                        $this->removeFromDB($user);
+                    }
+
+                    /** @var JuryIndeling[] $result */
+                    $juryIndelingen = $this->getDoctrine()
+                        ->getRepository('AppBundle:JuryIndeling')
+                        ->findBy(
+                            [],
+                            ['id' => 'DESC']
+                        );
+
+                    foreach ($juryIndelingen as $juryIndeling) {
+                        $this->removeFromDB($juryIndeling);
+                    }
+
+                    /** @var TijdSchema[] $tijdschemas */
+                    $tijdschemas = $this->getDoctrine()
+                        ->getRepository('AppBundle:TijdSchema')
+                        ->findBy(
+                            [],
+                            ['id' => 'DESC']
+                        );
+
+                    foreach ($tijdschemas as $tijdschema) {
+                        $this->removeFromDB($tijdschema);
+                    }
+
+                    $this->rrmdir('uploads/vloermuziek');
+
+                    return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
                 }
-                $em->flush();
-
-                $this->rrmdir('uploads/vloermuziek');
-
-                return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
             }
+
+            $this->setBasicPageData('Organisatie');
+            return $this->render(
+                'organisatie/removeInschrijvingen.html.twig',
+                array(
+                    'menuItems'                       => $this->menuItems,
+                    'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
+                    'totaalAantalTurnsters'           => $this->aantalTurnsters,
+                    'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
+                    'totaalAantalJuryleden'           => $this->aantalJury,
+                )
+            );
         }
 
-        $this->setBasicPageData('Organisatie');
-        return $this->render(
-            'organisatie/removeInschrijvingen.html.twig',
-            array(
-                'menuItems'                       => $this->menuItems,
-                'totaalAantalVerenigingen'        => $this->aantalVerenigingen,
-                'totaalAantalTurnsters'           => $this->aantalTurnsters,
-                'totaalAantalTurnstersWachtlijst' => $this->aantalWachtlijst,
-                'totaalAantalJuryleden'           => $this->aantalJury,
-            )
-        );
+        return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
     }
 
     private function rrmdir($dir)
@@ -1433,6 +1487,7 @@ class OrganisatieController extends BaseController
             } else {
                 unlink($file);
             }
-        } rmdir($dir);
+        }
+        rmdir($dir);
     }
 }
