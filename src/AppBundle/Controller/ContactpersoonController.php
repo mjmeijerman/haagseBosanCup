@@ -647,16 +647,7 @@ class ContactpersoonController extends BaseController
                             $jurylid->setEmail($request->request->get('email'));
                             $jurylid->setBrevet($request->request->get('brevet'));
                             $jurylid->setOpmerking($request->request->get('opmerking'));
-                            if ($request->request->get('dag') == 'za') {
-                                $jurylid->setZaterdag(true);
-                                $jurylid->setZondag(false);
-                            } elseif ($request->request->get('dag') == 'zo') {
-                                $jurylid->setZaterdag(false);
-                                $jurylid->setZondag(true);
-                            } else {
-                                $jurylid->setZaterdag(true);
-                                $jurylid->setZondag(true);
-                            }
+                            $this->setJurylidBeschikbareDagenFromPostData($request->request->get('dag'), $jurylid);
                             $jurylid->setUser($this->getUser());
                             $this->getUser()->addJurylid($jurylid);
                             $this->addToDB($this->getUser());
@@ -841,16 +832,7 @@ class ContactpersoonController extends BaseController
                                 $jurylid->setEmail($request->request->get('email'));
                                 $jurylid->setBrevet($request->request->get('brevet'));
                                 $jurylid->setOpmerking($request->request->get('opmerking'));
-                                if ($request->request->get('dag') == 'Za') {
-                                    $jurylid->setZaterdag(true);
-                                    $jurylid->setZondag(false);
-                                } elseif ($request->request->get('dag') == 'Zo') {
-                                    $jurylid->setZaterdag(false);
-                                    $jurylid->setZondag(true);
-                                } else {
-                                    $jurylid->setZaterdag(true);
-                                    $jurylid->setZondag(true);
-                                }
+                                $this->setJurylidBeschikbareDagenFromPostData($request->request->get('dag'), $jurylid);
                                 $this->addToDB($jurylid);
                                 $this->addFlash(
                                     'success',

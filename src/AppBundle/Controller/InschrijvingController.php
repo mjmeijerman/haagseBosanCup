@@ -93,16 +93,7 @@ class InschrijvingController extends BaseController
                                 $jurylid->setEmail($request->request->get('jury_email_' . $i));
                                 $jurylid->setBrevet($request->request->get('jury_brevet_' . $i));
                                 $jurylid->setOpmerking($request->request->get('jury_opmerking_' . $i));
-                                if ($request->request->get('jury_dag_' . $i) == 'za') {
-                                    $jurylid->setZaterdag(true);
-                                    $jurylid->setZondag(false);
-                                } elseif ($request->request->get('jury_dag_' . $i) == 'zo') {
-                                    $jurylid->setZaterdag(false);
-                                    $jurylid->setZondag(true);
-                                } else {
-                                    $jurylid->setZaterdag(true);
-                                    $jurylid->setZondag(true);
-                                }
+                                $this->setJurylidBeschikbareDagenFromPostData($request->request->get('jury_dag_' . $i), $jurylid);
                                 $jurylid->setUser($user);
                                 $user->addJurylid($jurylid);
                                 $this->addToDB($user);

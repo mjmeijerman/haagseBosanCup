@@ -1047,18 +1047,8 @@ class OrganisatieController extends BaseController
         if ($result) {
             $result->setZaterdag(false);
             $result->setZondag(false);
-            switch ($dag) {
-                case 'Za':
-                    $result->setZaterdag(true);
-                    break;
-                case 'Zo':
-                    $result->setZondag(true);
-                    break;
-                case 'ZaZo':
-                    $result->setZaterdag(true);
-                    $result->setZondag(true);
-                    break;
-            }
+            $result->setMaandag(false);
+            $this->setJurylidBeschikbareDagenFromPostData($dag, $result);
             $this->addToDB($result);
         }
         return new Response('true');

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\JuryIndeling;
+use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\SendMail;
 use AppBundle\Entity\TijdSchema;
@@ -42,7 +43,7 @@ class BaseController extends Controller
     const BEDRAG_PER_TURNSTER = 15;
     const JURY_BOETE_BEDRAG = 35;
     const AANTAL_TURNSTERS_PER_JURY = 10;
-    const DATUM_HBC = '4 & 5 juni 2016';
+    const DATUM_HBC = '3, 4 & 5 juni 2017';
     const LOCATIE_HBC = 'Sporthal Overbosch';
     const REKENINGNUMMER = 'NL81 INGB 000 007 81 99';
     const REKENING_TNV = 'Gymnastiekver. Donar';
@@ -57,6 +58,43 @@ class BaseController extends Controller
     protected function getFactuurNummer($user)
     {
         return ('HBC' . date('Y', time()) . '-' . $user->getId());
+    }
+
+    /**
+     * @param            $juryDagData
+     * @param Jurylid    $jurylid
+     */
+    protected function setJurylidBeschikbareDagenFromPostData($juryDagData, Jurylid $jurylid)
+    {
+        if (strtolower($juryDagData) == 'za') {
+            $jurylid->setZaterdag(true);
+            $jurylid->setZondag(false);
+            $jurylid->setMaandag(false);
+        } elseif (strtolower($juryDagData) == 'zo') {
+            $jurylid->setZaterdag(false);
+            $jurylid->setZondag(true);
+            $jurylid->setMaandag(false);
+        } elseif (strtolower($juryDagData) == 'ma') {
+            $jurylid->setZaterdag(false);
+            $jurylid->setZondag(false);
+            $jurylid->setMaandag(true);
+        } elseif (strtolower($juryDagData) == 'zazo') {
+            $jurylid->setZaterdag(true);
+            $jurylid->setZondag(true);
+            $jurylid->setMaandag(false);
+        } elseif (strtolower($juryDagData) == 'zama') {
+            $jurylid->setZaterdag(true);
+            $jurylid->setZondag(false);
+            $jurylid->setMaandag(true);
+        } elseif (strtolower($juryDagData) == 'zoma') {
+            $jurylid->setZaterdag(false);
+            $jurylid->setZondag(true);
+            $jurylid->setMaandag(true);
+        } elseif (strtolower($juryDagData) == 'zazoma') {
+            $jurylid->setZaterdag(true);
+            $jurylid->setZondag(true);
+            $jurylid->setMaandag(true);
+        }
     }
 
     /**
@@ -173,12 +211,20 @@ class BaseController extends Controller
     protected function getBeschikbareDag($juryObject)
     {
         /** @var Jurylid $juryObject */
-        if ($juryObject->getZaterdag() && $juryObject->getZondag()) {
-            return 'Beide';
+        if ($juryObject->getZaterdag() && $juryObject->getZondag() && $juryObject->getMaandag()) {
+            return 'ZaZoMa';
+        } elseif ($juryObject->getZaterdag() && $juryObject->getZondag()) {
+            return 'ZaZo';
+        } elseif ($juryObject->getMaandag() && $juryObject->getZondag()) {
+            return 'ZoMa';
+        } elseif ($juryObject->getZaterdag() && $juryObject->getMaandag()) {
+            return 'ZaMa';
         } elseif ($juryObject->getZaterdag()) {
             return 'Za';
         } elseif ($juryObject->getZondag()) {
             return 'Zo';
+        } elseif ($juryObject->getMaandag()) {
+            return 'Ma';
         } else {
             return 'Geen';
         }

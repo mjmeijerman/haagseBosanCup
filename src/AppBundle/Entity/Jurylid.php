@@ -67,6 +67,13 @@ class Jurylid
     private $zondag;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $maandag;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -235,6 +242,27 @@ class Jurylid
     public function getZondag()
     {
         return $this->zondag;
+    }
+
+
+    /**
+     * @param boolean $maandag
+     *
+     * @return Jurylid
+     */
+    public function setMaandag($maandag)
+    {
+        $this->maandag = $maandag;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getMaandag()
+    {
+        return $this->maandag;
     }
 
     /**

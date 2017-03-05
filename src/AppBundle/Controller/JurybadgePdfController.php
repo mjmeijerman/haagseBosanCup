@@ -104,13 +104,8 @@ class JurybadgePdfController extends AlphaPDFController
 		//DAG
 		$this->SetFontSize(10);
 		$this->SetAlpha(1);
-		if ($jurylid['dag'] == 'Zaterdag') {
-			$this->Text(34.8,50,'Zaterdag');
-		}
-		else {
-			$this->Text(36,50,'Zondag');
-		}
-		
+        $this->Text(34.8,50, $jurylid['dag']);
+
         //NAAM
         //FILL
         $this->SetFillColor(255,255,0);

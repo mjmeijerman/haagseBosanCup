@@ -67,24 +67,41 @@
                                 <td>
                                     <select id="selectDag_{{ jurylid.id }}" onchange="changeDag('{{ jurylid.id }}');">
                                         <option value="Geen"
-                                        {% if jurylid.dag == 'Geen' %}
-                                            selected
-                                        {% endif %}
+                                                {% if jurylid.dag == 'Geen' %}
+                                                    selected
+                                                {% endif %}
                                         >Geen</option>
                                         <option value="Za"
-                                        {% if jurylid.dag == 'Za' %}
-                                            selected
-                                        {% endif %}
+                                                {% if jurylid.dag == 'Za' %}
+                                                    selected
+                                                {% endif %}
                                         >Zaterdag</option>
                                         <option value="Zo"
-                                        {% if jurylid.dag == 'Zo' %}
-                                            selected
-                                        {% endif %}
+                                                {% if jurylid.dag == 'Zo' %}
+                                                    selected
+                                                {% endif %}
                                         >Zondag</option>
+                                        <option value="Ma"
+                                                {% if jurylid.dag == 'Ma' %}
+                                                    selected
+                                                {% endif %}
+                                        >Maandag</option>
                                         <option value="ZaZo"
-                                        {% if jurylid.dag == 'Beide' %}
-                                            selected
-                                        {% endif %}>Beide</option>
+                                                {% if jurylid.dag == 'ZaZo' %}
+                                        selected
+                                                {% endif %}>Zaterdag en Zondag</option>
+                                        <option value="ZoMa"
+                                                {% if jurylid.dag == 'ZoMa' %}
+                                        selected
+                                                {% endif %}>Zondag en Maandag</option>
+                                        <option value="ZaMa"
+                                                {% if jurylid.dag == 'ZaMa' %}
+                                        selected
+                                                {% endif %}>Zaterdag en Maandag</option>
+                                        <option value="ZaZo"
+                                                {% if jurylid.dag == 'ZaZoMa' %}
+                                        selected
+                                                {% endif %}>Alle dagen</option>
                                     </select>
                                 </td>
                                 <td>{{ jurylid.opmerking }}</td>
@@ -149,10 +166,27 @@
                                             selected
                                         {% endif %}
                                         >Zondag</option>
-                                        <option value="ZaZo"
-                                        {% if jurylid.dag == 'Beide' %}
+                                        <option value="Ma"
+                                        {% if jurylid.dag == 'Ma' %}
                                             selected
-                                        {% endif %}>Beide</option>
+                                        {% endif %}
+                                        >Maandag</option>
+                                        <option value="ZaZo"
+                                        {% if jurylid.dag == 'ZaZo' %}
+                                            selected
+                                        {% endif %}>Zaterdag en Zondag</option>
+                                        <option value="ZoMa"
+                                        {% if jurylid.dag == 'ZoMa' %}
+                                        selected
+                                        {% endif %}>Zondag en Maandag</option>
+                                        <option value="ZaMa"
+                                        {% if jurylid.dag == 'ZaMa' %}
+                                        selected
+                                        {% endif %}>Zaterdag en Maandag</option>
+                                        <option value="ZaZo"
+                                        {% if jurylid.dag == 'ZaZoMa' %}
+                                        selected
+                                        {% endif %}>Alle dagen</option>
                                     </select>
                                 </td>
                                 <td>{{ jurylid.opmerking }}</td>
