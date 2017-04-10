@@ -535,7 +535,7 @@ class OrganisatieController extends BaseController
     private function shouldRemoveInschrijvingenBeDisabled($instellingen)
     {
         $inschrijvingOpeningDateTime = new \DateTime($instellingen['Opening inschrijving']);
-        $disableVanaf = clone $inschrijvingOpeningDateTime;
+        $disableVanaf                = clone $inschrijvingOpeningDateTime;
         $disableVanaf->modify('-1 month');
 
         $nu = new \DateTime();
@@ -1344,25 +1344,26 @@ class OrganisatieController extends BaseController
                         if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
                             if ($_FILES['userfile']['size'] < 5000000) {
                                 $localfile = $_FILES['userfile']['tmp_name'];
-                                $fp        = fopen($localfile, 'r');
-                                $data      = fread($fp, filesize($localfile));
-                                fclose($fp);
-                                $lines = explode("\n", $data);
-                                foreach ($lines as $line) {
-                                    $repo     = $this->getDoctrine()->getRepository('AppBundle:Turnster');
-                                    $lineData = explode(";", $line);
-                                    /** @var Turnster $turnster */
-                                    $turnster = $repo->find(trim($lineData[0]));
-                                    if ($turnster) {
-                                        $score = $turnster->getScores();
-                                        $score->setWedstrijdnummer(trim($lineData[5]));
-                                        $score->setWedstrijddag(trim($lineData[6]));
-                                        $score->setWedstrijdronde(trim($lineData[7]));
-                                        $score->setBaan(trim($lineData[8]));
-                                        $score->setGroep(trim($lineData[9]));
-                                        $this->addToDB($score);
+
+                                ini_set("auto_detect_line_endings", "1");
+                                if (($handle = fopen($localfile, "r")) !== FALSE) {
+                                    $repo = $this->getDoctrine()->getRepository('AppBundle:Turnster');
+                                    while (($lineData = fgetcsv($handle, 0, ";")) !== FALSE) {
+                                        /** @var Turnster $turnster */
+                                        $turnster = $repo->find(trim($lineData[0]));
+                                        if ($turnster) {
+                                            $score = $turnster->getScores();
+                                            $score->setWedstrijdnummer(trim($lineData[5]));
+                                            $score->setWedstrijddag(trim($lineData[6]));
+                                            $score->setWedstrijdronde(trim($lineData[7]));
+                                            $score->setBaan(trim($lineData[8]));
+                                            $score->setGroep(trim($lineData[9]));
+                                            $this->addToDB($score);
+                                        }
                                     }
+                                    fclose($handle);
                                 }
+
                                 return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
                             } else {
                                 $this->addFlash(
