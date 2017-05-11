@@ -164,6 +164,36 @@ class UitslagenController extends BaseController
             $pdf->FooterDiploma(self::DATUM_HBC);
             $pdf->ContentDiploma($turnster);
         }
+
+        return new Response($pdf->Output(), 200, [
+            'Content-Type' => 'application/pdf'
+        ]);
+    }
+
+    /**
+     * @Route("/leegDiplomaPdf/", name="leegDiplomaPdf")
+     * @Method("GET")
+     */
+    public function emptyDiplomaPdf()
+    {
+        $pdf = new DiplomaPdfController('L', 'mm', 'A5');
+        $pdf->SetMargins(0,0);
+        $pdf->AddFont('Gotham','','Gotham-Light.php');
+        $pdf->AddFont('Franklin','','Frabk.php');
+
+        $legeTurnster = [
+            'naam' => '',
+            'vereniging' => '',
+            'categorie' => '',
+            'niveau' => '',
+        ];
+
+        $pdf->AddPage();
+        $pdf->SetFont('Gotham','',18);
+        $pdf->HeaderDiploma();
+        $pdf->FooterDiploma(self::DATUM_HBC);
+        $pdf->ContentDiploma($legeTurnster);
+
         return new Response($pdf->Output(), 200, [
             'Content-Type' => 'application/pdf'
         ]);
