@@ -31,7 +31,7 @@ class DiplomaPdfController extends AlphaPDFController
         $this->Text(154,145,'www.haagsebosancup.nl');
 
         //DATUM
-        $this->Text(85,145,'- ' . iconv("UTF-8", "CP1250//TRANSLIT", $datumHbc) . ' -');
+        $this->Text(85,145,'- ' .  utf8_decode($datumHbc) . ' -');
     }
 
     function ContentDiploma($turnster)
@@ -127,7 +127,7 @@ class DiplomaPdfController extends AlphaPDFController
 
         //TEKST
         $this->SetFontSize(20);
-        $this->Cell(70,0,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),0,1,'C');
+        $this->Cell(70,0,utf8_decode($turnster['naam']),0,1,'C');
 
         //VERENIGING
         //FILL
@@ -136,7 +136,7 @@ class DiplomaPdfController extends AlphaPDFController
 
         //TEKST
         $this->SetFontSize(16);
-        $this->Cell(70,0,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),0,1,'C');
+        $this->Cell(70,0,utf8_decode($turnster['vereniging']),0,1,'C');
 
         //CATEGORIE EN NIVEAU
         //FILL
@@ -145,8 +145,7 @@ class DiplomaPdfController extends AlphaPDFController
 
         //TEKST
         $this->SetFontSize(16);
-        $this->Cell(70,0,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['categorie']) . ' ' . iconv("UTF-8",
-                "CP1250//TRANSLIT", $turnster['niveau']),0,1, 'C');
+        $this->Cell(70,0,utf8_decode($turnster['categorie']) . ' ' . utf8_decode($turnster['niveau']),0,1, 'C');
 
         //SPONSORS
         //FILL
@@ -160,13 +159,13 @@ class DiplomaPdfController extends AlphaPDFController
     {
 		$this->SetFont('Helvetica','',20);
         $this->Ln(15);
-        $this->Cell(210,15,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),0,1,"C");
+        $this->Cell(210,15,utf8_decode($turnster['vereniging']),0,1,"C");
 		$this->Ln(16);
         $this->SetFont('Helvetica','',200);
-        $this->Cell(210,62,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['wedstrijdnummer']),0,1,"C");
+        $this->Cell(210,62,utf8_decode($turnster['wedstrijdnummer']),0,1,"C");
 		$this->Ln(10);
         $this->SetFont('Helvetica','',20);
-        $this->Cell(210,10,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),0,0,"C");
+        $this->Cell(210,10, utf8_decode($turnster['naam']),0,0,"C");
     }
 
     //ROUNDED RECTANGLE

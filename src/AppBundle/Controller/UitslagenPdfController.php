@@ -67,8 +67,8 @@ class UitslagenPdfController extends AlphaPDFController
             }
             $this->SetFont('Helvetica','',7);
             $this->Cell(8,6,$turnster['wedstrijdnummer'],1,0, "", $fill);
-            $this->Cell(35,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),1,0, "", $fill);
-            $this->Cell(55,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),1,0, "", $fill);
+            $this->Cell(35,6,utf8_decode($turnster['naam']),1,0, "", $fill);
+            $this->Cell(55,6,utf8_decode($turnster['vereniging']),1,0, "", $fill);
 
             $this->Cell(8,6,$turnster['dSprong1'],1,0, "", $fill);
             $this->Cell(8,6,$turnster['nSprong1'],1,0, "", $fill);

@@ -163,8 +163,8 @@ class WedstrijdIndelingPdfController extends AlphaPDFController
                 //TURNSTER 1
                 $this->Cell(10,6,'',0,0,'',$fill); //FILL
                 $this->Cell(15,6,$turnster['wedstrijdnummer'],0,0,'',$fill); //WEDSTRIJDNUMMER
-                $this->Cell(50,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['naam']),0,0,'L',$fill); //NAAM
-                $this->Cell(70,6,iconv("UTF-8", "CP1250//TRANSLIT", $turnster['vereniging']),0,0,'L',$fill); //VERENIGING
+                $this->Cell(50,6,utf8_decode($turnster['naam']),0,0,'L',$fill); //NAAM
+                $this->Cell(70,6,utf8_decode($turnster['vereniging']),0,0,'L',$fill); //VERENIGING
                 $this->Cell(30,6,$turnster['categorie'] . ' ' . $turnster['niveau'],0,0,'L',$fill); //CATEGORIE + NIVEAU
                 $this->Cell(122,6,'',0,1,'',$fill); //fill
             }

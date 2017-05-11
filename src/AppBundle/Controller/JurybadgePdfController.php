@@ -116,7 +116,7 @@ class JurybadgePdfController extends AlphaPDFController
         //TEKST
         $this->Ln(29);
         $this->SetFont('Gotham','',16);
-        $this->Cell(85.6,0,iconv("UTF-8", "CP1250//TRANSLIT", $jurylid['naam']),0,1,'C');
+        $this->Cell(85.6,0,utf8_decode($jurylid['naam']),0,1,'C');
 
         //TAAK
         $this->SetFont('Gotham','',12);
