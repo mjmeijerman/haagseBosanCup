@@ -176,16 +176,43 @@ class ContentController extends BaseController
         /** @var ScoresRepository $repo */
         $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
         $dagen = $repo->getDagen();
-        usort($dagen, function($a, $b) {
-            if ($a['wedstrijddag'] == $b['wedstrijddag']) {
-                return 0;
+        $sortedDagen = [];
+        foreach ($dagen as $dag) {
+            switch ($dag['wedstrijddag']) {
+                case 'Donderdag':
+                    $sortedDagen[0] = $dag;
+                    break;
+                case 'Vrijdag':
+                    $sortedDagen[1] = $dag;
+                    break;
+                case 'Zaterdag':
+                    $sortedDagen[2] = $dag;
+                    break;
+                case 'Zondag':
+                    $sortedDagen[3] = $dag;
+                    break;
+                case 'Maandag':
+                    $sortedDagen[4] = $dag;
+                    break;
+                case 'Dinsdag':
+                    $sortedDagen[5] = $dag;
+                    break;
+                case 'Woensdag':
+                    $sortedDagen[6] = $dag;
+                    break;
             }
-            return ($a['wedstrijddag'] < $b['wedstrijddag']) ? -1 : 1;
-        });
+        }
+        ksort($sortedDagen);
+//        usort($dagen, function($a, $b) {
+//            if ($a['wedstrijddag'] == $b['wedstrijddag']) {
+//                return 0;
+//            }
+//            return ($a['wedstrijddag'] < $b['wedstrijddag']) ? -1 : 1;
+//        });
         $banen = [];
         $wedstrijdrondes = [];
         $categorieNiveau = [];
-        foreach ($dagen as $dag) {
+        foreach ($sortedDagen as $dag) {
             $banen[$dag['wedstrijddag']] = $repo->getBanenPerDag($dag['wedstrijddag']);
             $wedstrijdrondes[$dag['wedstrijddag']] = $repo->getWedstrijdrondesPerDag($dag['wedstrijddag']);
             foreach ($banen[$dag['wedstrijddag']] as $baan) {
@@ -201,7 +228,7 @@ class ContentController extends BaseController
         return $this->render('default/wedstrijdIndeling.html.twig', array(
             'menuItems' => $this->menuItems,
             'sponsors' => $this->sponsors,
-            'dagen' => $dagen,
+            'dagen' => $sortedDagen,
             'banen' => $banen,
             'wedstrijdrondes' => $wedstrijdrondes,
             'categorieNiveau' => $categorieNiveau,
