@@ -150,9 +150,6 @@ class DiplomaPdfController extends AlphaPDFController
         //SPONSORS
         //FILL
         $this->Ln(36);
-
-        //IMAGES
-        //$this->Image('http://www.haagsebosancup.nl/uploads/sponsors/016715e536af06be81f69417036e7e39018a9291.png',2,126,0,10);
     }
 
     function Wedstrijdnummer($turnster)
@@ -166,6 +163,10 @@ class DiplomaPdfController extends AlphaPDFController
 		$this->Ln(10);
         $this->SetFont('Helvetica','',20);
         $this->Cell(210,10, utf8_decode($turnster['naam']),0,0,"C");
+
+        //IMAGES
+        $this->Image('http://www.haagsebosancup.nl/uploads/sponsors/aa105ca81400aafb31e0d6aff7484bb583efa3da_groot.jpg',8,127,0,17);
+        $this->Image('http://www.haagsebosancup.nl/uploads/sponsors/664eac9e26c5b3dde345d5d18bdd8b6484b565e7_groot.png',153,127,0,17);
     }
 
     //ROUNDED RECTANGLE
