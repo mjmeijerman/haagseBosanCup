@@ -288,7 +288,21 @@ class OrganisatieController extends BaseController
     {
         $vloermuziek = [];
         $categorien  = ['Jeugd 2', 'Junior', 'Senior'];
-        $niveaus     = ['Div. 3', 'Div. 4', 'Div. 5'];
+        $niveaus     = [
+            'Div. 3',
+            'Div. 3 Za',
+            'Div. 3 Zo',
+            'Div. 3 Ma',
+            'Div. 4',
+            'Div. 4 Za',
+            'Div. 4 Zo',
+            'Div. 4 Ma',
+            'Div. 5',
+            'Div. 5 Za',
+            'Div. 5 Zo',
+            'Div. 5 Ma',
+        ];
+
         foreach ($categorien as $categorie) {
             foreach ($niveaus as $niveau) {
                 /** @var Turnster[] $results */
@@ -326,6 +340,7 @@ class OrganisatieController extends BaseController
                 }
             }
         }
+
         return $this->render(
             'organisatie/vloermuziek.html.twig',
             array(

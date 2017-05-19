@@ -249,6 +249,7 @@ class BaseController extends Controller
                 'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
             ];
         }
+
         return $toegestaneNiveaus;
     }
 
