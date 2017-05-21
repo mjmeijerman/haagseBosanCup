@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="betaling")
+ * @ORM\Table(name="betaling", options={ "charset"="utf8mb4", "collate"="utf8mb4_unicode_ci" })
  */
 class Betaling
 {

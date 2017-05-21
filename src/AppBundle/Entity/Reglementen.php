@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="reglementen")
+ * @ORM\Table(name="reglementen", options={ "charset"="utf8mb4", "collate"="utf8mb4_unicode_ci" })
  */
 class Reglementen
 {

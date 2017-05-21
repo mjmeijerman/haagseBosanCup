@@ -59,7 +59,7 @@
         {% for foto in fotoUploads %}
             <tr>
                 <td>{{ foto.naam }}</td>
-                <td>http://www.haagsebosancup.nl/uploads/adminFotos/{{ foto.locatie }}</td>
+                <td>https://www.haagsebosancup.nl/uploads/adminFotos/{{ foto.locatie }}</td>
                 <td><a href="{{ path('removeAdminFile', { 'id': foto.id, 'type': 'Foto' }) }}">
                         <img src="{{ asset('images/remove.png') }}" width="18px"/>
                     </a>
@@ -84,7 +84,7 @@
         {% for file in fileUploads %}
             <tr>
                 <td>{{ file.naam }}</td>
-                <td>http://www.haagsebosancup.nl/uploads/adminFiles/{{ file.locatie }}</td>
+                <td>https://www.haagsebosancup.nl/uploads/adminFiles/{{ file.locatie }}</td>
                 <td><a href="{{ path('removeAdminFile', { 'id': file.id, 'type': 'File' }) }}">
                         <img src="{{ asset('images/remove.png') }}" width="18px"/>
                     </a>

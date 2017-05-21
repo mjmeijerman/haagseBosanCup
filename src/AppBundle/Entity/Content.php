@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="content")
+ * @ORM\Table(name="content", options={ "charset"="utf8mb4", "collate"="utf8mb4_unicode_ci" })
  */
 class Content
 {

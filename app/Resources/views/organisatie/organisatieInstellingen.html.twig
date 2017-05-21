@@ -91,7 +91,7 @@
             </tr>
             {% for voorinschrijving in voorinschrijvingen %}
                 <tr>
-                    <td>http://www.haagsebosancup.nl/inschrijven?token={{ voorinschrijving.token }}</td>
+                    <td>https://www.haagsebosancup.nl/inschrijven?token={{ voorinschrijving.token }}</td>
                     <td>{{ voorinschrijving.tokenSentTo }}</td>
                     <td>{{ voorinschrijving.createdAt }}</td>
                     <td>{{ voorinschrijving.usedAt }}</td>
@@ -133,7 +133,7 @@
         </tr>
         <tr>
             <td>{{ reglementen.naam }}</td>
-            <td>http://www.haagsebosancup.nl/uploads/reglementen/{{ reglementen.locatie }}</td>
+            <td>https://www.haagsebosancup.nl/uploads/reglementen/{{ reglementen.locatie }}</td>
             <td>{{ reglementen.createdAt }}</td>
             <td><a href="{{ path('addReglementen', { 'page': app.request.get('page') }) }}">
                     <img src="{{ asset('images/refresh.png') }}" width="18px"/>
