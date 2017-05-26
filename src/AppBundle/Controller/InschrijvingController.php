@@ -552,22 +552,6 @@ class InschrijvingController extends BaseController
         }
     }
 
-    private function getVerenigingen()
-    {
-        $verenigingen = [];
-        /** @var Vereniging[] $results */
-        $results = $this->getDoctrine()
-            ->getRepository('AppBundle:Vereniging')
-            ->findBy(
-                [],
-                ['naam' => 'ASC']
-            );
-        foreach ($results as $result) {
-            $verenigingen[] = $result->getAll();
-        }
-        return $verenigingen;
-    }
-
     /**
      * @Route("/checkUsername/{username}/", name="checkUsernameAvailabilityAjaxCall", options={"expose"=true})
      * @Method("GET")

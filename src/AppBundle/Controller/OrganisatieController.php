@@ -29,9 +29,9 @@ class OrganisatieController extends BaseController
 
     /**
      * @Route("/organisatie/{page}/", name="organisatieGetContent", defaults={"page" = "Mijn gegevens"})
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
-    public function getOrganisatiePage($page)
+    public function getOrganisatiePage(Request $request, $page)
     {
         $this->updateGereserveerdePlekken();
         $this->setBasicPageData('Organisatie');
@@ -47,7 +47,7 @@ class OrganisatieController extends BaseController
             case 'Inschrijvingen':
                 return $this->getOrganisatieInschrijvingenPage();
             case 'Juryzaken':
-                return $this->getJuryPage();
+                return $this->getJuryPage($request, $page);
             case 'Financieel':
                 return $this->getOrganisatieFacturenPage();
             case 'Mijn gegevens':
@@ -215,8 +215,64 @@ class OrganisatieController extends BaseController
         return $userObject->getAll();
     }
 
-    private function getJuryPage()
+    private function getJuryPage(Request $request, $page)
     {
+        if ($request->getMethod() === 'POST') {
+            if (
+                !empty($request->request->get('userId'))
+                && !empty($request->request->get('juryEmail'))
+                && !empty($request->request->get('juryVoornaam'))
+                && !empty($request->request->get('juryAchternaam'))
+                && !empty($request->request->get('brevet'))
+                && !empty($request->request->get('dag'))
+            ) {
+
+                /** @var User $user */
+                $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($request->request->get('userId'));
+
+                $jurylid = new Jurylid();
+                $jurylid->setEmail($request->request->get('juryEmail'));
+                $jurylid->setVoornaam($request->request->get('juryVoornaam'));
+                $jurylid->setAchternaam($request->request->get('juryAchternaam'));
+                $jurylid->setBrevet($request->request->get('brevet'));
+                switch ($request->request->get('dag')) {
+                    case 'za':
+                        $jurylid->setZaterdag(true);
+                        $jurylid->setZondag(false);
+                        $jurylid->setMaandag(false);
+                        break;
+                    case 'zo':
+                        $jurylid->setZaterdag(false);
+                        $jurylid->setZondag(true);
+                        $jurylid->setMaandag(false);
+                        break;
+                    case 'ma':
+                        $jurylid->setZaterdag(false);
+                        $jurylid->setZondag(false);
+                        $jurylid->setMaandag(true);
+                        break;
+                }
+                $jurylid->setUser($user);
+
+                $user->addJurylid($jurylid);
+
+                $this->addToDB($user);
+
+                $this->addFlash('success', 'Jurylid succesvol toegevoegd');
+                return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);
+            } else {
+                $this->addFlash('danger', 'Niet alle gegevens zijn goed ingevoerd!');
+            }
+        }
+
+        /** @var User[] $users */
+        $users = $this->getDoctrine()->getRepository('AppBundle:User')->loadUsersByRole('ROLE_CONTACT');
+
+        usort($users, function($a, $b)
+        {
+            return strcmp($a->getVereniging()->getNaam(), $b->getVereniging()->getNaam());
+        });
+
         $juryIndeling = $this->getJuryIndeling();
         /** @var Jurylid[] $results */
         $results       = $this->getDoctrine()->getRepository('AppBundle:Jurylid')
@@ -264,6 +320,7 @@ class OrganisatieController extends BaseController
                 'juryleden'                       => $juryleden,
                 'juryledenNiet'                   => $juryledenNiet,
                 'juryIndeling'                    => $juryIndeling,
+                'users'                           => $users
             )
         );
     }

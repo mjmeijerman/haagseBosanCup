@@ -60,6 +60,22 @@ class BaseController extends Controller
         return ('HBC' . date('Y', time()) . '-' . $user->getId());
     }
 
+    protected function getVerenigingen()
+    {
+        $verenigingen = [];
+        /** @var Vereniging[] $results */
+        $results = $this->getDoctrine()
+            ->getRepository('AppBundle:Vereniging')
+            ->findBy(
+                [],
+                ['naam' => 'ASC']
+            );
+        foreach ($results as $result) {
+            $verenigingen[] = $result->getAll();
+        }
+        return $verenigingen;
+    }
+
     /**
      * @param            $juryDagData
      * @param Jurylid    $jurylid

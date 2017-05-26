@@ -3,7 +3,69 @@
 {% block body %}
     <div class="jurybadges_button"><a href="{{ path('juryBadges') }}" target="_blank">Jurybadges downloaden</a></div><h1>Juryzaken</h1>
     <p>
-        <div class="titel">
+    <div class="titel">
+        <h2>Jurylid toevoegen</h2>
+    </div>
+    <div class="bericht">
+        <form method="post">
+            <table>
+                <tr>
+                    <td>Voornaam</td>
+                    <td><input type="text" name="juryVoornaam" required /></td>
+                </tr>
+                <tr>
+                    <td>Achternaam</td>
+                    <td><input type="text" name="juryAchternaam" required /></td>
+                </tr>
+                <tr>
+                    <td>Email adres</td>
+                    <td><input type="email" name="juryEmail" required /></td>
+                </tr>
+                <tr>
+                    <td>Vereniging</td>
+                    <td>
+                        <select name="userId" required>
+                            <option selected value="">Selecteer vereniging</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">
+                                    {{ user.vereniging.naam }}, {{ user.vereniging.plaats }}: {{ user.voornaam }} {{ user.achternaam }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Brevet</td>
+                    <td>
+                        <select name="brevet" required>
+                            <option selected value="">Selecteer brevet</option>
+                            <option value="TD1">TD1</option>
+                            <option value="TD2">TD2</option>
+                            <option value="TD3">TD3</option>
+                            <option value="TD4">TD4</option>
+                            <option value="TD5">TD5</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dag</td>
+                    <td>
+                        <select name="dag" required>
+                            <option selected value="">Selecteer beschikbare dag</option>
+                            <option value="za">Zaterdag</option>
+                            <option value="zo">Zondag</option>
+                            <option value="ma">Maandag</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Jurylid toevoegen" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="titel">
             <h2>Juryindeling</h2>
         </div>
         <div class="bericht">
