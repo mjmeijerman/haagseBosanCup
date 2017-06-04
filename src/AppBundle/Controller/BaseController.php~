@@ -1275,7 +1275,7 @@ class BaseController extends Controller
                                     $score->setUpdatedSprong(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
-                                    return new Response($e->getMessage(), 500);
+                                    return new Response($e->getMessage(), $e->getCode());
                                 }
                                 return new Response('ok', 200);
                             } else {
@@ -1292,7 +1292,7 @@ class BaseController extends Controller
                                     $score->setUpdatedBrug(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
-                                    return new Response($e->getMessage(), 500);
+                                    return new Response($e->getMessage(), $e->getCode());
                                 }
                                 return new Response('ok', 200);
                             } else {
@@ -1309,7 +1309,7 @@ class BaseController extends Controller
                                     $score->setUpdatedBalk(new \DateTime('now'));
                                     $this->addToDB($score);
                                 } catch (\Exception $e) {
-                                    return new Response($e->getMessage(), 500);
+                                    return new Response($e->getMessage(), $e->getCode());
                                 }
                                 return new Response('ok', 200);
                             } else {
