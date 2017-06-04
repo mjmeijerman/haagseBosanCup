@@ -1266,7 +1266,7 @@ class BaseController extends Controller
                                 $request->query->get('nSprong1') !== null && $request->query->get('dSprong2') !== null &&
                                 $request->query->get('eSprong2') !== null && $request->query->get('nSprong2') !== null) {
                                 try {
-                                    $score->setDSprong1($request->query->get('dSprong1'));
+                                    $score->setDSprong1($request->query->dSprong1('get'));
                                     $score->setESprong1($request->query->get('eSprong1'));
                                     $score->setNSprong1($request->query->get('nSprong1'));
                                     $score->setDSprong2($request->query->get('dSprong2'));
@@ -1340,7 +1340,7 @@ class BaseController extends Controller
             } else {
                 return new Response('Invalid toestel', 500);
             }
-            return new Response('Iternal server error', 500);
+            return new Response('Internal server error', 500);
         }
         return new Response('Invalid key!', 403);
     }
@@ -1369,6 +1369,70 @@ class BaseController extends Controller
             } else {
                 return new Response('Combinatie van niveau/categorie niet gevonden!', 500);
             }
+        }
+        return new Response('Invalid key!', 403);
+    }
+
+    /**
+     * @Route("/getScore/{wedstrijdnummer}/{toestel}/", name="getScore")
+     * @Method({"GET"})
+     */
+    public function getScore(Request $request, $wedstrijdnummer, $toestel)
+    {
+        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
+            $toestellen = ['sprong', 'brug', 'balk', 'vloer'];
+            if ($request->query->get('toestel') && in_array(strtolower($toestel), $toestellen)) {
+                /** @var Scores $score */
+                $score = $this->getDoctrine()->getRepository('AppBundle:Scores')
+                    ->findOneBy(['wedstrijdnummer' => $wedstrijdnummer]);
+                if ($score) {
+                    switch (strtolower($request->query->get('toestel'))) {
+                        case 'sprong':
+			    $scoreArray = [
+				'dSprong1' => $score->getDSprong1(),
+                                'eSprong1' => $score->getESprong1(),
+                                'nSprong1' => $score->getNSprong1(),
+                                'dSprong2' => $score->getDSprong2(),
+                                'eSprong2' => $score->getESprong2(),
+                                'nSprong2' => $score->getNSprong2(),
+			    ];
+			    $responseData = json_encode($scoreArray);
+                            return new Response($responseData, 200);
+                            break;
+                        case 'brug':
+                            $scoreArray = [
+				'dBrug' => $score->getDBrug(),
+                                'eBrug' => $score->getEBrug(),
+                                'nBrug' => $score->getNBrug(),
+			    ];
+			    $responseData = json_encode($scoreArray);
+                            return new Response($responseData, 200);
+                            break;
+                        case 'balk':
+                            $scoreArray = [
+				'dBalk' => $score->getDBalk(),
+                                'eBalk' => $score->getEBalk(),
+                                'nBalk' => $score->getNBalk(),
+			    ];
+			    $responseData = json_encode($scoreArray);
+                            return new Response($responseData, 200);
+                            break;
+                        case 'vloer':
+                            $scoreArray = [
+				'dVloer' => $score->getDVloer(),
+                                'eVloer' => $score->getEVloer(),
+                                'nVloer' => $score->getNVloer(),
+			    ];
+			    $responseData = json_encode($scoreArray);
+                            return new Response($responseData, 200);                            break;
+                    }
+                } else {
+                    return new Response('Geen geldig wedstrijdnummer', 500);
+                }
+            } else {
+                return new Response('Invalid toestel', 500);
+            }
+            return new Response('Internal server error', 500);
         }
         return new Response('Invalid key!', 403);
     }
