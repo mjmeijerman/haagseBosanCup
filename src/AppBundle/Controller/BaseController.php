@@ -1386,7 +1386,7 @@ class BaseController extends Controller
                 $score = $this->getDoctrine()->getRepository('AppBundle:Scores')
                     ->findOneBy(['wedstrijdnummer' => $wedstrijdnummer]);
                 if ($score) {
-                    switch (strtolower($request->query->get('toestel'))) {
+                    switch (strtolower($toestel)) {
                         case 'sprong':
 			    $scoreArray = [
 				'dSprong1' => $score->getDSprong1(),
@@ -1424,7 +1424,8 @@ class BaseController extends Controller
                                 'nVloer' => $score->getNVloer(),
 			    ];
 			    $responseData = json_encode($scoreArray);
-                            return new Response($responseData, 200);                            break;
+                            return new Response($responseData, 200);
+                            break;
                     }
                 } else {
                     return new Response('Geen geldig wedstrijdnummer', 500);
