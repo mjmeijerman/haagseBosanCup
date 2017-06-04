@@ -1266,7 +1266,7 @@ class BaseController extends Controller
                                 $request->query->get('nSprong1') !== null && $request->query->get('dSprong2') !== null &&
                                 $request->query->get('eSprong2') !== null && $request->query->get('nSprong2') !== null) {
                                 try {
-                                    $score->setDSprong1($request->query->dSprong1('get'));
+                                    $score->setDSprong1($request->query->get('dSprong1'));
                                     $score->setESprong1($request->query->get('eSprong1'));
                                     $score->setNSprong1($request->query->get('nSprong1'));
                                     $score->setDSprong2($request->query->get('dSprong2'));
