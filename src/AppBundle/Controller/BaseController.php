@@ -1381,7 +1381,7 @@ class BaseController extends Controller
     {
         if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
             $toestellen = ['sprong', 'brug', 'balk', 'vloer'];
-            if ($request->query->get('toestel') && in_array(strtolower($toestel), $toestellen)) {
+            if (in_array(strtolower($toestel), $toestellen)) {
                 /** @var Scores $score */
                 $score = $this->getDoctrine()->getRepository('AppBundle:Scores')
                     ->findOneBy(['wedstrijdnummer' => $wedstrijdnummer]);
