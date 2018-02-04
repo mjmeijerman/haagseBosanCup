@@ -98,7 +98,7 @@ class InschrijvingController extends BaseController
                                 $user->addJurylid($jurylid);
                                 $this->addToDB($user);
 
-                                $subject    = 'Aanmelding Haagse Bosan Cup';
+                                $subject    = 'Aanmelding Haagse Donar Cup';
                                 $to         = $jurylid->getEmail();
                                 $view       = 'mails/inschrijven_jurylid.html.twig';
                                 $parameters = [
@@ -109,7 +109,7 @@ class InschrijvingController extends BaseController
                                         $user->getVereniging()->getPlaats(),
                                     'contactEmail'   => $user->getEmail(),
                                 ];
-                                $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsebosancup.nl');
+                                $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsedonarcup.nl');
                             }
                         }
                     }
@@ -504,7 +504,7 @@ class InschrijvingController extends BaseController
                             }
                             $session->set('vrijePlekken', $this->getVrijePlekken());
                             $this->addToDB($contactpersoon);
-                            $subject        = 'Inloggegevens Haagse Bosan Cup';
+                            $subject        = 'Inloggegevens Haagse Donar Cup';
                             $to             = $contactpersoon->getEmail();
                             $view           = 'mails/inschrijven_contactpersoon.html.twig';
                             $inschrijvenTot = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);

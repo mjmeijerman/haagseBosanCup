@@ -75,7 +75,7 @@ class WedstrijdIndelingPdfController extends AlphaPDFController
         $this->Text(3,294,'www.donargym.nl');
 
         //HBC SITE
-        $this->Text(154,294,'www.haagsebosancup.nl');
+        $this->Text(154,294,'www.haagsedonarcup.nl');
 
         //DATUM
         $this->Text(87,294,'- ' . $this->datumHBC . ' -');

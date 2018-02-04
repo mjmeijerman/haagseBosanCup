@@ -25,7 +25,7 @@ class UitslagenPdfController extends AlphaPDFController
         $this->Ln(30);
         $this->SetTextColor(0, 0, 0);
         $this->SetFont('Helvetica', 'B', 20);
-        $this->Cell(277, 10, "Haagse Bosan Cup " . date('Y', time()) . ": Uitslagenlijst " . $this->categorie . " " .
+        $this->Cell(277, 10, "Haagse Donar Cup " . date('Y', time()) . ": Uitslagenlijst " . $this->categorie . " " .
             $this->niveau, 0, 1, 'C');
         $this->Ln(6);
         $this->SetDrawColor(0,0,0);

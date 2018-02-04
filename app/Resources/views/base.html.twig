@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Haagse Bosan Cup</title>
+    <title>Haagse Donar Cup</title>
     <meta charset="UTF-8" />
     {% block stylesheets %}
         <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
@@ -116,7 +116,7 @@
                 {% if sponsor.website %}
                     <a href="{{ sponsor.website }}" target="_blank" style="text-decoration: none;">
                 {% endif %}
-                    <img src="https://haagsebosancup.nl/uploads/sponsors/{{ sponsor.locatie }}" />
+                    <img src="https://haagsedonarcup.nl/uploads/sponsors/{{ sponsor.locatie }}" />
                 {% if sponsor.website %}
                     </a>
                 {% endif %}
@@ -127,7 +127,7 @@
         </div>
 		
         <div id="social">
-            <a href="https://www.facebook.com/haagsebosancup" target="_blank"><img src="{{ asset('images/facebook.png') }}" width="30" /></a>
+            <a href="https://www.facebook.com/haagsedonarcup" target="_blank"><img src="{{ asset('images/facebook.png') }}" width="30" /></a>
         </div>
 
         {% block javascripts %}

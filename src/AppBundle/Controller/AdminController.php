@@ -112,7 +112,7 @@ class AdminController extends BaseController
                 ->setPassword($encoder->encodePassword($password, $organisatieLid->getSalt()));
             $this->addToDB($organisatieLid);
 
-            $subject = 'Inloggegevens website Haagse Bosan Cup';
+            $subject = 'Inloggegevens website Haagse Donar Cup';
             $to = $organisatieLid->getEmail();
             $view = 'mails/new_user.txt.twig';
             $mailParameters = array(
@@ -120,7 +120,7 @@ class AdminController extends BaseController
                 'username' => $organisatieLid->getUsername(),
                 'password' => $password
             );
-            $from = 'webmaster@haagsebosancup.nl';
+            $from = 'webmaster@haagsedonarcup.nl';
             $this->sendEmail($subject, $to, $view, $mailParameters, $from);
 
             return $this->redirectToRoute('getAdminIndexPage');

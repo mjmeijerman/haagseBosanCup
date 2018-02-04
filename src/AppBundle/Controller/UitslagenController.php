@@ -324,7 +324,7 @@ class UitslagenController extends BaseController
         $pdf->SetY(60);
         $pdf->wedstrijdIndelingContent($turnsters, $userId);
         return new Response($pdf->Output(
-            'wedstrijdindeling HBC ' . self::DATUM_HBC . " " .$request->query->get('wedstrijddag') . " wedstrijdronde ".
+            'wedstrijdindeling HDC ' . self::DATUM_HBC . " " .$request->query->get('wedstrijddag') . " wedstrijdronde ".
             $request->query->get('wedstrijdronde') . " baan " . $request->query->get('baan') . ".pdf", "I"
         ), 200, [
             'Content-Type' => 'application/pdf'

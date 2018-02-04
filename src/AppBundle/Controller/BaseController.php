@@ -43,7 +43,7 @@ class BaseController extends Controller
     const BEDRAG_PER_TURNSTER = 15;
     const JURY_BOETE_BEDRAG = 35;
     const AANTAL_TURNSTERS_PER_JURY = 10;
-    const DATUM_HBC = '3, 4 & 5 juni 2017';
+    const DATUM_HBC = '9 & 10 juni 2018';
     const LOCATIE_HBC = 'Sporthal Overbosch';
     const REKENINGNUMMER = 'NL81 INGB 000 007 81 99';
     const REKENING_TNV = 'Gymnastiekver. Donar';
@@ -57,7 +57,7 @@ class BaseController extends Controller
     
     protected function getFactuurNummer($user)
     {
-        return ('HBC' . date('Y', time()) . '-' . $user->getId());
+        return ('HDC' . date('Y', time()) . '-' . $user->getId());
     }
 
     protected function getVerenigingen()
@@ -710,7 +710,7 @@ class BaseController extends Controller
 
         $this->addToDB($tokenObject);
 
-        $subject = 'Voorinschrijving HBC';
+        $subject = 'Voorinschrijving HDC';
         $to = $email;
         $view = 'mails/voorinschrijving.txt.twig';
         $mailParameters = [
@@ -748,7 +748,7 @@ class BaseController extends Controller
         return false;
     }
 
-    protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@haagsebosancup.nl')
+    protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@haagsedonarcup.nl')
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
@@ -911,7 +911,7 @@ class BaseController extends Controller
                 }
                 break;
             default:
-                $returnData['error'] = 'An unknown error occurred, please contact webmaster@haagsebosancup.nl';
+                $returnData['error'] = 'An unknown error occurred, please contact webmaster@haagsedonarcup.nl';
         }
         return new JsonResponse($returnData);
     }
@@ -952,20 +952,20 @@ class BaseController extends Controller
         $pdf->SetTextColor(0);
 
         //REKENINGNUMMER DETAILS
-        $pdf->Text(3, 290, 'Haagse Bosan Cup - ' . $datumHBC . ', ' . $locatieHBC);
+        $pdf->Text(3, 290, 'Haagse Donar Cup - ' . $datumHBC . ', ' . $locatieHBC);
         $pdf->Text(3, 294, $rekeningNummer . ' - T.n.v. ' . $rekeningTNV . ' o.v.v. ' . $factuurNummer);
 
         //LOGO DONAR
         $pdf->Image('images/logodonarPNG.png', 188, 268);
 
-        //LOGO HBC
+        //LOGO HDC
         $pdf->Image('images/logohbcPNG.png', 8, 268);
 
         //DONAR SITE
         $pdf->Text(180, 290, 'www.donargym.nl');
 
         //HBC SITE
-        $pdf->Text(171, 294, 'www.haagsebosancup.nl');
+        $pdf->Text(171, 294, 'www.haagsedonarcup.nl');
         return $pdf;
     }
 
@@ -1235,7 +1235,7 @@ class BaseController extends Controller
                 $pdf->SetAlpha(0.6);
                 $pdf->SetFontSize(8);
                 $pdf->Text(34, 209,
-                    'Mochten er zich problemen voordoen, neemt u dan alstublieft contact op via info@haagsebosancup.nl');
+                    'Mochten er zich problemen voordoen, neemt u dan alstublieft contact op via info@haagsedonarcup.nl');
                 return new Response($pdf->Output(), 200, array(
                     'Content-Type' => 'application/pdf'
                 ));

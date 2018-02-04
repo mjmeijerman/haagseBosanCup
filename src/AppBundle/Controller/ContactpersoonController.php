@@ -205,7 +205,7 @@ class ContactpersoonController extends BaseController
         }
         return new Response($pdf->Output(
             'Uitslagen ' . $this->getUser()->getVereniging()->getNaam() . ' ' . $this->getUser()->getVereniging()
-                ->getPlaats() . ' HBC ' . self::DATUM_HBC . ".pdf", "I"
+                ->getPlaats() . ' HDC ' . self::DATUM_HBC . ".pdf", "I"
         ), 200, [
             'Content-Type' => 'application/pdf'
         ]);
@@ -658,7 +658,7 @@ class ContactpersoonController extends BaseController
 
                             /** @var User $user */
                             $user = $this->getUser();
-                            $subject    = 'Aanmelding Haagse Bosan Cup';
+                            $subject    = 'Aanmelding Haagse Donar Cup';
                             $to         = $jurylid->getEmail();
                             $view       = 'mails/inschrijven_jurylid.html.twig';
                             $parameters = [
@@ -669,7 +669,7 @@ class ContactpersoonController extends BaseController
                                     $user->getVereniging()->getPlaats(),
                                 'contactEmail'   => $user->getEmail(),
                             ];
-                            $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsebosancup.nl');
+                            $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsedonarcup.nl');
 
                             return $this->redirectToRoute('getContactpersoonIndexPage');
                         }

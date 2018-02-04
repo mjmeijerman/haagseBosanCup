@@ -261,7 +261,7 @@ class ContentController extends BaseController
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $this->addToDB($user);
-                $subject = 'Inloggegevens website Haagse Bosan Cup';
+                $subject = 'Inloggegevens website Haagse Donar Cup';
                 $to = $user->getEmail();
                 $view = 'mails/new_password.txt.twig';
                 $mailParameters = array(

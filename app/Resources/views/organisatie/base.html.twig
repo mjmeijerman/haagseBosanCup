@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Haagse Bosan Cup</title>
+    <title>Haagse Donar Cup</title>
     <meta charset="UTF-8"/>
     {% block stylesheets %}
         <link href="{{ asset('css/organisatie.css') }}" rel="stylesheet"/>
@@ -42,7 +42,7 @@
             {% for menuItem in menuItems %}
                 <a href="{{ path('organisatieGetContent', { 'page': menuItem.naam }) }}">{{ menuItem.naam }}</a>
             {% endfor %}
-            <a href="{{ path('getIndexPage') }}">HBC site</a>
+            <a href="{{ path('getIndexPage') }}">HDC site</a>
             <a href="{{ path('logout') }}">Uitloggen</a>
         </nav>
 
