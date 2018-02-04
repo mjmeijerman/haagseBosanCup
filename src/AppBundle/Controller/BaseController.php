@@ -54,7 +54,7 @@ class BaseController extends Controller
     protected $aantalTurnsters;
     protected $aantalWachtlijst;
     protected $aantalJury;
-    
+
     protected function getFactuurNummer($user)
     {
         return ('HDC' . date('Y', time()) . '-' . $user->getId());
@@ -439,6 +439,16 @@ class BaseController extends Controller
         ) {
             return true;
         }
+        return false;
+    }
+
+    protected function isAfterOpeningInschrijving()
+    {
+        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
+        if (time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING])) {
+            return true;
+        }
+
         return false;
     }
 

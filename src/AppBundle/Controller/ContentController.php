@@ -2,19 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Content;
 use AppBundle\Entity\Instellingen;
 use AppBundle\Entity\ScoresRepository;
-use AppBundle\Entity\Turnster;
-use AppBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Content;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception;
-use AppBundle\Controller\BaseController;
 
 
 class ContentController extends BaseController
@@ -160,12 +154,13 @@ class ContentController extends BaseController
             $nieuwsItems[] = $result->getAll();
         }
         return $this->render('default/nieuws.html.twig', array(
-            'nieuwsItems' => $nieuwsItems,
-            'menuItems' => $this->menuItems,
-            'sponsors' => $this->sponsors,
-            'aantalPlekken' => $aantalPlekken,
-            'tijdVol' => $tijdVol,
-            'tijdTotVol' => $tijdTotVol,
+            'nieuwsItems'         => $nieuwsItems,
+            'menuItems'           => $this->menuItems,
+            'sponsors'            => $this->sponsors,
+            'aantalPlekken'       => $aantalPlekken,
+            'tijdVol'             => $tijdVol,
+            'tijdTotVol'          => $tijdTotVol,
+            'inschrijvingGeopend' => $this->isAfterOpeningInschrijving(),
         ));
     }
 
