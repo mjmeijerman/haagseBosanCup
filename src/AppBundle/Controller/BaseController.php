@@ -40,8 +40,8 @@ class BaseController extends Controller
     const UITERLIJKE_BETAALDATUM_FACTUUR = 'Uiterlijke betaaldatum';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
     const EMPTY_RESULT = 'Klik om te wijzigen';
-    const BEDRAG_PER_TURNSTER = 15;
-    const JURY_BOETE_BEDRAG = 35;
+    const BEDRAG_PER_TURNSTER = 16.50;
+    const JURY_BOETE_BEDRAG = 50;
     const AANTAL_TURNSTERS_PER_JURY = 10;
     const DATUM_HBC = '9 & 10 juni 2018';
     const LOCATIE_HBC = 'Sporthal Overbosch';
@@ -85,31 +85,12 @@ class BaseController extends Controller
         if (strtolower($juryDagData) == 'za') {
             $jurylid->setZaterdag(true);
             $jurylid->setZondag(false);
-            $jurylid->setMaandag(false);
         } elseif (strtolower($juryDagData) == 'zo') {
             $jurylid->setZaterdag(false);
             $jurylid->setZondag(true);
-            $jurylid->setMaandag(false);
-        } elseif (strtolower($juryDagData) == 'ma') {
-            $jurylid->setZaterdag(false);
-            $jurylid->setZondag(false);
-            $jurylid->setMaandag(true);
         } elseif (strtolower($juryDagData) == 'zazo') {
             $jurylid->setZaterdag(true);
             $jurylid->setZondag(true);
-            $jurylid->setMaandag(false);
-        } elseif (strtolower($juryDagData) == 'zama') {
-            $jurylid->setZaterdag(true);
-            $jurylid->setZondag(false);
-            $jurylid->setMaandag(true);
-        } elseif (strtolower($juryDagData) == 'zoma') {
-            $jurylid->setZaterdag(false);
-            $jurylid->setZondag(true);
-            $jurylid->setMaandag(true);
-        } elseif (strtolower($juryDagData) == 'zazoma') {
-            $jurylid->setZaterdag(true);
-            $jurylid->setZondag(true);
-            $jurylid->setMaandag(true);
         }
     }
 
@@ -227,20 +208,12 @@ class BaseController extends Controller
     protected function getBeschikbareDag($juryObject)
     {
         /** @var Jurylid $juryObject */
-        if ($juryObject->getZaterdag() && $juryObject->getZondag() && $juryObject->getMaandag()) {
-            return 'ZaZoMa';
-        } elseif ($juryObject->getZaterdag() && $juryObject->getZondag()) {
+        if ($juryObject->getZaterdag() && $juryObject->getZondag()) {
             return 'ZaZo';
-        } elseif ($juryObject->getMaandag() && $juryObject->getZondag()) {
-            return 'ZoMa';
-        } elseif ($juryObject->getZaterdag() && $juryObject->getMaandag()) {
-            return 'ZaMa';
         } elseif ($juryObject->getZaterdag()) {
             return 'Za';
         } elseif ($juryObject->getZondag()) {
             return 'Zo';
-        } elseif ($juryObject->getMaandag()) {
-            return 'Ma';
         } else {
             return 'Geen';
         }

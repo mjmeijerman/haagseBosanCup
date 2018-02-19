@@ -67,11 +67,7 @@
                             <option value="" selected>Beschikbare dag</option>
                             <option value="Za" {% if jury.dag == "Za" %}selected{% endif %}>Zaterdag</option>
                             <option value="Zo" {% if jury.dag == "Zo" %}selected{% endif %}>Zondag</option>
-                            <option value="ma" {% if jury.dag == "Ma" %}selected{% endif %}>Maandag</option>
                             <option value="zazo" {% if jury.dag == "ZaZo" %}selected{% endif %}>Zaterdag en Zondag</option>
-                            <option value="zama" {% if jury.dag == "ZaMa" %}selected{% endif %}>Zaterdag en Maandag</option>
-                            <option value="zoma" {% if jury.dag == "ZoMa" %}selected{% endif %}>Zondag en Maandag</option>
-                            <option value="zazoma" {% if jury.dag == "ZaZoMa" %}selected{% endif %}>Alle dagen beschikbaar</option>
                         </select> <!-- vergeet de spatie niet -->
                     </td>
                 </tr>

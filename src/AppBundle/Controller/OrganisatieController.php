@@ -239,17 +239,14 @@ class OrganisatieController extends BaseController
                     case 'za':
                         $jurylid->setZaterdag(true);
                         $jurylid->setZondag(false);
-                        $jurylid->setMaandag(false);
                         break;
                     case 'zo':
                         $jurylid->setZaterdag(false);
                         $jurylid->setZondag(true);
-                        $jurylid->setMaandag(false);
                         break;
-                    case 'ma':
-                        $jurylid->setZaterdag(false);
-                        $jurylid->setZondag(false);
-                        $jurylid->setMaandag(true);
+                    case 'zazo':
+                        $jurylid->setZaterdag(true);
+                        $jurylid->setZondag(true);
                         break;
                 }
                 $jurylid->setUser($user);
@@ -1119,7 +1116,6 @@ class OrganisatieController extends BaseController
         if ($result) {
             $result->setZaterdag(false);
             $result->setZondag(false);
-            $result->setMaandag(false);
             $this->setJurylidBeschikbareDagenFromPostData($dag, $result);
             $this->addToDB($result);
         }

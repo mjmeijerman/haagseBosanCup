@@ -256,12 +256,6 @@ class UitslagenController extends BaseController
                     'dag' => 'Zondag',
                 ];
             }
-            if ($result->getMaandag()) {
-                $juryleden[] = [
-                    'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                    'dag' => 'Maandag',
-                ];
-            }
         }
         $pdf = new JurybadgePdfController('L','mm',[85.6,53.98]);
         $pdf->setDatumHBC(self::DATUM_HBC);

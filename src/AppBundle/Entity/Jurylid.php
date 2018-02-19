@@ -71,7 +71,7 @@ class Jurylid
      *
      * @ORM\Column(type="boolean")
      */
-    private $maandag;
+    private $maandag = false;
 
     /**
      * Get id
