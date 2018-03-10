@@ -277,8 +277,8 @@ class BaseController extends Controller
     protected function getGroepen()
     {
         return [
-            'Voorinstap' => ['N2', 'D1', 'D2'],
-            'Instap' => ['N2', 'D1', 'D2'],
+            'Voorinstap' => ['N2', 'N3', 'D1', 'D2'],
+            'Instap' => ['N2', 'N3', 'D1', 'D2'],
             'Pupil 1' => ['N3', 'D1', 'D2'],
             'Pupil 2' => ['N3', 'D1', 'D2'],
             'Jeugd 1' => ['N4', 'D1', 'D2'],
@@ -337,7 +337,7 @@ class BaseController extends Controller
         if ($leeftijd < 8) {
             return [];
         } elseif ($leeftijd == 8 || $leeftijd == 9) {
-            return ['N2', 'D1', 'D2'];
+            return ['N2', 'N3', 'D1', 'D2'];
         } elseif ($leeftijd == 10 || $leeftijd == 11) {
             return ['N3', 'D1', 'D2'];
         } elseif ($leeftijd == 12) {
