@@ -377,13 +377,15 @@ class BaseController extends Controller
                 array('instelling' => self::OPENING_INSCHRIJVING),
                 array('gewijzigd' => 'DESC')
             );
+        /** @var Instellingen $datumGeopend */
         if (count($result) > 0) {
             $datumGeopend = $result[0];
         }
+
         /** @var Instellingen $result */
         $result = $this->getDoctrine()
             ->getRepository('AppBundle:Instellingen')
-            ->getTijdVol($datumGeopend);
+            ->getTijdVol($datumGeopend->getDatum());
         if ($result) {
             return $result->getDatum();
         } else {
@@ -397,7 +399,7 @@ class BaseController extends Controller
             $this->addToDB($instelling);
             $result = $this->getDoctrine()
                 ->getRepository('AppBundle:Instellingen')
-                ->getTijdVol($datumGeopend);
+                ->getTijdVol($datumGeopend->getDatum());
             return $result->getDatum();
         }
     }

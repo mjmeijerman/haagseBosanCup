@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class InstellingenRepository extends EntityRepository
 {
-    public function getTijdVol($datumGeopend)
+    public function getTijdVol(\DateTime $datumGeopend)
     {
         $result = $this->createQueryBuilder('u')
             ->where('u.instelling = :tijdVol')
             ->andWhere('u.gewijzigd > :datumGeopend')
             ->setParameters([
-                'datumGeopend' => $datumGeopend,
+                'datumGeopend' => $datumGeopend->format('Y-m-d H:i:s'),
                 'tijdVol' => 'tijdVol',
             ])
             ->getQuery()
