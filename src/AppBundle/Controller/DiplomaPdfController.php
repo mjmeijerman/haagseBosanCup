@@ -14,7 +14,7 @@ class DiplomaPdfController extends AlphaPDFController
         $this->SetAlpha(0.5);
         $this->Rect(0,0,297,35,'F');
         $this->SetAlpha(1);
-        $this->Image('images/HBCDiplomaheader.png',0,0);
+        $this->Image('images/HDCDiplomaheader.png',0,0);
     }
 
     function FooterDiploma($datumHbc)
