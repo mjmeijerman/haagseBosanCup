@@ -909,7 +909,7 @@ class BaseController extends Controller
         //LOGO
         $pdf->SetFillColor(127);
         $pdf->Rect(0, 0, 210, 35, 'F');
-        $pdf->Image('images/HDCFactuurheader.png');
+        $pdf->Image('images/HDCFactuurHeader.png');
 
         //FACTUUR, NUMMER EN DATUM
         $pdf->SetFont('Franklin', '', 16);
