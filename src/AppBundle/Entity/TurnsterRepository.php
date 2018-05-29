@@ -266,7 +266,7 @@ WHERE
 AND
   t.afgemeld = 0
 ORDER BY
-  s.wedstrijddag, t.user_id, s.wedstrijdronde
+  s.wedstrijddag, t.user_id, s.wedstrijdronde, s.wedstrijdnummer
 EOQ;
 
         $stmt = $connection->executeQuery($sql);
