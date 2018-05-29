@@ -238,4 +238,39 @@ class TurnsterRepository extends EntityRepository
             ->getResult();
         return $results;
     }
+
+    public function getTurnstersOrderedByDayAndVereniging()
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = <<<EOQ
+SELECT
+  t.id,
+  t.catagorie,
+  t.niveau,
+  t.voornaam,
+  t.achternaam
+  v.naam as vereniging_naam,
+  v.plaats as vereniging_plaats,
+  s.wedstrijdnummer
+FROM
+  turnster t
+JOIN
+  scores s ON t.score_id = s.id
+JOIN
+  user u ON t.user_id = u.id
+JOIN
+  vereniging v ON u.vereniging_id = v.id
+WHERE
+  t.wachtlijst = 0
+AND
+  t.afgemeld = 0
+ORDER BY
+  s.wedstrijddag, t.user_id, s.wedstrijdronde
+EOQ;
+
+        $stmt = $connection->executeQuery($sql);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

@@ -7,6 +7,7 @@ use AppBundle\Entity\Jurylid;
 use AppBundle\Entity\Scores;
 use AppBundle\Entity\ScoresRepository;
 use AppBundle\Entity\Turnster;
+use AppBundle\Entity\TurnsterRepository;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -129,27 +130,30 @@ class UitslagenController extends BaseController
      */
     public function diplomaWedstrijdnummerPdf()
     {
-        /** @var Turnster[] $results */
-        $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
-            ->findBy([
-                'wachtlijst' => 0,
-                'afgemeld' => 0,
-            ]);
+        /** @var TurnsterRepository $turnsterRepository */
+        $turnsterRepository = $this->getDoctrine()->getRepository("AppBundle:Turnster");
+
+//        /** @var Turnster[] $results */
+//        $results = $turnsterRepository
+//            ->findBy([
+//                'wachtlijst' => 0,
+//                'afgemeld' => 0,
+//            ]);
+        $results = $turnsterRepository->getTurnstersOrderedByDayAndVereniging();
         $turnsters = [];
         foreach ($results as $result) {
             $turnsters[] = [
-                'id'  => $result->getId(),
-                'categorie' => $result->getCategorie(),
-                'niveau' => $result->getNiveau(),
-                'naam' => $result->getVoornaam() . ' ' . $result->getAchternaam(),
-                'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .$result->getUser()
-                        ->getVereniging()->getPlaats(),
-                'wedstrijdnummer' => $result->getScores()->getWedstrijdnummer(),
+                'id'  => $result['id'],
+                'categorie' => $result['categorie'],
+                'niveau' => $result['niveau'],
+                'naam' => $result['voornaam'] . ' ' . $result['achternaam'],
+                'vereniging' => $result['vereniging_naam'] . ' ' .$result['vereniging_plaats'],
+                'wedstrijdnummer' => $result['wedstrijdnummer'],
             ];
         }
-        usort($turnsters, function ($a, $b) {
-            return ($a['wedstrijdnummer'] < $b['wedstrijdnummer']) ? -1 : 1;
-        });
+//        usort($turnsters, function ($a, $b) {
+//            return ($a['wedstrijdnummer'] < $b['wedstrijdnummer']) ? -1 : 1;
+//        });
         $pdf = new DiplomaPdfController('L', 'mm', 'A5');
         $pdf->SetMargins(0,0);
         $pdf->AddFont('Gotham','','Gotham-Light.php');
