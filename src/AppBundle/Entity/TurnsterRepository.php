@@ -246,7 +246,7 @@ class TurnsterRepository extends EntityRepository
         $sql = <<<EOQ
 SELECT
   t.id,
-  t.catagorie,
+  t.categorie,
   t.niveau,
   t.voornaam,
   t.achternaam,
