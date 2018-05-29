@@ -249,7 +249,7 @@ SELECT
   t.catagorie,
   t.niveau,
   t.voornaam,
-  t.achternaam
+  t.achternaam,
   v.naam as vereniging_naam,
   v.plaats as vereniging_plaats,
   s.wedstrijdnummer
