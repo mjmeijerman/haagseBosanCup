@@ -166,7 +166,7 @@ class DiplomaPdfController extends AlphaPDFController
 
         //IMAGES
         $this->Image('https://haagsedonarcup.nl/uploads/sponsors/aa105ca81400aafb31e0d6aff7484bb583efa3da_groot.jpg',8,127,0,17);
-        $this->Image('https://haagsedonarcup.nl/uploads/sponsors/664eac9e26c5b3dde345d5d18bdd8b6484b565e7_groot.png',153,127,0,17);
+        $this->Image('https://haagsedonarcup.nl/uploads/sponsors/003d6cb53ea1a6da9b07d1d3725fcbb5007d7bf4.png',153,127,0,17);
     }
 
     //ROUNDED RECTANGLE
