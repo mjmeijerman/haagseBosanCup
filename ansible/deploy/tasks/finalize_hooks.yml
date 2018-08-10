@@ -1,0 +1,49 @@
+- name: make sure that all web writable folders exist
+  file: path="{{ item.name }}" state=directory recurse=yes
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set deploy_user ACL privileges on directories
+  acl: name={{ item.name }} entity={{ deploy_user }} etype=user permissions=rwx state=present
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set deploy_user default ACL privileges on directories
+  acl: name={{ item.name }} entity={{ deploy_user }} etype=user permissions=rwx default=yes state=present
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set web_user ACL privileges on directories
+  acl: name={{ item.name }} entity={{ nginx_user }} etype=user permissions=rwx state=present
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set web_user default ACL privileges on directories
+  acl: name={{ item.name }} entity={{ nginx_user }} etype=user permissions=rwx default=yes state=present
+  with_items: "{{ web_writable_folders }}"
+
+- name: Make app/cache writable
+  command: setfacl -R -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/cache
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Make app/cache writable
+  command: setfacl -dR -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/cache
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Make app/logs writable
+  command: setfacl -R -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/logs
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Make app/logs writable
+  command: setfacl -dR -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/logs
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Make app/sessions writable
+  command: setfacl -R -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/sessions
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Make app/sessions writable
+  command: setfacl -dR -m u:"www-data":rwX -m u:"{{ deploy_user }}":rwX app/sessions
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
