@@ -613,7 +613,7 @@ class OrganisatieController extends BaseController
             return false;
         }
 
-        if ($nu->format('n') > '8') {
+        if ($nu->format('n') > '7') {
             return false;
         }
 
