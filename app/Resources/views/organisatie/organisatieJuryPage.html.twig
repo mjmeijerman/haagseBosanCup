@@ -82,7 +82,7 @@
             {% if juryIndeling %}
                 <tr>
                     <td>{{ juryIndeling.naam }}</td>
-                    <td>https://www.haagsedonarcup.nl/uploads/juryIndeling/{{ juryIndeling.locatie }}</td>
+                    <td>/uploads/juryIndeling/{{ juryIndeling.locatie }}</td>
                     <td>{{ juryIndeling.createdAt }}</td>
                     <td><a href="{{ path('addjuryIndeling', { 'page': app.request.get('page') }) }}">
                             <img src="{{ asset('images/refresh.png') }}" width="18px"/>
