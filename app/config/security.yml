@@ -10,8 +10,8 @@ security:
     role_hierarchy:
         ROLE_INGELOGD:    [ROLE_USER]
         ROLE_CONTACT:     [ROLE_INGELOGD]
-        ROLE_ADMIN:       [ROLE_INGELOGD]
-        ROLE_ORGANISATIE: [ROLE_INGELOGD]
+        ROLE_ADMIN:       [ROLE_INGELOGD, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ORGANISATIE: [ROLE_INGELOGD, ROLE_ALLOWED_TO_SWITCH]
         ROLE_JURY:        [ROLE_INGELOGD]
 
     firewalls:
@@ -29,6 +29,7 @@ security:
                 check_path: /login_check
                 csrf_provider: security.csrf.token_manager
                 default_target_path: /pagina/Inloggen
+            switch_user: true
 
             logout:
                 path:   /logout

@@ -24,6 +24,7 @@
             <th>Taak</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         {% for lid in organisatieLeden %}
             <tr>
@@ -37,6 +38,11 @@
                 </td>
                 <td><a href="{{ path('removeOrganisatieLid', { 'username': lid.username }) }}">
                         <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('getContent', {'_switch_user': lid.username, 'page': 'Inloggen'}) }}">
+                        <img src="{{ asset('images/login_as.png') }}" width="18px"/>
                     </a>
                 </td>
             </tr>
