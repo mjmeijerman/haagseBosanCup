@@ -84,7 +84,11 @@
 
         {% if app.user %}
             <div id="logout">
-                <a href="{{ path('logout') }}">Uitloggen</a>
+                {% if is_granted('ROLE_PREVIOUS_ADMIN') or is_granted('ROLE_PREVIOUS_ORGANISATIE') %}
+                    <a href="{{ path('getContent', {'_switch_user': '_exit', 'page': 'Inloggen'}) }}">Uitloggen</a>
+                {% else %}
+                    <a href="{{ path('logout') }}">Uitloggen</a>
+                {% endif %}
             </div>
         {% endif %}
 

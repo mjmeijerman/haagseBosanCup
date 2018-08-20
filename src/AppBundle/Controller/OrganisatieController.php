@@ -666,6 +666,7 @@ class OrganisatieController extends BaseController
                 'turnstersWachtlijst' => count($turnstersWachtlijst),
                 'aantalJuryleden'     => count($juryleden),
                 'email'               => $result->getEmail(),
+                'username'            => $result->getUsername(),
             ];
         }
         return $contactpersonen;

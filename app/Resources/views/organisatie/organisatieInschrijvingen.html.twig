@@ -57,6 +57,9 @@
 							<th>Wachtlijst</th>
 							<th>Juryleden</th>
 							<th></th>
+                            {% if not is_granted('ROLE_PREVIOUS_ADMIN') %}
+								<th></th>
+							{% endif %}
 						</tr>
 						{% for contactpersoon in contactpersonen %}
 						<tr>
@@ -67,10 +70,18 @@
 							<td>{{ contactpersoon.turnstersWachtlijst }}</td>
 							<td>{{ contactpersoon.aantalJuryleden }}</td>
 							<td>
-							 	<a href="{{ path('removeContactpersoon', { 'id': contactpersoon.id }) }}">
+								<a href="{{ path('removeContactpersoon', { 'id': contactpersoon.id }) }}">
 									<img src="{{ asset('images/remove.png') }}" width="15"/>
 								</a>
 							</td>
+
+                            {% if not is_granted('ROLE_PREVIOUS_ADMIN') %}
+							<td>
+								<a href="{{ path('getContent', {'_switch_user': contactpersoon.username, 'page': 'Inloggen'}) }}">
+									<img src="{{ asset('images/login_as.png') }}" width="18px"/>
+								</a>
+							</td>
+                            {% endif %}
 						</tr>
 						{% endfor %}
 					</table>

@@ -12,3 +12,4 @@
 /.idea
 /web/uploads/*
 /.settings
+/var/sessions
