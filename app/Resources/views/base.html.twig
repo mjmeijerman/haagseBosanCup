@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Haagse Donar Cup</title>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     {% block stylesheets %}
         <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
     {% endblock %}
@@ -52,7 +52,7 @@
     <div id="container">
         <div id="header">
             <a href="{{ path('getIndexPage') }}">
-                <img src="{{ asset('images/header.png') }}" alt="" />
+                <img src="{{ asset('images/header.png') }}" alt=""/>
             </a>
         </div>
 
@@ -96,12 +96,13 @@
             <div class="locatie">
                 <h2>Locatie</h2>
                 <hr>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2451.4535801027096!2d4.3465653!3d52.08967620000001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b70ac9816991%3A0x8f5cdf0ea9d78ec8!2sVlaskamp+3%2C+2592+AA+Den+Haag!5e0!3m2!1snl!2snl!4v1420389570598"
-                        width="200" frameborder="0"
-                        style="border:0;margin-left:10px;margin-right:10px;margin-bottom:5px;"></iframe>
-                <br/>
-                Sporthal Overbosch<br/>
-                Vlaskamp 3, Den Haag
+                <a href="https://www.google.com/maps/place/Vlaskamp+3,+2592+AA+Den+Haag/@52.0875809,4.3423114,15.34z/data=!4m5!3m4!1s0x47c5b70ac9816991:0x8f5cdf0ea9d78ec8!8m2!3d52.0894346!4d4.346816"
+                   target="_blank" style="color:#F2E609">
+                    <img src="{{ asset('images/locatie.png') }}" width="200"/>
+                    <br/>
+                    Sporthal Overbosch<br/>
+                    Vlaskamp 3, Den Haag
+                </a>
             </div>
         </div>
 
@@ -115,23 +116,24 @@
         <div id="s">
             <div class="sponsor">
                 Sponsors
-                <hr />
+                <hr/>
                 {% for sponsor in sponsors %}
-                {% if sponsor.website %}
-                    <a href="{{ sponsor.website }}" target="_blank" style="text-decoration: none;">
-                {% endif %}
-                    <img src="/uploads/sponsors/{{ sponsor.locatie }}" />
-                {% if sponsor.website %}
-                    </a>
-                {% endif %}
-                <br />
-                    {% if loop.index != sponsors|length %}<br />{% endif %}
+                    {% if sponsor.website %}
+                        <a href="{{ sponsor.website }}" target="_blank" style="text-decoration: none;">
+                    {% endif %}
+                    <img src="/uploads/sponsors/{{ sponsor.locatie }}"/>
+                    {% if sponsor.website %}
+                        </a>
+                    {% endif %}
+                    <br/>
+                    {% if loop.index != sponsors|length %}<br/>{% endif %}
                 {% endfor %}
             </div>
         </div>
-		
+
         <div id="social">
-            <a href="https://www.facebook.com/haagsedonarcup" target="_blank"><img src="{{ asset('images/facebook.png') }}" width="30" /></a>
+            <a href="https://www.facebook.com/haagsedonarcup" target="_blank"><img
+                        src="{{ asset('images/facebook.png') }}" width="30"/></a>
         </div>
 
         {% block javascripts %}
