@@ -8,8 +8,6 @@ namespace AppBundle\Controller\MakeFont;
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
-require('ttfparser.php');
-
 function Message($txt, $severity='')
 {
 	if(PHP_SAPI=='cli')
