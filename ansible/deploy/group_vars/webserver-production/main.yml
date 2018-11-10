@@ -1,2 +1,2 @@
-project_root: /var/www/haagsedonarcup.nl
+project_root: '{{ deploy_root }}/haagsedonarcup.nl'
 mailer_delivery_address: ~

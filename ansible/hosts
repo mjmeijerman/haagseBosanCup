@@ -6,4 +6,4 @@ webserver-test
 haagsedonarcup-production ansible_ssh_host=haagsedonarcup.nl
 
 [webserver-test]
-haagsedonarcup-test ansible_ssh_host=haagsedonarcup.nl
+haagsedonarcup-test ansible_ssh_host=test.haagsedonarcup.nl
