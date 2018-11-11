@@ -34,6 +34,8 @@ project_shared_children:
   - { path: "web/uploads", src: "uploads" }
 
 web_writable_folders:
+  - { name: "{{ deploy_helper.shared_path }}/logs", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/sessions", recursive: false }
   - { name: "{{ deploy_helper.shared_path }}/uploads", recursive: false }
 
 project_environment:
