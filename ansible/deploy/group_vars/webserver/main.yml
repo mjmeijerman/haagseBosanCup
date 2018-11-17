@@ -29,13 +29,10 @@ project_templates:
   - { name: parameters.yml, src: "templates/parameters.yml.j2", dest: "app/config/parameters.yml" }
 
 project_shared_children:
-  - { path: "app/logs", src: "logs" }
   - { path: "app/sessions", src: "sessions" }
   - { path: "web/uploads", src: "uploads" }
 
 web_writable_folders:
-  - { name: "{{ deploy_helper.shared_path }}/logs", recursive: false }
-  - { name: "{{ deploy_helper.shared_path }}/sessions", recursive: false }
   - { name: "{{ deploy_helper.shared_path }}/uploads", recursive: false }
 
 project_environment:
