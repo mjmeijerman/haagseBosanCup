@@ -165,8 +165,8 @@ class DiplomaPdfController extends AlphaPDFController
         $this->Cell(210,10, utf8_decode($turnster['naam']),0,0,"C");
 
         //IMAGES
-        $this->Image('/uploads/sponsors/003d6cb53ea1a6da9b07d1d3725fcbb5007d7bf4.png',22,114,0,30);
-        $this->Image('/uploads/sponsors/664eac9e26c5b3dde345d5d18bdd8b6484b565e7_groot.png',153,127,0,17);
+        $this->Image('uploads/sponsors/003d6cb53ea1a6da9b07d1d3725fcbb5007d7bf4.png',22,114,0,30);
+        $this->Image('uploads/sponsors/664eac9e26c5b3dde345d5d18bdd8b6484b565e7_groot.png',153,127,0,17);
     }
 
     //ROUNDED RECTANGLE
