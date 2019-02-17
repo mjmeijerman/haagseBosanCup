@@ -535,6 +535,7 @@ class ContactpersoonController extends BaseController
                 'voornaam' => '',
                 'achternaam' => '',
                 'email' => '',
+                'phone_number' => '',
                 'brevet' => '',
                 'opmerking' => '',
                 'dag' => '',
@@ -543,6 +544,7 @@ class ContactpersoonController extends BaseController
                 'voornaam' => 'text',
                 'achternaam' => 'text',
                 'email' => 'text',
+                'phone_number' => 'text',
                 'brevet' => 'turnster_niveau',
                 'opmerking' => 'text',
                 'dag' => 'turnster_niveau',
@@ -553,6 +555,7 @@ class ContactpersoonController extends BaseController
                     'voornaam' => $request->request->get('voornaam'),
                     'achternaam' => $request->request->get('achternaam'),
                     'email' => $request->request->get('email'),
+                    'phone_number' => $request->request->get('phone_number'),
                     'brevet' => $request->request->get('brevet'),
                     'dag' => $request->request->get('dag'),
                     'opmerking' => $request->request->get('opmerking'),
@@ -564,6 +567,7 @@ class ContactpersoonController extends BaseController
                             'voornaam' => false,
                             'achternaam' => false,
                             'email' => false,
+                            'phone_number' => false,
                             'brevet' => false,
                             'dag' => false,
                             'opmerking' => true,
@@ -619,6 +623,22 @@ class ContactpersoonController extends BaseController
                             $classNames['email'] = 'error';
                         }
 
+                        $re = '/^([0-9]+)$/';
+                        if (preg_match(
+                                $re,
+                                $request->request->get('phone_number')
+                            ) && strlen($request->request->get('phone_number')) == 10
+                        ) {
+                            $validationJury['phone_number'] = true;
+                            $classNames['phone_number'] = 'succesIngevuld';
+                        } else {
+                            $this->addFlash(
+                                'error',
+                                'Het telefoonnummer moet uit precies 10 cijfers bestaan'
+                            );
+                            $classNames['telefoonnummer'] = 'error';
+                        }
+
                         if ($request->request->get('brevet')) {
                             $validationJury['brevet'] = true;
                             $classNames['brevet'] = 'brevet';
@@ -645,6 +665,7 @@ class ContactpersoonController extends BaseController
                             $jurylid->setVoornaam(trim($request->request->get('voornaam')));
                             $jurylid->setAchternaam(trim($request->request->get('achternaam')));
                             $jurylid->setEmail($request->request->get('email'));
+                            $jurylid->setPhoneNumber($request->request->get('phone_number'));
                             $jurylid->setBrevet($request->request->get('brevet'));
                             $jurylid->setOpmerking($request->request->get('opmerking'));
                             $this->setJurylidBeschikbareDagenFromPostData($request->request->get('dag'), $jurylid);
@@ -720,6 +741,7 @@ class ContactpersoonController extends BaseController
                     'voornaam' => $result->getVoornaam(),
                     'achternaam' => $result->getAchternaam(),
                     'email' => $result->getEmail(),
+                    'phone_number' => $result->getPhoneNumber(),
                     'brevet' => $result->getBrevet(),
                     'opmerking' => $result->getOpmerking(),
                     'dag' => $this->getBeschikbareDag($result),
@@ -728,6 +750,7 @@ class ContactpersoonController extends BaseController
                     'voornaam' => 'text',
                     'achternaam' => 'text',
                     'email' => 'text',
+                    'phone_number' => 'text',
                     'brevet' => 'turnster_niveau',
                     'opmerking' => 'text',
                     'dag' => 'turnster_niveau',
@@ -738,6 +761,7 @@ class ContactpersoonController extends BaseController
                         'voornaam' => $request->request->get('voornaam'),
                         'achternaam' => $request->request->get('achternaam'),
                         'email' => $request->request->get('email'),
+                        'phone_number' => $request->request->get('phone_number'),
                         'brevet' => $request->request->get('brevet'),
                         'dag' => $request->request->get('dag'),
                         'opmerking' => $request->request->get('opmerking'),
@@ -749,6 +773,7 @@ class ContactpersoonController extends BaseController
                                 'voornaam' => false,
                                 'achternaam' => false,
                                 'email' => false,
+                                'phone_number' => false,
                                 'brevet' => false,
                                 'dag' => false,
                                 'opmerking' => true,
@@ -804,6 +829,22 @@ class ContactpersoonController extends BaseController
                                 $classNames['email'] = 'error';
                             }
 
+                            $re = '/^([0-9]+)$/';
+                            if (preg_match(
+                                    $re,
+                                    $request->request->get('phone_number')
+                                ) && strlen($request->request->get('phone_number')) == 10
+                            ) {
+                                $validationJury['phone_number'] = true;
+                                $classNames['phone_number'] = 'succesIngevuld';
+                            } else {
+                                $this->addFlash(
+                                    'error',
+                                    'Het telefoonnummer moet uit precies 10 cijfers bestaan'
+                                );
+                                $classNames['telefoonnummer'] = 'error';
+                            }
+
                             if ($request->request->get('brevet')) {
                                 $validationJury['brevet'] = true;
                                 $classNames['brevet'] = 'succesIngevuld';
@@ -830,6 +871,7 @@ class ContactpersoonController extends BaseController
                                 $jurylid->setVoornaam(trim($request->request->get('voornaam')));
                                 $jurylid->setAchternaam(trim($request->request->get('achternaam')));
                                 $jurylid->setEmail($request->request->get('email'));
+                                $jurylid->setPhoneNumber($request->request->get('phone_number'));
                                 $jurylid->setBrevet($request->request->get('brevet'));
                                 $jurylid->setOpmerking($request->request->get('opmerking'));
                                 $this->setJurylidBeschikbareDagenFromPostData($request->request->get('dag'), $jurylid);

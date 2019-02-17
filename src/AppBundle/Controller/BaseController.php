@@ -43,7 +43,7 @@ class BaseController extends Controller
     const BEDRAG_PER_TURNSTER = 16.50;
     const JURY_BOETE_BEDRAG = 50;
     const AANTAL_TURNSTERS_PER_JURY = 10;
-    const DATUM_HBC = '9 & 10 juni 2018';
+    const DATUM_HBC = '1 & 2 juni 2019';
     const LOCATIE_HBC = 'Sporthal Overbosch';
     const REKENINGNUMMER = 'NL81 INGB 000 007 81 99';
     const REKENING_TNV = 'Gymnastiekver. Donar';

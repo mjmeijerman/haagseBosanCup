@@ -21,6 +21,12 @@
                     <td>Email adres</td>
                     <td><input type="email" name="juryEmail" required /></td>
                 </tr>
+
+                <tr>
+                    <td>Telefoonnummer</td>
+                    <td><input type="text" name="juryPhoneNumber" required /></td>
+                </tr>
+
                 <tr>
                     <td>Vereniging</td>
                     <td>
@@ -118,6 +124,7 @@
 							<th>Dag</th>
 							<th>Opmerking</th>
 							<th>Email</th>
+							<th>Tel.</th>
 							<th></th>
 						</tr>
 						{% for jurylid in juryleden %}
@@ -150,6 +157,7 @@
                                 </td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
+                                <td>{{ jurylid.phoneNumber }}</td>
                                 <td>
                                     <div onclick="remove_jurylid('{{ jurylid.id }}',
                                         '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
@@ -186,6 +194,7 @@
 							<th>Dag</th>
 							<th>Opmerking</th>
 							<th>Email</th>
+							<th>Tel.</th>
 							<th></th>
 						</tr>
 						{% for jurylid in juryledenNiet %}
@@ -218,6 +227,7 @@
                                 </td>
                                 <td>{{ jurylid.opmerking }}</td>
                                 <td>{{ jurylid.email }}</td>
+                                <td>{{ jurylid.phoneNumber }}</td>
                                 <td>
                                     <div onclick="remove_jurylid_niet('{{ jurylid.id }}',
                                         '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"

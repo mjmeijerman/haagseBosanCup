@@ -25,6 +25,12 @@ class Jurylid
 
     /**
      * @var string
+     * @ORM\Column(name="phone_number", type="string", length=190)
+     */
+    private $phoneNumber;
+
+    /**
+     * @var string
      * @ORM\Column(name="voornaam", type="string", length=255)
      */
     private $voornaam;
@@ -104,6 +110,22 @@ class Jurylid
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     */
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
     }
 
     /**

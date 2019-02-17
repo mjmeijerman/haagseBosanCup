@@ -79,18 +79,18 @@ class InschrijvingController extends BaseController
                             }
                         }
                         for ($i = 1; $i <= $aantalJury; $i++) {
-                            if ($request->request->get('jury_voornaam_' . $i) && $request->request->get(
-                                    'jury_achternaam_' . $i
-                                )
-                                && $request->request->get('jury_email_' . $i) && $request->request->get(
-                                    'jury_brevet_' . $i
-                                )
+                            if ($request->request->get('jury_voornaam_' . $i)
+                                && $request->request->get('jury_achternaam_' . $i)
+                                && $request->request->get('jury_email_' . $i)
+                                && $request->request->get('jury_phone_number_' . $i)
+                                && $request->request->get('jury_brevet_' . $i)
                                 && $request->request->get('jury_dag_' . $i)
                             ) {
                                 $jurylid = new Jurylid();
                                 $jurylid->setVoornaam(trim($request->request->get('jury_voornaam_' . $i)));
                                 $jurylid->setAchternaam(trim($request->request->get('jury_achternaam_' . $i)));
                                 $jurylid->setEmail($request->request->get('jury_email_' . $i));
+                                $jurylid->setPhoneNumber($request->request->get('jury_phone_number_' . $i));
                                 $jurylid->setBrevet($request->request->get('jury_brevet_' . $i));
                                 $jurylid->setOpmerking($request->request->get('jury_opmerking_' . $i));
                                 $this->setJurylidBeschikbareDagenFromPostData($request->request->get('jury_dag_' . $i), $jurylid);
@@ -170,6 +170,7 @@ class InschrijvingController extends BaseController
                 'voornaam'   => $jurylid->getVoornaam(),
                 'achternaam' => $jurylid->getAchternaam(),
                 'email'      => $jurylid->getEmail(),
+                'phone_number' => $jurylid->getPhoneNumber(),
                 'brevet'     => $jurylid->getBrevet(),
             ];
         }
