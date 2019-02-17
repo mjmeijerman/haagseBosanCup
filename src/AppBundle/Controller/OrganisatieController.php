@@ -221,6 +221,7 @@ class OrganisatieController extends BaseController
             if (
                 !empty($request->request->get('userId'))
                 && !empty($request->request->get('juryEmail'))
+                && !empty($request->request->get('juryPhoneNumber'))
                 && !empty($request->request->get('juryVoornaam'))
                 && !empty($request->request->get('juryAchternaam'))
                 && !empty($request->request->get('brevet'))
@@ -232,6 +233,7 @@ class OrganisatieController extends BaseController
 
                 $jurylid = new Jurylid();
                 $jurylid->setEmail($request->request->get('juryEmail'));
+                $jurylid->setPhoneNumber($request->request->get('juryPhoneNumber'));
                 $jurylid->setVoornaam($request->request->get('juryVoornaam'));
                 $jurylid->setAchternaam($request->request->get('juryAchternaam'));
                 $jurylid->setBrevet($request->request->get('brevet'));
@@ -292,6 +294,7 @@ class OrganisatieController extends BaseController
                     'dag'        => $this->getBeschikbareDag($result),
                     'opmerking'  => $result->getOpmerking(),
                     'email'      => $result->getEmail(),
+                    'phoneNumber' => $result->getPhoneNumber(),
                 ];
             } else {
                 $juryledenNiet[] = [
@@ -303,6 +306,7 @@ class OrganisatieController extends BaseController
                     'dag'        => $this->getBeschikbareDag($result),
                     'opmerking'  => $result->getOpmerking(),
                     'email'      => $result->getEmail(),
+                    'phoneNumber' => $result->getPhoneNumber(),
                 ];
             }
         }
@@ -614,6 +618,10 @@ class OrganisatieController extends BaseController
         }
 
         if ($nu->format('n') > '7') {
+            return false;
+        }
+
+        if ($nu->format('Y') > $inschrijvingOpeningDateTime->format('Y')) {
             return false;
         }
 

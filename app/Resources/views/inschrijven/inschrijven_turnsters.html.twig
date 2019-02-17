@@ -96,11 +96,14 @@
                             <input type="text" class="turnster_voornaam" id="voornaam" placeholder="Voornaam"
                                    name="jury_voornaam_{{ i }}"/>
                             <!-- vergeet de spatie niet -->
-                            <input type="text" class="turnster_achternaam" id="achternaam" placeholder="Achternaam"
+                            <input type="text" class="jury_veld" id="achternaam" placeholder="Achternaam"
                                    name="jury_achternaam_{{ i }}"/>
                             <!-- vergeet de spatie niet -->
-                            <input type="text" class="turnster_achternaam" id="email" placeholder="jurylid@email.com"
+                            <input type="text" class="jury_veld" id="email" placeholder="jurylid@email.com"
                                    name="jury_email_{{ i }}"/>
+                            <!-- vergeet de spatie niet -->
+                            <input type="text" class="jury_veld" id="phone_number" placeholder="0612345678"
+                                   name="jury_phone_number_{{ i }}"/>
                             <!-- vergeet de spatie niet -->
                             <br/>
                             <select class="jury_brevet" name="jury_brevet_{{ i }}">
@@ -171,6 +174,7 @@
                     <td class="controle_voornaam">{{ jurylid.voornaam }}</td>
                     <td class="controle_achternaam">{{ jurylid.achternaam }}</td>
                     <td class="controle_achternaam">{{ jurylid.email }}</td>
+                    <td class="controle_achternaam">{{ jurylid.phone_number }}</td>
                     <td class="controle_niveau">{{ jurylid.brevet }}</td>
                 </tr>
             {% endfor %}
