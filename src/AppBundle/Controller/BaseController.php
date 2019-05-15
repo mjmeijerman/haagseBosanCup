@@ -277,7 +277,8 @@ class BaseController extends Controller
     protected function getGroepen()
     {
         return [
-            'Voorinstap' => ['N2', 'N3', 'D1', 'D2'],
+            'Voorinstap' => ['D1', 'D2'],
+            '(Voor)instap' => ['N2', 'N3'],
             'Instap' => ['N2', 'N3', 'D1', 'D2'],
             'Pupil 1' => ['N3', 'D1', 'D2'],
             'Pupil 2' => ['N3', 'D1', 'D2'],
@@ -316,6 +317,7 @@ class BaseController extends Controller
     {
         switch ($categorie) {
             case 'Voorinstap': return date('Y', time()) - 8;
+            case '(Voor)instap': return [date('Y', time()) - 9, date('Y', time()) - 9];
             case 'Instap': return date('Y', time()) - 9;
             case 'Pupil 1': return date('Y', time()) - 10;
             case 'Pupil 2': return date('Y', time()) - 11;
