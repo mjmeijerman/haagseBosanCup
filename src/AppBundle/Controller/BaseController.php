@@ -279,7 +279,7 @@ class BaseController extends Controller
         return [
             'Voorinstap' => ['D1', 'D2'],
             '(Voor)instap' => ['N2', 'N3'],
-            'Instap' => ['N2', 'N3', 'D1', 'D2'],
+            'Instap' => ['D1', 'D2'],
             'Pupil 1' => ['N3', 'D1', 'D2'],
             'Pupil 2' => ['N3', 'D1', 'D2'],
             'Jeugd 1' => ['N4', 'D1', 'D2'],
