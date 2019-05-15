@@ -317,7 +317,7 @@ class BaseController extends Controller
     {
         switch ($categorie) {
             case 'Voorinstap': return date('Y', time()) - 8;
-            case '(Voor)instap': return [date('Y', time()) - 9, date('Y', time()) - 9];
+            case '(Voor)instap': return [date('Y', time()) - 9, date('Y', time()) - 8];
             case 'Instap': return date('Y', time()) - 9;
             case 'Pupil 1': return date('Y', time()) - 10;
             case 'Pupil 2': return date('Y', time()) - 11;
