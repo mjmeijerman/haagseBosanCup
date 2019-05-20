@@ -1040,6 +1040,8 @@ class ContactpersoonController extends BaseController
                 $extensions = array('mp3', 'wma');
                 if (in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
                     if ($oud = $result->getVloermuziek()) {
+                        $result->setVloermuziek(null);
+                        $this->addToDB($result);
                         $this->removeFromDB($oud);
                     }
                     $vloermuziek->setTurnster($result);
