@@ -25,10 +25,10 @@ class DiplomaPdfController extends AlphaPDFController
         $this->SetTextColor(0);
 
         //DONAR SITE
-        $this->Text(5,145,'www.donargym.nl');
+        $this->Text(5,145,'www.haagsedonarcup.nl');
 
         //HBC SITE
-        $this->Text(154,145,'www.haagsedonarcup.nl');
+        $this->Image('https://haagsedonarcup.nl/uploads/sponsors/ca64ecbb4276c8583d9eac5b142c5062839663cf_groot.gif',150,130,0,15);
 
         //DATUM
         $this->Text(85,145,'- ' .  utf8_decode($datumHbc) . ' -');
@@ -165,8 +165,8 @@ class DiplomaPdfController extends AlphaPDFController
         $this->Cell(210,10, utf8_decode($turnster['naam']),0,0,"C");
 
         //IMAGES
-        $this->Image('uploads/sponsors/003d6cb53ea1a6da9b07d1d3725fcbb5007d7bf4.png',22,114,0,30);
-        $this->Image('uploads/sponsors/664eac9e26c5b3dde345d5d18bdd8b6484b565e7_groot.png',153,127,0,17);
+        $this->Image('https://haagsedonarcup.nl/uploads/sponsors/9db8eb6e16a55cf34fd6ccb6edd3ce76dac79747_groot.png',22,114,0,30);
+        $this->Image('https://haagsedonarcup.nl/uploads/sponsors/9fc2ed362cf8b06300477066fe8c675f15c0ea19_groot.jpg',150,127,0,14);
     }
 
     //ROUNDED RECTANGLE
