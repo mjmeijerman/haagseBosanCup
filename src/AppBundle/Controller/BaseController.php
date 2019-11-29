@@ -278,14 +278,13 @@ class BaseController extends Controller
     {
         return [
             'Voorinstap' => ['D1', 'D2'],
-            '(Voor)instap' => ['N2', 'N3'],
             'Instap' => ['D1', 'D2'],
-            'Pupil 1' => ['N3', 'D1', 'D2'],
-            'Pupil 2' => ['N3', 'D1', 'D2'],
-            'Jeugd 1' => ['N4', 'D1', 'D2'],
-            'Jeugd 2' => ['Div. 3', 'Div. 4', 'Div. 5'],
-            'Junior' => ['Div. 3', 'Div. 4', 'Div. 5'],
-            'Senior' => ['Div. 3', 'Div. 4', 'Div. 5'],
+            'Pupil 1' => ['D1', 'D2'],
+            'Pupil 2' => ['D1', 'D2'],
+            'Jeugd 1' => ['D1', 'D2'],
+            'Jeugd 2' => ['Div. 4', 'Div. 5'],
+            'Junior' => ['Div. 4', 'Div. 5'],
+            'Senior' => ['Div. 4', 'Div. 5'],
         ];
     }
 
@@ -339,13 +338,13 @@ class BaseController extends Controller
         if ($leeftijd < 8) {
             return [];
         } elseif ($leeftijd == 8 || $leeftijd == 9) {
-            return ['N2', 'N3', 'D1', 'D2'];
+            return ['D1', 'D2'];
         } elseif ($leeftijd == 10 || $leeftijd == 11) {
-            return ['N3', 'D1', 'D2'];
+            return ['D1', 'D2'];
         } elseif ($leeftijd == 12) {
-            return ['N4', 'D1', 'D2'];
+            return ['D1', 'D2'];
         } else {
-            return ['Div. 3', 'Div. 4', 'Div. 5'];
+            return ['Div. 4', 'Div. 5'];
         }
     }
 
