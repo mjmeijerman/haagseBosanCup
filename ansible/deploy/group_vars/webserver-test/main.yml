@@ -1,2 +1,3 @@
 project_root: '{{ deploy_root }}/test.haagsedonarcup.nl'
 mailer_delivery_address: ['markmeijerman@gmail.com']
+jurysysteem_url: 'https://hdc-test.jurysysteem.nl'

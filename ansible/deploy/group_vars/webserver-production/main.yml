@@ -1,2 +1,3 @@
 project_root: '{{ deploy_root }}/haagsedonarcup.nl'
 mailer_delivery_address: ~
+jurysysteem_url: 'https://hdc.jurysysteem.nl'
