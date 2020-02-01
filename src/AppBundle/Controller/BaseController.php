@@ -43,9 +43,9 @@ class BaseController extends Controller
     const BEDRAG_PER_TURNSTER = 17.50;
     const JURY_BOETE_BEDRAG = 50;
     const AANTAL_TURNSTERS_PER_JURY = 10;
-    const DATUM_HBC = '1 & 2 juni 2019';
+    const DATUM_HBC = '6 & 7 juni 2020';
     const LOCATIE_HBC = 'Sporthal Overbosch';
-    const REKENINGNUMMER = 'NL81 INGB 000 007 81 99';
+    const REKENINGNUMMER = 'NL51 INGB 000 650 00 42';
     const REKENING_TNV = 'Gymnastiekver. Donar';
 
     protected $sponsors = [];
@@ -282,9 +282,9 @@ class BaseController extends Controller
             'Pupil 1' => ['D1', 'D2'],
             'Pupil 2' => ['D1', 'D2'],
             'Jeugd 1' => ['D1', 'D2'],
-            'Jeugd 2' => ['Div. 4', 'Div. 5'],
-            'Junior' => ['Div. 4', 'Div. 5'],
-            'Senior' => ['Div. 4', 'Div. 5'],
+            'Jeugd 2' => ['Div. 4', 'Div. 5', 'Div. 6'],
+            'Junior' => ['Div. 4', 'Div. 5', 'Div. 6'],
+            'Senior' => ['Div. 4', 'Div. 5', 'Div. 6'],
         ];
     }
 
@@ -344,7 +344,7 @@ class BaseController extends Controller
         } elseif ($leeftijd == 12) {
             return ['D1', 'D2'];
         } else {
-            return ['Div. 4', 'Div. 5'];
+            return ['Div. 4', 'Div. 5', 'Div. 6'];
         }
     }
 
@@ -553,6 +553,18 @@ class BaseController extends Controller
             ->findBy([], ['positie' => 'ASC']);
         foreach ($results as $result) {
             $this->menuItems[] = $result->getAll();
+        }
+
+        foreach ($this->menuItems as &$menuItem) {
+            if(is_array($menuItem)) {
+                if (isset($menuItem['submenuItems'])) {
+                    foreach ($menuItem['submenuItems'] as &$submenuItem) {
+                        if ($submenuItem['naam'] === 'Live scores' || $submenuItem['naam'] === 'Uitslagen') {
+                            $submenuItem['jurysysteemUrl'] = $this->getParameter('jurysysteem_url');
+                        }
+                    }
+                }
+            }
         }
     }
 

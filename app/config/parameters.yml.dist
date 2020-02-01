@@ -24,3 +24,4 @@ parameters:
 
     standaard_wachtwoord: lalala
     update_scores_string: lalala
+    jurysysteem_url: http://www.jurysysteem.loc
