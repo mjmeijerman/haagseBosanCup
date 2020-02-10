@@ -18,6 +18,7 @@ use AppBundle\Form\Type\EditSponsorType;
 use AppBundle\Form\Type\NieuwsberichtType;
 use AppBundle\Form\Type\OrganisatieType;
 use AppBundle\Form\Type\SponsorType;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -126,6 +127,7 @@ class ContactpersoonController extends BaseController
                 'opmerking' => $juryObject->getOpmerking(),
                 'brevet' => $juryObject->getBrevet(),
                 'dag' => $this->getBeschikbareDag($juryObject),
+                'isConfirmed' => $juryObject->getIsConfirmed(),
             ];
         }
         $teLeverenJuryleden = ceil(count($turnsters)/10);
@@ -665,6 +667,7 @@ class ContactpersoonController extends BaseController
                             $jurylid->setVoornaam(trim($request->request->get('voornaam')));
                             $jurylid->setAchternaam(trim($request->request->get('achternaam')));
                             $jurylid->setEmail($request->request->get('email'));
+                            $jurylid->setConfirmationId(Uuid::uuid4()->toString());
                             $jurylid->setPhoneNumber($request->request->get('phone_number'));
                             $jurylid->setBrevet($request->request->get('brevet'));
                             $jurylid->setOpmerking($request->request->get('opmerking'));
@@ -689,6 +692,7 @@ class ContactpersoonController extends BaseController
                                 'vereniging'     => $user->getVereniging()->getNaam() . ', ' .
                                     $user->getVereniging()->getPlaats(),
                                 'contactEmail'   => $user->getEmail(),
+                                'confirmationUrl' => sprintf(self::TOURNAMENT_WEBSITE_URL) . '/jury/bevestig/' . $jurylid->getConfirmationId(),
                             ];
                             $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsedonarcup.nl');
 

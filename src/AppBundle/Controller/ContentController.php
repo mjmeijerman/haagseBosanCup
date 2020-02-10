@@ -118,12 +118,7 @@ class ContentController extends BaseController
                 10
             );
         if ($this->verwijderenTurnsterToegestaan()) {
-            if (!$this->inschrijvingToegestaan()) {
-                $aantalPlekken = 0;
-            }
-            else {
-                $aantalPlekken = $this->getVrijePlekken();
-            }
+            $aantalPlekken = $this->getVrijePlekken();
             if ($aantalPlekken == 0) {
                 /** @var \DateTime $tijdVolObject */
                 $tijdVolObject = $this->getTijdVol();
