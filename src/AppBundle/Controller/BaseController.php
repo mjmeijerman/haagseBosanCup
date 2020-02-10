@@ -387,7 +387,7 @@ class BaseController extends Controller
         $result = $this->getDoctrine()
             ->getRepository('AppBundle:Instellingen')
             ->getTijdVol($datumGeopend->getDatum());
-        if ($result) {
+        if ($result && $result->getDatum() > $datumGeopend->getDatum()) {
             return $result->getDatum();
         } else {
             $result = $this->getDoctrine()
