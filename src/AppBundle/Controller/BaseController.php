@@ -40,7 +40,7 @@ class BaseController extends Controller
     const UITERLIJKE_BETAALDATUM_FACTUUR = 'Uiterlijke betaaldatum';
     const MAX_AANTAL_TURNSTERS = 'Max aantal turnsters';
     const EMPTY_RESULT = 'Klik om te wijzigen';
-    const BEDRAG_PER_TURNSTER = 17.50;
+    const BEDRAG_PER_TURNSTER = 18.50;
     const JURY_BOETE_BEDRAG = 50;
     const AANTAL_TURNSTERS_PER_JURY = 10;
     const DATUM_HBC = '6 & 7 juni 2020';
