@@ -13,6 +13,7 @@ use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserRepository;
 use AppBundle\Entity\Voorinschrijving;
+use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -233,6 +234,7 @@ class OrganisatieController extends BaseController
 
                 $jurylid = new Jurylid();
                 $jurylid->setEmail($request->request->get('juryEmail'));
+                $jurylid->setConfirmationId(Uuid::uuid4()->toString());
                 $jurylid->setPhoneNumber($request->request->get('juryPhoneNumber'));
                 $jurylid->setVoornaam($request->request->get('juryVoornaam'));
                 $jurylid->setAchternaam($request->request->get('juryAchternaam'));
@@ -256,6 +258,26 @@ class OrganisatieController extends BaseController
                 $user->addJurylid($jurylid);
 
                 $this->addToDB($user);
+
+                $subject    = 'Aanmelding ' . BaseController::TOURNAMENT_FULL_NAME;
+                $to         = $jurylid->getEmail();
+                $view       = 'mails/inschrijven_jurylid.txt.twig';
+                $parameters = [
+                    'voornaam'       => $jurylid->getVoornaam(),
+                    'achternaam'     => $jurylid->getAchternaam(),
+                    'contactpersoon' => $user->getVoornaam() . ' ' . $user->getAchternaam(),
+                    'vereniging'     => $user->getVereniging()->getNaam() . ', ' .
+                        $user->getVereniging()->getPlaats(),
+                    'contactEmail'   => $user->getEmail(),
+                    'confirmationUrl' => sprintf(self::TOURNAMENT_WEBSITE_URL) . '/jury/bevestig/' . $jurylid->getConfirmationId(),
+                ];
+                $this->sendEmail(
+                    $subject,
+                    $to,
+                    $view,
+                    $parameters,
+                    BaseController::TOURNAMENT_CONTACT_EMAIL
+                );
 
                 $this->addFlash('success', 'Jurylid succesvol toegevoegd');
                 return $this->redirectToRoute('organisatieGetContent', ['page' => $page]);

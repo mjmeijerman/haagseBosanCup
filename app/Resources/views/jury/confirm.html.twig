@@ -1,0 +1,96 @@
+{% extends 'jury/base.html.twig' %}
+
+{% block body %}
+    <h1>Bevestigen aanmelding jurylid</h1>
+    Geacht jurylid, <br />
+    <br />
+    Je bent aangemeld om te jureren voor {{ jurylid.user.vereniging.naam }} {{ jurylid.user.vereniging.plaats }} op ons toernooi.
+    Wij willen je vragen om onderstaande gegevens te controleren en waar nodig aan te passen, en vervolgens je aanmelding te bevestigen.
+    <br />
+    <br />
+
+    <form method="post" name="confirmJudge">
+        <table class="aanpas_tabel">
+            <tr>
+                <td>
+                    Voornaam
+                </td>
+                <td>
+                    <input type="text" name="voornaam" class="jury_veld" value="{{ jurylid.voornaam }}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Achternaam
+                </td>
+                <td>
+                    <input type="text" name="achternaam" class="jury_veld" value="{{ jurylid.achternaam }}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Brevet
+                </td>
+                <td>
+                    <select class="jury_brevet" name="brevet">
+                        <option value="TD2"{% if jurylid.brevet == 'TD2' %} selected{% endif %}>TD2</option>
+                        <option value="TD3"{% if jurylid.brevet == 'TD3' %} selected{% endif %}>TD3</option>
+                        <option value="TD4"{% if jurylid.brevet == 'TD4' %} selected{% endif %}>TD4</option>
+                        <option value="TD5"{% if jurylid.brevet == 'TD5' %} selected{% endif %}>TD5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Beschikbare dag(en)
+                </td>
+                <td>
+                    <select class="jury_brevet" name="dag">
+                        <option value="za"{% if jurylid.zaterdag %} selected{% endif %}>Zaterdag</option>
+                        <option value="zo"{% if jurylid.zondag %} selected{% endif %}>Zondag</option>
+                        <option value="zazo"{% if jurylid.zaterdag and jurylid.zondag %} selected{% endif %}>Beide
+                            dagen
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Telefoonnummer
+                </td>
+                <td>
+                    <input type="text" class="jury_veld" name="phone" value="{{ jurylid.phoneNumber }}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Evt. opmerkingen
+                </td>
+                <td>
+                    <input type="text" class="jury_veld" name="remarks" value="{{ jurylid.opmerking }}"/>
+                </td>
+            </tr>
+        </table>
+
+        <br />
+        <input type="submit" id="controle_button" value="Gegevens bevestigen"/>
+{#        <div id="controle_button">#}
+{#            Gegevens bevestigen#}
+{#        </div>#}
+    </form>
+
+    <br />
+    <h4>» Ik heb me helemaal niet opgegeven als jurylid voor deze vereniging</h4>
+
+    <p>
+        Niet opgegeven als jurylid voor deze vereniging? Of zelfs helemaal niet?<br />
+        <br />
+        Klik dan op onderstaande knop om je te verwijderen uit ons systeem. Zowel organisatie als de betreffende vereniging worden hiervan op de hoogte gesteld.<br />
+        We raden je aan om zelf ook contact op te nemen met de vereniging.
+    </p>
+
+    <br />
+    <form method="post" name="unsubscribeJudge" action="{{ path('unsubscribeJudge', {'confirmationId': confirmationId}) }}">
+        <input type="submit" id="controle_button" value="Schrijf mij maar uit"/>
+    </form>
+{% endblock %}

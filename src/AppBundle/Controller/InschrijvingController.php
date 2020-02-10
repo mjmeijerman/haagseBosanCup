@@ -8,6 +8,7 @@ use AppBundle\Entity\Turnster;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Vereniging;
 use AppBundle\Entity\Voorinschrijving;
+use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -90,6 +91,7 @@ class InschrijvingController extends BaseController
                                 $jurylid->setVoornaam(trim($request->request->get('jury_voornaam_' . $i)));
                                 $jurylid->setAchternaam(trim($request->request->get('jury_achternaam_' . $i)));
                                 $jurylid->setEmail($request->request->get('jury_email_' . $i));
+                                $jurylid->setConfirmationId(Uuid::uuid4()->toString());
                                 $jurylid->setPhoneNumber($request->request->get('jury_phone_number_' . $i));
                                 $jurylid->setBrevet($request->request->get('jury_brevet_' . $i));
                                 $jurylid->setOpmerking($request->request->get('jury_opmerking_' . $i));
@@ -108,6 +110,7 @@ class InschrijvingController extends BaseController
                                     'vereniging'     => $user->getVereniging()->getNaam() . ', ' .
                                         $user->getVereniging()->getPlaats(),
                                     'contactEmail'   => $user->getEmail(),
+                                    'confirmationUrl' => sprintf(self::TOURNAMENT_WEBSITE_URL) . '/jury/bevestig/' . $jurylid->getConfirmationId(),
                                 ];
                                 $this->sendEmail($subject, $to, $view, $parameters, 'jury@haagsedonarcup.nl');
                             }

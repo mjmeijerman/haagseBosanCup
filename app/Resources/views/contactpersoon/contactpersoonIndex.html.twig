@@ -149,18 +149,18 @@
                         {% if turnster.vloermuziek %}
                             <a href="{{ path('addVloermuziek', { 'turnsterId': turnster.id }) }}"
                                style="text-decoration: none">
-                                <img src="{{ asset('images/refresh.png') }}" height="18">
+                                <img src="{{ asset('images/refresh.png') }}" height="15" class="img_padding">
                             </a>
                         {% else %}
                             <a href="{{ path('addVloermuziek', { 'turnsterId': turnster.id }) }}"
                                style="text-decoration: none">
-                                <img src="{{ asset('images/upload.png') }}" height="18">
+                                <img src="{{ asset('images/upload.png') }}" height="15" class="img_padding">
                             </a>
                         {% endif %}
                     {% endif %}
                     {% if turnster.vloermuziek %}
                         <a href="{{ asset(turnster.vloermuziekLocatie) }}" target="_blank">
-                            <img src="{{ asset('images/listen.png') }}" height="18">
+                            <img src="{{ asset('images/listen.png') }}" height="15" class="img_padding">
                         </a>
                     {% endif %}
                 </td>
@@ -168,7 +168,7 @@
                     {% if wijzigenTurnsterToegestaan %}
                         <a href="{{ path('editTurnster', { 'turnsterId': turnster.id }) }}"
                            style="text-decoration: none">
-                            <img src="{{ asset('images/edit.png') }}">
+                            <img src="{{ asset('images/edit.png') }}" class="img_padding">
                         </a>
                     {% endif %}
                     {% if verwijderenTurnsterToegestaan %}
@@ -176,7 +176,7 @@
                               action="{{ path('removeTurnster') }}" style="display: inline;">
                             <div class="fake_link" onclick="remove_turnster('{{ turnster.id }}',
                                     '{{ turnster.voornaam }}', '{{ turnster.achternaam }}')" style="display: inline">
-                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" />
                                 <input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
                             </div>
                         </form>
@@ -189,7 +189,7 @@
     <table>
         <tr>
             {% if uploadenVloermuziekToegestaan %}
-                <td><img src="{{ asset('images/upload.png') }}" height="18"></td>
+                <td><img src="{{ asset('images/upload.png') }}" height="15"></td>
                 <td>Muziek uploaden</td>
             {% endif %}
             {% if wijzigenTurnsterToegestaan %}
@@ -199,11 +199,11 @@
         </tr>
         <tr>
             {% if uploadenVloermuziekToegestaan %}
-                <td><img src="{{ asset('images/listen.png') }}" height="18"></td>
+                <td><img src="{{ asset('images/listen.png') }}" height="15"></td>
                 <td>Muziek beluisteren</td>
             {% endif %}
             {% if verwijderenTurnsterToegestaan %}
-                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td><img src="{{ asset('images/remove-user.png') }}" width="15"/></td>
                 <td>Turnster afmelden</td>
             {% endif %}
         </tr>
@@ -274,7 +274,7 @@
                             <div class="fake_link" onclick="remove_turnster('{{ wachtlijst.id }}',
                                     '{{ wachtlijst.voornaam }}', '{{ wachtlijst.achternaam }}')"
                                  style="display: inline">
-                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <img src="{{ asset('images/remove-user.png') }}" width="15"/>
                                 <input type="hidden" name="turnsterId" value="{{ wachtlijst.id }}"/>
                             </div>
                         </form>
@@ -293,7 +293,7 @@
         </tr>
         <tr>
             {% if verwijderenTurnsterToegestaan %}
-                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td><img src="{{ asset('images/remove-user.png') }}" width="15"/></td>
                 <td>Turnster afmelden</td>
             {% endif %}
         </tr>
@@ -302,7 +302,10 @@
     <h4>&#187; Juryleden ({{ juryleden|length }})</h4>
     <table id="juryleden">
         <tr>
-            <th width="20">
+            <th width="15">
+
+            </th>
+            <th width="15">
                 #
             </th>
             <th>
@@ -326,6 +329,13 @@
         </tr>
         {% for jurylid in juryleden %}
             <tr>
+                <td>
+                    {% if jurylid.isConfirmed %}
+                        <img src="{{ asset('images/correct.png') }}" class="bevestig_check" />
+                    {% else %}
+                        <img src="{{ asset('images/question.png') }}" class="bevestig_check" />
+                    {% endif %}
+                </td>
                 <td>
                     {{ loop.index }}
                 </td>
@@ -356,7 +366,7 @@
                             <div class="fake_link" onclick="remove_jury('{{ jurylid.id }}',
                                     '{{ jurylid.voornaam }}', '{{ jurylid.achternaam }}')"
                                  style="display: inline">
-                                <img src="{{ asset('images/remove.png') }}" width="15"/>
+                                <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" />
                                 <input type="hidden" name="juryId" value="{{ jurylid.id }}"/>
                             </div>
                         </form>
@@ -375,9 +385,25 @@
         </tr>
         <tr>
             {% if verwijderJuryToegestaan %}
-                <td><img src="{{ asset('images/remove.png') }}" width="15"/></td>
+                <td><img src="{{ asset('images/remove-user.png') }}" width="15"/></td>
                 <td>Jurylid afmelden</td>
             {% endif %}
+        </tr>
+        <tr>
+            <td>
+                <img src="{{ asset('images/question.png') }}" width="12"/>
+            </td>
+            <td>
+                Jurylid heeft nog niet bevestigd
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="{{ asset('images/correct.png') }}" width="12"/>
+            </td>
+            <td>
+                Jurylid heeft bevestigd
+            </td>
         </tr>
     </table>
 

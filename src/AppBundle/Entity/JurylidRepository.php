@@ -31,6 +31,7 @@ class JurylidRepository extends EntityRepository
         $ingeschrevenJuryleden = $this->createQueryBuilder('u')
             ->select('count(u.id)')
             ->Where('u.user = :user')
+            ->andWhere('u.isConfirmed = 1')
             ->orderBy('u.' . $orderBy)
             ->setParameters([
                 'user' => $user,

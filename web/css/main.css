@@ -706,6 +706,15 @@ body {
 	transition: .3s;
 }
 
+.content .bevestig_check {
+	max-width: 12px;
+	margin-left: .2em;
+}
+
+.content .img_padding {
+	padding: .2em .2em;
+}
+
 .content .jury_veld:focus {
 	background: #FFF;
 	color: #000;
@@ -990,6 +999,8 @@ body {
 	background: #A4D8A4;
 	color: green;
 	text-align: center;
+	border: 0px;
+
 	-o-transition: .5s;
 	-ms-transition: .5s;
 	-moz-transition: .5s;

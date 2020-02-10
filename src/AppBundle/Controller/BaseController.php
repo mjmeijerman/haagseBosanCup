@@ -47,6 +47,9 @@ class BaseController extends Controller
     const LOCATIE_HBC = 'Sporthal Overbosch';
     const REKENINGNUMMER = 'NL51 INGB 000 650 00 42';
     const REKENING_TNV = 'Gymnastiekver. Donar';
+    const TOURNAMENT_WEBSITE_URL = 'https://www.haagsedonarcup.nl';
+    const TOURNAMENT_CONTACT_EMAIL = 'info@haagsedonarcup.nl';
+    const TOURNAMENT_FULL_NAME = 'Haagse Donar Cup';
 
     protected $sponsors = [];
     protected $menuItems = [];

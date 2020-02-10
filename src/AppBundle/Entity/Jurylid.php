@@ -80,6 +80,16 @@ class Jurylid
     private $maandag = false;
 
     /**
+     * @ORM\Column(type="guid")
+     */
+    private $confirmationId;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isConfirmed = false;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -285,6 +295,26 @@ class Jurylid
     public function getMaandag()
     {
         return $this->maandag;
+    }
+
+    public function setConfirmationId($confirmationId): void
+    {
+        $this->confirmationId = $confirmationId;
+    }
+
+    public function getConfirmationId()
+    {
+        return $this->confirmationId;
+    }
+
+    public function getIsConfirmed(): bool
+    {
+        return $this->isConfirmed;
+    }
+
+    public function setIsConfirmed(bool $isConfirmed): void
+    {
+        $this->isConfirmed = $isConfirmed;
     }
 
     /**
