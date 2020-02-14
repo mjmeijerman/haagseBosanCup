@@ -19,28 +19,41 @@
 					<h2>Status (geplaatst/wachtlijst)</h2>
 				</div>
 				<div class="bericht">
-					<table class="inschrijvingen_status">
-						{% for groep, waardes in groepen %}
-							<tr>
-								<td class="cat">{{ groep }}</td>
-								{% set geplaatstCounter = 0 %}
-								{% set wachtlijstCounter = 0 %}
+					<span id="indelingen_status">
+						<table class="uitslagen">
+							{% for groep, waardes in groepen %}
+								<tr>
+									<td class="categorie">
+										<div id="categorie">
+											{{ groep }}
+										</div>
+									</td>
+
+									{% set geplaatstCounter = 0 %}
+									{% set wachtlijstCounter = 0 %}
 									{% for waarde in waardes %}
-										<td class="niv">
-										<a href="{{ path('bekijkInschrijvingenPerNiveau', { 'page': app.request.get
-										('page'), 'categorie': groep, 'niveau': waarde }) }}">
-										{{ waarde }} ({{ aantallenPerNiveau
-										.geplaatst[groep][waarde] }}/{{ aantallenPerNiveau
-										.wachtlijst[groep][waarde] }})</a></td>
+										<td>
+												<a href="{{ path('bekijkInschrijvingenPerNiveau', { 'page': app.request.get
+													('page'), 'categorie': groep, 'niveau': waarde }) }}">
+												{{ waarde }} ({{ aantallenPerNiveau
+													.geplaatst[groep][waarde] }}/{{ aantallenPerNiveau
+													.wachtlijst[groep][waarde] }})</a>
+											</td>
 										{% set geplaatstCounter = geplaatstCounter + aantallenPerNiveau
-										.geplaatst[groep][waarde] %}
+											.geplaatst[groep][waarde] %}
 										{% set wachtlijstCounter = wachtlijstCounter + aantallenPerNiveau
-										.wachtlijst[groep][waarde] %}
+											.wachtlijst[groep][waarde] %}
 									{% endfor %}
-								<td> | {{ geplaatstCounter }}/{{ wachtlijstCounter }}</td>
-							</tr>
-						{% endfor %}
-					</table>
+									<td class="geplaatst">
+										{{ geplaatstCounter }}
+									</td>
+									<td class="wachtlijst">
+										{{ wachtlijstCounter }}
+									</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</span>
 				</div>
 			</p>
 
@@ -71,7 +84,7 @@
 							<td>{{ contactpersoon.aantalJuryleden }}</td>
 							<td>
 								<a href="{{ path('removeContactpersoon', { 'id': contactpersoon.id }) }}">
-									<img src="{{ asset('images/remove.png') }}" width="15"/>
+									<img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" />
 								</a>
 							</td>
 
