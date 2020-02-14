@@ -118,6 +118,7 @@
 				<div class="bericht">
 					<table class="overzicht" style="font-size:8pt">
 						<tr>
+                            <th></th>
 							<th>Naam</th>
 							<th>Vereniging</th>
 							<th>Brevet</th>
@@ -129,6 +130,13 @@
 						</tr>
 						{% for jurylid in juryleden %}
                             <tr id="jurylid_row_{{ jurylid.id }}">
+                                <td>
+                                    {% if jurylid.isConfirmed %}
+                                        <img src="{{ asset('images/correct.png') }}" class="bevestig_check"/>
+                                    {% else %}
+                                        <img src="{{ asset('images/question.png') }}" class="bevestig_check"/>
+                                    {% endif %}
+                                </td>
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>
@@ -162,7 +170,7 @@
                                     <div onclick="remove_jurylid('{{ jurylid.id }}',
                                         '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
                                          style="display: inline">
-                                        <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
+                                        <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" style="cursor: pointer;">
 		            				</div>
                                 </td>
                             </tr>
@@ -188,6 +196,7 @@
 				<div class="bericht">
 					<table class="overzicht" style="font-size:8pt">
 						<tr>
+                            <th></th>
 							<th>Naam</th>
 							<th>Vereniging</th>
 							<th>Brevet</th>
@@ -199,6 +208,13 @@
 						</tr>
 						{% for jurylid in juryledenNiet %}
                             <tr id="jurylid_row_{{ jurylid.id }}">
+                                <td>
+                                    {% if jurylid.isConfirmed %}
+                                        <img src="{{ asset('images/correct.png') }}" class="bevestig_check"/>
+                                    {% else %}
+                                        <img src="{{ asset('images/question.png') }}" class="bevestig_check"/>
+                                    {% endif %}
+                                </td>
                                 <td>{{ jurylid.naam }}</td>
                                 <td>{{ jurylid.vereniging }}</td>
                                 <td>{{ jurylid.brevet }}</td>

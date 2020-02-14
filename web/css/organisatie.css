@@ -240,6 +240,11 @@ article h2 {
 	margin: .6em 0 0 0;
 }
 
+article .bevestig_check {
+    max-width: 12px;
+    margin-left: .2em;
+}
+
 /* MAILS TABEL */
 
 article #mails td {
@@ -248,52 +253,44 @@ article #mails td {
 
 /* INSCHRIJVINGEN PAGINA */
 
-article .cat {
-    background: rgba(255, 255, 0, 0.55);
-    font-size: 12pt;
-    width: 100px;
+article #indelingen_status table {
+    border-collapse: separate;
+    border-spacing: .5em .5em;
+    border-radius: 0;
+}
+
+article #indelingen_status .uitslagen tr {
+    width: 100%;
+    margin-bottom: .5em;
+    padding: .8em 1em;
+    /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
     color: #000;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 3px;
-    text-align: center;
-    margin: 3px;
 }
 
-article .niv {
-    background: rgba(0, 0, 0, 0.4);
-    font-size: 12pt;
-    width: 100px;
-    color: #FFFF00;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 3px;
-    text-align: center;
-    margin: 3px;
+article #indelingen_status .uitslagen td:hover {
+    background: #191919;
+    color: #FFF;
 }
 
-article .niv_vol {
-    background: rgba(255, 0, 0, 0.6);
-    font-size: 12pt;
-    width: 100px;
-    color: #FFFF00;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 3px;
-    text-align: center;
-    margin: 3px;
+article #indelingen_status .uitslagen tr td {
+    padding: .5em .7em;
+    background: rgba(255,255,255,.9);
 }
 
-article .niv_bijnavol {
-    background: rgba(255, 170, 0, 0.6);
-    font-size: 12pt;
-    width: 100px;
-    color: #FFFF00;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 3px;
-    text-align: center;
-    margin: 3px;
+article #indelingen_status .uitslagen .categorie {
+    background: rgba(95, 99, 253, 0.4);
+}
+
+article #indelingen_status .uitslagen .subtext {
+    font-size: .6em;
+}
+
+article #indelingen_status .uitslagen .geplaatst {
+    background: rgba(0,255,0,.2);
+}
+
+article #indelingen_status .uitslagen .wachtlijst {
+    background: rgba(255,0,0,.2);
 }
 
 article .inschrijvingen table {
