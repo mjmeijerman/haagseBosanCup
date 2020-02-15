@@ -47,7 +47,7 @@ class ContactpersoonController extends BaseController
         $indelingen = $this->getWedstrijdindelingen();
         $uploadenVloermuziekToegestaan = $this->uploadenVloermuziekToegestaan();
         $wijzigenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
-        $verwijderenTurnsterToegestaan = $this->verwijderenTurnsterToegestaan();
+        $verwijderenTurnsterToegestaan = $this->wijzigTurnsterToegestaan();
         $wijzigJuryToegestaan = $this->wijzigJuryToegestaan();
         $verwijderJuryToegestaan = $this->wijzigJuryToegestaan();
         $factuurBekijkenToegestaan = $this->factuurBekijkenToegestaan();
