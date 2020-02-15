@@ -433,14 +433,9 @@ class BaseController extends Controller
 
     protected function wijzigTurnsterToegestaan()
     {
-        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_TURNSTERS);
-        if ((time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
-            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS]))
-        ) {
-            return true;
-        }
-        return false;
+
+        return (time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_TURNSTERS]));
     }
 
     protected function getJuryIndeling()
@@ -490,10 +485,8 @@ class BaseController extends Controller
 
     protected function wijzigJuryToegestaan()
     {
-        $instellingGeopend = $this->getOrganisatieInstellingen(self::OPENING_INSCHRIJVING);
         $instellingGesloten = $this->getOrganisatieInstellingen(self::SLUITING_INSCHRIJVING_JURYLEDEN);
-        if (time() > strtotime($instellingGeopend[self::OPENING_INSCHRIJVING]) &&
-            time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN])) {
+        if (time() < strtotime($instellingGesloten[self::SLUITING_INSCHRIJVING_JURYLEDEN])) {
             return true;
         } else {
             return false;
