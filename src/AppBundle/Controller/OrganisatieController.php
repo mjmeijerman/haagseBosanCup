@@ -259,7 +259,7 @@ class OrganisatieController extends BaseController
 
                 $this->addToDB($user);
 
-                $subject    = 'Aanmelding ' . BaseController::TOURNAMENT_FULL_NAME;
+                $subject    = 'Graag bevestigen: aanmelding ' . BaseController::TOURNAMENT_FULL_NAME;
                 $to         = $jurylid->getEmail();
                 $view       = 'mails/inschrijven_jurylid.txt.twig';
                 $parameters = [
