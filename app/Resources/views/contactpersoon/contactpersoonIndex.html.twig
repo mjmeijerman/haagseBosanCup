@@ -59,7 +59,7 @@
     {% if factuurBekijkenToegestaan %}
         <a href="{{ path('pdfFactuur') }}" id="{{ factuurId }}" target="_blank">&#187; Factuur downloaden</a>
     {% endif %}
-    <a href="{{ path('contactpersoonUitslagen') }}" id="indeling" target="_blank">&#187; Uitslagen downloaden</a>
+    <a href="{{ uitslagenUrl }}" id="indeling" target="_blank">&#187; Uitslagen downloaden</a>
 
     <h4>&#187; Wedstrijdindelingen</h4>
     {% for dag in dagen %}
