@@ -682,7 +682,7 @@ class ContactpersoonController extends BaseController
 
                             /** @var User $user */
                             $user = $this->getUser();
-                            $subject    = 'Aanmelding Haagse Donar Cup';
+                            $subject    = 'Graag bevestigen: aanmelding Haagse Donar Cup';
                             $to         = $jurylid->getEmail();
                             $view       = 'mails/inschrijven_jurylid.html.twig';
                             $parameters = [
