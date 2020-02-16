@@ -100,7 +100,7 @@ class InschrijvingController extends BaseController
                                 $user->addJurylid($jurylid);
                                 $this->addToDB($user);
 
-                                $subject    = 'Aanmelding Haagse Donar Cup';
+                                $subject    = 'Graag bevestigen: aanmelding Haagse Donar Cup';
                                 $to         = $jurylid->getEmail();
                                 $view       = 'mails/inschrijven_jurylid.html.twig';
                                 $parameters = [
