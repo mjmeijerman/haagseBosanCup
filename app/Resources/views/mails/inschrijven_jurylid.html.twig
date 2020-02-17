@@ -1,9 +1,10 @@
-Beste {{ parameters.voornaam }} {{ parameters.achternaam }},
+Beste {{ parameters.voornaam | raw }} {{ parameters.achternaam | raw }},
 
-Je ontvangt deze email omdat je bent ingeschreven als jurylid voor de Haagse Donar Cup!
-Deze inschrijving is gedaan door {{ parameters.contactpersoon }} van {{ parameters.vereniging }} ({{ parameters.contactEmail }}).
+Je ontvangt deze email omdat je bent ingeschreven als jurylid voor {{ tournamentName }}!
+Deze inschrijving is gedaan door {{ parameters.contactpersoon }} van {{ parameters.vereniging | raw }} ({{ parameters.contactEmail | raw }}).
 
-Graag ontvangen wij nog een bevestiging of de opgegeven gegevens juist zijn. Indien nodig kunt u deze zelf aanpassen, dit kan via deze link: {{ parameters.confirmationUrl }}
+Graag ontvangen wij nog een bevestiging van deze inschrijving. Dit kan via deze link: {{ parameters.confirmationUrl }}
+Mochten er gegevens niet kloppen, dan kun je dat ook daar aanpassen.
 
 Met vriendelijke groet,
 Team Haagse Donar Cup

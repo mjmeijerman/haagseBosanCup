@@ -1,10 +1,10 @@
-Beste {{ parameters.contactpersoon_voornaam }} {{ parameters.contactpersoon_achternaam }},
+Beste {{ parameters.contactpersoon_voornaam | raw }} {{ parameters.contactpersoon_achternaam | raw }},
 
 Onderstaand jurylid heeft aangegeven niet toegezegd te hebben voor jullie te jureren tijdens {{ tournamentName }}.
 We willen je daarom vragen om een vervangend jurylid te regelen.
 
-Naam jurylid: {{ parameters.jurylid_voornaam }} {{ parameters.jurylid_achternaam }}
-Email jurylid: {{ parameters.jurylid_email }}
+Naam jurylid: {{ parameters.jurylid_voornaam | raw }} {{ parameters.jurylid_achternaam | raw }}
+Email jurylid: {{ parameters.jurylid_email | raw }}
 
 Met vriendelijke groet,
 Team Haagse Donar Cup
