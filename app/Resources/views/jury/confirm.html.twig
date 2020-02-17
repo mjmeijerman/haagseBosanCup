@@ -2,10 +2,13 @@
 
 {% block body %}
     <h1>Bevestigen aanmelding jurylid</h1>
-    Geacht jurylid, <br />
+    Beste {{ jurylid.voornaam }},<br />
     <br />
     Je bent aangemeld om te jureren voor {{ jurylid.user.vereniging.naam }} {{ jurylid.user.vereniging.plaats }} op ons toernooi.
-    Wij willen je vragen om onderstaande gegevens te controleren en waar nodig aan te passen, en vervolgens je aanmelding te bevestigen.
+    Wij willen je vragen om onderstaande gegevens te controleren en waar nodig aan te passen.
+    <br />
+    <br />
+    <b>Let op:</b> vergeet niet om op de knop "Gegevens bevestigen" te klikken om je bevestiging door te voeren!
     <br />
     <br />
 
@@ -16,7 +19,7 @@
                     Voornaam
                 </td>
                 <td>
-                    <input type="text" name="voornaam" class="jury_veld" value="{{ jurylid.voornaam }}"/>
+                    <input type="text" name="voornaam" class="jury_veld_confirm" value="{{ jurylid.voornaam }}"/>
                 </td>
             </tr>
             <tr>
@@ -24,7 +27,7 @@
                     Achternaam
                 </td>
                 <td>
-                    <input type="text" name="achternaam" class="jury_veld" value="{{ jurylid.achternaam }}"/>
+                    <input type="text" name="achternaam" class="jury_veld_confirm" value="{{ jurylid.achternaam }}"/>
                 </td>
             </tr>
             <tr>
@@ -32,7 +35,7 @@
                     Brevet
                 </td>
                 <td>
-                    <select class="jury_brevet" name="brevet">
+                    <select class="jury_brevet_confirm" name="brevet">
                         <option value="TD1"{% if jurylid.brevet == 'TD1' %} selected{% endif %}>TD1</option>
                         <option value="TD2"{% if jurylid.brevet == 'TD2' %} selected{% endif %}>TD2</option>
                         <option value="TD3"{% if jurylid.brevet == 'TD3' %} selected{% endif %}>TD3</option>
@@ -46,7 +49,7 @@
                     Beschikbare dag(en)
                 </td>
                 <td>
-                    <select class="jury_brevet" name="dag">
+                    <select class="jury_brevet_confirm" name="dag">
                         <option value="za"{% if jurylid.zaterdag %} selected{% endif %}>Zaterdag</option>
                         <option value="zo"{% if jurylid.zondag %} selected{% endif %}>Zondag</option>
                         <option value="zazo"{% if jurylid.zaterdag and jurylid.zondag %} selected{% endif %}>Beide
@@ -60,7 +63,7 @@
                     Telefoonnummer
                 </td>
                 <td>
-                    <input type="text" class="jury_veld" name="phone" value="{{ jurylid.phoneNumber }}"/>
+                    <input type="text" class="jury_veld_confirm" name="phone" value="{{ jurylid.phoneNumber }}"/>
                 </td>
             </tr>
             <tr>
@@ -68,13 +71,13 @@
                     Evt. opmerkingen
                 </td>
                 <td>
-                    <input type="text" class="jury_veld" name="remarks" value="{{ jurylid.opmerking }}"/>
+                    <input type="text" class="jury_veld_confirm" name="remarks" value="{{ jurylid.opmerking }}"/>
                 </td>
             </tr>
         </table>
 
         <br />
-        <input type="submit" id="controle_button" value="Gegevens bevestigen"/>
+        <input type="submit" id="controle_button" value="» Gegevens bevestigen «"/>
 {#        <div id="controle_button">#}
 {#            Gegevens bevestigen#}
 {#        </div>#}
@@ -92,6 +95,6 @@
 
     <br />
     <form method="post" name="unsubscribeJudge" action="{{ path('unsubscribeJudge', {'confirmationId': confirmationId}) }}">
-        <input type="submit" id="controle_button" value="Schrijf mij maar uit"/>
+        <input type="submit" id="controle_button" value="» Schrijf mij maar uit «"/>
     </form>
 {% endblock %}

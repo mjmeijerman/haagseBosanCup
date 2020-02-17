@@ -1,9 +1,9 @@
-Beste {{ parameters.voornaam }} {{ parameters.achternaam }},
+Beste {{ parameters.voornaam | raw }} {{ parameters.achternaam | raw }},
 
 Bedankt voor het bevestigen van je inschrijving. We hebben de onderstaande gegevens van je opgeslagen.
 
-Naam: {{ parameters.voornaam }} {{ parameters.achternaam }}
-Email: {{ parameters.email }}
+Naam: {{ parameters.voornaam | raw }} {{ parameters.achternaam | raw }}
+Email: {{ parameters.email | raw }}
 Telefoonnummer: {{ parameters.phone }}
 Brevet: {{ parameters.brevet }}
 Beschikbaar op: {{ parameters.dag }}

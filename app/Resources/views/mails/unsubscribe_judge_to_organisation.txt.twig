@@ -1,9 +1,9 @@
 Beste organisatie,
 
-Onderstaand jurylid dat is opgegeven door {{ parameters.contactpersoon_voornaam }} {{ parameters.contactpersoon_achternaam }} van {{ parameters.vereniging }} heeft aangegeven niet toegezegd te hebben te willen jureren voor deze vereniging, en is daarom verwijderd uit de database.
+Onderstaand jurylid dat is opgegeven door {{ parameters.contactpersoon_voornaam | raw }} {{ parameters.contactpersoon_achternaam | raw }} van {{ parameters.vereniging | raw }} heeft aangegeven niet toegezegd te hebben te willen jureren voor deze vereniging, en is daarom verwijderd uit de database.
 
-Naam jurylid: {{ parameters.jurylid_voornaam }} {{ parameters.jurylid_achternaam }}
-Email jurylid: {{ parameters.jurylid_email }}
+Naam jurylid: {{ parameters.jurylid_voornaam | raw }} {{ parameters.jurylid_achternaam | raw }}
+Email jurylid: {{ parameters.jurylid_email | raw }}
 
 Met vriendelijke groet,
 Team Haagse Donar Cup
