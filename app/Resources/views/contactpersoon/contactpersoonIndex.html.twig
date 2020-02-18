@@ -367,7 +367,7 @@
                         <form method="post" name="remove_jury_{{ jurylid.id }}"
                               action="{{ path('removeJury') }}" style="display: inline;">
                             <div class="fake_link" onclick="remove_jury('{{ jurylid.id }}',
-                                    '{{ jurylid.voornaam | raw }}', '{{ jurylid.achternaam | raw }}')"
+                                    '{{ jurylid.voornaam | escape('js') }}', '{{ jurylid.achternaam | escape('js') }}')"
                                  style="display: inline">
                                 <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" />
                                 <input type="hidden" name="juryId" value="{{ jurylid.id }}"/>
