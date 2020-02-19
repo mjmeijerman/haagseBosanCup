@@ -168,7 +168,7 @@
                                 <td>{{ jurylid.phoneNumber }}</td>
                                 <td>
                                     <div onclick="remove_jurylid('{{ jurylid.id }}',
-                                        '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
+                                        '{{ jurylid.naam | escape('js') }}', '{{ jurylid.vereniging | escape('js') }}')"
                                          style="display: inline">
                                         <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" style="cursor: pointer;">
 		            				</div>
@@ -246,7 +246,7 @@
                                 <td>{{ jurylid.phoneNumber }}</td>
                                 <td>
                                     <div onclick="remove_jurylid_niet('{{ jurylid.id }}',
-                                        '{{ jurylid.naam }}', '{{ jurylid.vereniging }}')"
+                                        '{{ jurylid.naam | escape('js') }}', '{{ jurylid.vereniging | escape('js') }}')"
                                          style="display: inline">
                                         <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 		            				</div>

@@ -175,7 +175,7 @@
                         <form method="post" name="remove_turnster_{{ turnster.id }}"
                               action="{{ path('removeTurnster') }}" style="display: inline;">
                             <div class="fake_link" onclick="remove_turnster('{{ turnster.id }}',
-                                    '{{ turnster.voornaam }}', '{{ turnster.achternaam }}')" style="display: inline">
+                                    '{{ turnster.voornaam | escape('js') }}', '{{ turnster.achternaam | escape('js') }}')" style="display: inline">
                                 <img src="{{ asset('images/remove-user.png') }}" width="15" class="img_padding" />
                                 <input type="hidden" name="turnsterId" value="{{ turnster.id }}"/>
                             </div>
@@ -272,7 +272,7 @@
                         <form method="post" name="remove_turnster_{{ wachtlijst.id }}"
                               action="{{ path('removeTurnster') }}" style="display: inline;">
                             <div class="fake_link" onclick="remove_turnster('{{ wachtlijst.id }}',
-                                    '{{ wachtlijst.voornaam }}', '{{ wachtlijst.achternaam }}')"
+                                    '{{ wachtlijst.voornaam | escape('js') }}', '{{ wachtlijst.achternaam | escape('js') }}')"
                                  style="display: inline">
                                 <img src="{{ asset('images/remove-user.png') }}" width="15"/>
                                 <input type="hidden" name="turnsterId" value="{{ wachtlijst.id }}"/>

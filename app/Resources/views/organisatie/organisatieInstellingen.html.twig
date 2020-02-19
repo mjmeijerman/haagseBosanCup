@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             <div onclick="remove_niveau('{{ id }}',
-                                    '{{ categorie }}', '{{ data.niveau }}')"
+                                    '{{ categorie | escape('js') }}', '{{ data.niveau | escape('js') }}')"
                                  style="display: inline">
                                 <img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
                             </div>
