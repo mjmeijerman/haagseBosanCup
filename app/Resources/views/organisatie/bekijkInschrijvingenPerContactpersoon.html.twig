@@ -83,7 +83,7 @@
 					</td>
 					<td class="img">
 						<div onclick="remove_turnster('{{ turnster.id }}',
-								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+								'{{ turnster.naam | escape('js') }}', '{{ contactpersoon.vereniging | escape('js') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>
@@ -130,7 +130,7 @@
                     </td>
 					<td class="img">
 						<div onclick="remove_turnster_wachtlijst('{{ turnster.id }}',
-								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+								'{{ turnster.naam | escape('js') }}', '{{ contactpersoon.vereniging | escape('js') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>
@@ -168,7 +168,7 @@
 					<td>{{ turnster.opmerking }}</td>
 					<td class="img">
 					    <div onclick="remove_turnster_afgemeld('{{ turnster.id }}',
-								'{{ turnster.naam }}', '{{ contactpersoon.vereniging }}')"
+								'{{ turnster.naam | escape('js') }}', '{{ contactpersoon.vereniging | escape('js') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>
@@ -204,7 +204,7 @@
 					<td>{{ jurylid.dag }}</td>
 					<td>
 					    <div onclick="remove_jurylid('{{ jurylid.id }}',
-								'{{ jurylid.naam }}', '{{ contactpersoon.vereniging }}', '{{ app.request.get('page') }}')"
+								'{{ jurylid.naam | escape('js') }}', '{{ contactpersoon.vereniging | escape('js') }}', '{{ app.request.get('page') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>

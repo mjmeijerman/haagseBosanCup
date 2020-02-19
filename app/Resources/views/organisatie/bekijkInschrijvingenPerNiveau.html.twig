@@ -35,7 +35,7 @@
                     </td>
 					<td class="img">
 						<div onclick="remove_turnster('{{ turnster.id }}',
-								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
+								'{{ turnster.naam | escape('js') }}', '{{ turnster.vereniging | escape('js') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>
@@ -75,7 +75,7 @@
                     </td>
 					<td class="img">
 						<div onclick="remove_turnster_wachtlijst('{{ turnster.id }}',
-								'{{ turnster.naam }}', '{{ turnster.vereniging }}')"
+								'{{ turnster.naam | escape('js') }}', '{{ turnster.vereniging | escape('js') }}')"
 							 style="display: inline">
 							<img src="{{ asset('images/remove.png') }}" width="20" style="cursor: pointer;">
 						</div>
