@@ -261,7 +261,7 @@ class OrganisatieController extends BaseController
 
                 $subject    = 'Graag bevestigen: aanmelding ' . BaseController::TOURNAMENT_FULL_NAME;
                 $to         = $jurylid->getEmail();
-                $view       = 'mails/inschrijven_jurylid.txt.twig';
+                $view       = 'mails/inschrijven_jurylid.html.twig';
                 $parameters = [
                     'voornaam'       => $jurylid->getVoornaam(),
                     'achternaam'     => $jurylid->getAchternaam(),
