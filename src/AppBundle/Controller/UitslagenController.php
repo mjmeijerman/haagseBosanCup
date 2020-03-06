@@ -88,6 +88,8 @@ class UitslagenController extends BaseController
      */
     public function uitslagen(Request $request)
     {
+        return $this->redirect($this->getParameter('jurysysteem_url') . '/uitslagen');
+
         if ($request->query->get('categorie') && $request->query->get('niveau') && $this->checkIfNiveauToegestaan
             ($request->query->get('categorie'), $request->query->get('niveau'))
         ) {
@@ -209,6 +211,8 @@ class UitslagenController extends BaseController
      */
     public function scores(Request $request)
     {
+        return $this->redirect($this->getParameter('jurysysteem_url') . '/scores');
+
         $activeBaan = '';
         $banen = $this->getDoctrine()->getRepository("AppBundle:Scores")
             ->getBanen();
