@@ -16,7 +16,7 @@
         "ext-pdo": "*",
         "symfony/symfony": "2.8.*",
         "doctrine/orm": "~2.2,>=2.2.3,<2.5",
-        "doctrine/dbal": "<2.5",
+        "doctrine/dbal": "<2.11",
         "doctrine/doctrine-bundle": "~1.4",
         "ramsey/uuid": "^3.9",
         "symfony/assetic-bundle": "~2.3",
