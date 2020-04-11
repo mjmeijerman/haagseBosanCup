@@ -744,8 +744,8 @@ class BaseController extends Controller
 
     protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@haagsedonarcup.nl')
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
+        $message = new \Swift_Message();
+            $message->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
